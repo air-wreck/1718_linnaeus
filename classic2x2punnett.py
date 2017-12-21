@@ -1,14 +1,20 @@
 import matplotlib.pyplot as plt
 
-def makeClassicSquare2(p1, p2):
+def makeSquare2(p1, p2, incDom=False):
     go = test(p1, p2)
     if go == 1:
         print "You inputted more than two alleles for each parent. Please try again."
     elif go == 2:
         print "You used more than one letter to represent alleles. Please try again."
     else:
-        text = [[p2[0],formatS(p1[0]+p2[0]),formatS(p1[1]+p2[0])], [p2[1],formatS(p1[0]+p2[1]),formatS(p1[1]+p2[1])]]
-        colors = setColors(text)
+        text=[[],[]]
+        count = 0
+        for i in p2:
+            text[count].append(i)
+            for j in p1:
+                text[count].append(formatS(j+i))
+            count+=1
+        colors = setColors(text, incDom)
         table = plt.table(
             cellText=text,
             cellColours=colors,
@@ -16,7 +22,7 @@ def makeClassicSquare2(p1, p2):
             colWidths=[0.25,0.25,0.25],
             rowLabels=['',''],
             colLabels=['',p1[0],p1[1]],
-            colColours= ['0.25','0.25','0.25'],
+            colColours= ['0.45','0.45','0.45'],
             colLoc='center',
             loc='center',bbox=None)
         table.scale(1, 6)
@@ -28,19 +34,23 @@ def formatS(string):
     else:
         return string[1]+string[0]
 
-def setColors(text):
+def setColors(text, incDom):
     colors = [[],[]]
+    i = 0
     for row in text:
         for box in row:
-            i = text.index(row)
             if len(box) == 1:
-                colors[i].append('0.25')
+                colors[i].append('0.45')
             elif box.isupper():
                 colors[i].append('r')
-            elif box.islower():
-                colors[i].append('w')
+            elif box[0].upper() in box:
+                if incDom:
+                    colors[i].append('m')
+                else:
+                    colors[i].append('r')
             else:
-                colors[i].append('m')
+                colors[i].append('w')
+        i+=1
     return colors 
     
 def test(p1, p2):
