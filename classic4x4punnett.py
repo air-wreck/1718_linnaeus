@@ -1,32 +1,40 @@
 import matplotlib.pyplot as plt
 
 def makeSquare4(p1, p2, incDom=False):
-    gametes1 = []
-    gametes2 = []
-    for i in range(2):
-        for j in range(2,4):
-            gametes1.append(p1[i]+p1[j])
-            gametes2.append(p2[i]+p2[j])
-    text = [[],[],[],[]]
-    count = 0
-    for g1 in gametes2:
-        text[count].append(g1)
-        for g2 in gametes1:
-            text[count].append(formatS(g1[0]+g2[0])+formatS(g1[1]+g2[1]))
-        count+=1
-    colors = setColors(text, incDom)
-    table = plt.table(
-        cellText=text,
-        cellColours=colors,
-        cellLoc='center',
-        colWidths=[0.2,0.2,0.2,0.2,0.2],
-        rowLabels=['','','',''],
-        colLabels=['']+gametes1,
-        colColours= ['0.45','0.45','0.45','0.45','0.45'],
-        colLoc='center',
-        loc='center',bbox=None)
-    table.scale(1, 4)
-    plt.show()
+    go = test(p1, p2)
+    if go == 1:
+        print "You inputted more than four alleles for each parent. Please try again."
+    elif go == 2:
+        print "You used more than two letters to represent alleles. Please try again."
+    elif go ==3:
+        print "You used fewer than two letters to represent alleles. Please try again."
+    else:
+        gametes1 = []
+        gametes2 = []
+        for i in range(2):
+            for j in range(2,4):
+                gametes1.append(p1[i]+p1[j])
+                gametes2.append(p2[i]+p2[j])
+        text = [[],[],[],[]]
+        count = 0
+        for g1 in gametes2:
+            text[count].append(g1)
+            for g2 in gametes1:
+                text[count].append(formatS(g1[0]+g2[0])+formatS(g1[1]+g2[1]))
+            count+=1
+        colors = setColors(text, incDom)
+        table = plt.table(
+            cellText=text,
+            cellColours=colors,
+            cellLoc='center',
+            colWidths=[0.2,0.2,0.2,0.2,0.2],
+            rowLabels=['','','',''],
+            colLabels=['']+gametes1,
+            colColours= ['0.45','0.45','0.45','0.45','0.45'],
+            colLoc='center',
+            loc='center',bbox=None)
+        table.scale(1, 4)
+        plt.show()
 
 def formatS(string):
     if string[0]<=string[1]:
@@ -73,3 +81,31 @@ def setColors(text, incDom):
                 colors[i].append('w')
         i+=1
     return colors
+
+def test(p1, p2):
+    notEnough = False
+    tooMuch = False
+    letters = []
+    for p in (p1, p2):
+        letters2 = []
+        for letter in p:
+            if letter.upper() not in letters2:
+                letters2.append(letter.upper())
+            if letter.upper() not in letters:
+                letters.append(letter.upper())
+        if len(letters2) < 2:
+            notEnough = True
+        if len(letters2) > 2:
+            tooMuch = True
+    if len(letters) < 2:
+        notEnough = True
+    if len(letters) > 2:
+        tooMuch = True
+    if len(p1) != 4 or len(p2) !=4:
+        return 1
+    elif tooMuch:
+        return 2
+    elif notEnough:
+        return 3
+    else:
+        return 4
