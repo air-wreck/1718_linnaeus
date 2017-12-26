@@ -22,10 +22,10 @@ def makeSquare16(p1, p2, incDom=False):
         cellText=data,
         cellColours=colors,
         cellLoc='center',
-        colWidths=[0.055,0.055,0.055,0.055,0.055,0.055,0.055,0.055,0.055,0.055,0.055,0.055,0.055,0.055,0.055,0.055,0.055],
-        rowLabels=['','','','','','','','','','','','','','','',''],
+        colWidths=[0.055]*17,
+        rowLabels=['']*16,
         colLabels=['']+gametes1,
-        colColours= ['0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45'],
+        colColours= ['0.45']*17,
         colLoc='center',
         loc='center',bbox=None)
     plt.show()

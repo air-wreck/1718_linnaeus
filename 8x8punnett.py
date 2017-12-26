@@ -21,10 +21,10 @@ def makeSquare8(p1, p2, incDom=False):
         cellText=data,
         cellColours=colors,
         cellLoc='center',
-        colWidths=[0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1],
-        rowLabels=['','','','','','','',''],
+        colWidths=[0.1]*9,
+        rowLabels=['']*8,
         colLabels=['']+gametes1,
-        colColours= ['0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45','0.45'],
+        colColours= ['0.45']*9,
         colLoc='center',
         loc='center',bbox=None)
     table.scale(1, 2)
@@ -64,7 +64,7 @@ def setColors(data, incDom):
     return colors
 
 def analyzeData(data, incDom):
-    text = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']]
+    text = [['']*8]*8
     for i in range(0,8):
         for j in range(1,9):
             for k in range(0,3):
