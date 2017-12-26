@@ -44,12 +44,12 @@ def setColors(data, incDom):
             if len(box) == 1:
                 colors[i].append('0.45')
             elif box.isupper():
-                colors[i].append('r')
+                colors[i].append((1,.25,.35))
             elif box[0].upper() in box:
                 if incDom:
-                    colors[i].append('m')
+                    colors[i].append((1,.35,.65))
                 else:
-                    colors[i].append('r')
+                    colors[i].append((1,.25,.35))
             else:
                 colors[i].append('w')
         i+=1
