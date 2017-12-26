@@ -48,17 +48,15 @@ def setColors(data, incDom):
             else:
                 for i in range(0,3):
                     if box[0+2*i:2+2*i].isupper():
-                        c[i] = 0.9
+                        c[i] = 0.5
                     elif box[0+2*i:2+2*i].islower():
-                        c[i] = .4
+                        c[i] = 1
                     else: 
                         if incDom:
-                            c[i] = 0.6
+                            c[i] = 0.7
                         else:
-                            c[i] = 0.9
-                if c[0]==0.4 and c[1]==0.4 and c[2]==0.4:
-                    colors[j].append((1,1,1))
-                elif c[0]==0.9 and c[1]==0.9 and c[2]==0.9:
+                            c[i] = 0.5
+                if c[0]==0.5 and c[1]==0.5 and c[2]==0.5:
                     colors[j].append((.6,.6,.6))
                 else:
                     colors[j].append(tuple(c))
