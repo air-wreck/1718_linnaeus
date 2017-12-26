@@ -7,16 +7,18 @@ def makeSquare2(p1, p2, incDom=False):
     elif go == 2:
         print "You used more than one letter to represent alleles. Please try again."
     else:
-        text=[[],[]]
+        data=[[],[]]
         count = 0
         for i in p2:
-            text[count].append(i)
+            data[count].append(i)
             for j in p1:
-                text[count].append(formatS(j+i))
+                data[count].append(formatS(j+i))
             count+=1
-        colors = setColors(text, incDom)
+        text = analyzeData(data, incDom)
+        print text
+        colors = setColors(data, incDom)
         table = plt.table(
-            cellText=text,
+            cellText=data,
             cellColours=colors,
             cellLoc='center',
             colWidths=[0.25,0.25,0.25],
@@ -34,10 +36,10 @@ def formatS(string):
     else:
         return string[1]+string[0]
 
-def setColors(text, incDom):
+def setColors(data, incDom):
     colors = [[],[]]
     i = 0
-    for row in text:
+    for row in data:
         for box in row:
             if len(box) == 1:
                 colors[i].append('0.45')
@@ -52,6 +54,21 @@ def setColors(text, incDom):
                 colors[i].append('w')
         i+=1
     return colors 
+
+def analyzeData(data, incDom):
+    text = [[],[]]
+    for i in range(0,2):
+        for j in range(1,3):
+            if data[i][j].isupper():
+                text[i].append("Homozygous dominant. Dominant phenotype.")
+            elif data[i][j].islower():
+                text[i].append("Homozygous recessive. Recessive phenotype")
+            else:
+                if incDom:
+                    text[i].append("Heterozygous. Intermediate phenotype.")
+                else:
+                    text[i].append("Heterozygous. Dominant phenotype.")
+    return text
     
 def test(p1, p2):
     if len(p1) != 2 or len(p2) !=2:

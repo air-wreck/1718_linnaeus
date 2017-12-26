@@ -15,16 +15,17 @@ def makeSquare4(p1, p2, incDom=False):
             for j in range(2,4):
                 gametes1.append(p1[i]+p1[j])
                 gametes2.append(p2[i]+p2[j])
-        text = [[],[],[],[]]
+        data = [[],[],[],[]]
         count = 0
         for g1 in gametes2:
-            text[count].append(g1)
+            data[count].append(g1)
             for g2 in gametes1:
-                text[count].append(formatS(g1[0]+g2[0])+formatS(g1[1]+g2[1]))
+                data[count].append(formatS(g1[0]+g2[0])+formatS(g1[1]+g2[1]))
             count+=1
-        colors = setColors(text, incDom)
+        colors = setColors(data, incDom)
+        text = analyzeData(data, incDom)
         table = plt.table(
-            cellText=text,
+            cellText=data,
             cellColours=colors,
             cellLoc='center',
             colWidths=[0.2,0.2,0.2,0.2,0.2],
@@ -35,6 +36,7 @@ def makeSquare4(p1, p2, incDom=False):
             loc='center',bbox=None)
         table.scale(1, 4)
         plt.show()
+        print text
 
 def formatS(string):
     if string[0]<=string[1]:
@@ -42,10 +44,10 @@ def formatS(string):
     else:
         return string[1]+string[0]
 
-def setColors(text, incDom):
+def setColors(data, incDom):
     colors = [[],[],[],[]]
     i = 0
-    for row in text:
+    for row in data:
         for box in row:
             if len(box) == 2:
                 colors[i].append('0.45')
@@ -81,6 +83,30 @@ def setColors(text, incDom):
                 colors[i].append('w')
         i+=1
     return colors
+
+def analyzeData(data, incDom):
+    text = [['','','',''],['','','',''],['','','',''],['','','','']]
+    for i in range(0,4):
+        for j in range(1,5):
+            if data[i][j][:2].isupper():
+                text[i][j-1]+="Trait 1: Homozygous dominant. Dominant phenotype."
+            elif data[i][j][:2].islower():
+                text[i][j-1]+="Trait 1: Homozygous recessive. Recessive phenotype."
+            else:
+                if incDom:
+                    text[i][j-1]+="Trait 1: Heterozygous. Intermediate phenotype."
+                else:
+                    text[i][j-1]+="Trait 1: Heterozygous. Dominant phenotype."
+            if data[i][j][2:4].isupper():
+                text[i][j-1]+="Trait 2: Homozygous dominant. Dominant phenotype."
+            elif data[i][j][2:4].islower():
+                text[i][j-1]+="Trait 2: Homozygous recessive. Recessive phenotype."
+            else:
+                if incDom:
+                    text[i][j-1]+="Trait 2: Heterozygous. Intermediate phenotype."
+                else:
+                    text[i][j-1]+="Trait 2: Heterozygous. Dominant phenotype."
+    return text
 
 def test(p1, p2):
     notEnough = False
