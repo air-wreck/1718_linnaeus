@@ -5,6 +5,49 @@ html, body {
   height: 100%;
 }
 
+.narrow-menu {
+  display: none;
+}
+
+.menu {
+  background-color: #707070;
+  width: 30px;
+  height: 3px;
+  margin: 6px 0px;
+}
+
+#dropbtn {
+  background-color: rgba(0, 0, 0, 0);
+  border: rgba(0, 0, 0, 0);
+  padding: 8px;
+}
+
+#dropbtn:focus {
+  outline: 0px;
+}
+
+#dropdown {
+  display: none;
+  z-index: 1;
+  position: absolute;
+  background-color: #f9f9f9;
+  right: 0;
+}
+
+#dropdown a {
+  text-align: left;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-family: "Open Sans";
+}
+
+#dropdown a:hover {
+  background-color: #525252;
+  color: white;
+}
+
 .front-page {
   height: calc(100% - 51px);
   width: 100%;
@@ -21,6 +64,19 @@ html, body {
   font-family: 'Courgette', cursive;
   color: #a5e544;
   margin: 5px;
+}
+
+.title-text {
+  left: 15%;
+  top: 25%;
+  position: absolute;
+}
+
+.title-img {
+  right: 15%;
+  bottom: 15%;
+  position: absolute;
+  z-index: -1;
 }
 
 .nav-bar ul {
@@ -125,6 +181,10 @@ html, body {
   padding-right: 20px;
 }
 
+.content-2 li a {
+  color: inherit;
+}
+
 .content-3 {
   text-align: center;
   background-color: #e5e5e5;
@@ -169,6 +229,15 @@ html, body {
   box-sizing: border-box;
 }
 
+/* condense title once it gets cramped */
+@media (max-width: 1100px) {
+  .title-img {
+    right: 10px;
+    bottom: 30px;
+    max-width: 100%;
+  }
+}
+
 /* remove margins on moderately small screens */
 @media (max-width: 900px) {
   .content-1-container {
@@ -179,8 +248,20 @@ html, body {
   }
 }
 
-/* redo table layout for very small (mobile) screens) */
+/* redo table layout for very small (mobile) screens)
+   also condense title layout even further
+   also condense navigation bar */
 @media (max-width: 768px) {
+  .nav-bar li a {
+    display: none;
+  }
+  .narrow-menu {
+    display: block;
+  }
+  .title-text {
+    left: 30px;
+    top: 100px;
+  }
   .content-1-container {
     grid-template-columns: 0px 1fr 0px;
     grid-template-rows: 130px 1fr
