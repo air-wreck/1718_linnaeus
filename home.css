@@ -96,7 +96,6 @@ html, body {
                        "mgl ped-txt pun-txt mgr"
                        "mgl vir-img dna-img mgr"
                        "mgl vir-txt dna-txt mgr";
-  /* TODO: make this responsive by adapting grid template areas based on media queries */
 }
 
 .content-2 {
@@ -145,7 +144,9 @@ html, body {
   grid-column-gap: 50px;
   grid-template-columns: 100px 150px 1fr 100px;
   grid-template-rows: 1fr;
-  grid-template-areas: "mnl dadu-img dadu-txt mnr";
+  grid-template-areas: "mnl dadu-img dadu-txt mnr"
+                       "mnl colu-img colu-txt mnr"
+                       "mnl thum-img thum-txt mnr";
 }
 
 .quote {
@@ -167,3 +168,48 @@ html, body {
   width: 100%;
   box-sizing: border-box;
 }
+
+/* remove margins on moderately small screens */
+@media (max-width: 900px) {
+  .content-1-container {
+    grid-template-columns: 0px 1fr 1fr 0px;
+  }
+  .content-3-container {
+    grid-template-columns: 0px 150px 1fr 0px;
+  }
+}
+
+/* redo table layout for very small (mobile) screens) */
+@media (max-width: 768px) {
+  .content-1-container {
+    grid-template-columns: 0px 1fr 0px;
+    grid-template-rows: 130px 1fr
+                        130px 1fr
+                        130px 1fr
+                        130px 1fr;
+    grid-template-areas: "mgl ped-img mgr"
+                         "mgl ped-txt mgr"
+                         "mgl pun-img mgr"
+                         "mgl pun-txt mgr"
+                         "mgl vir-img mgr"
+                         "mgl vir-txt mgr"
+                         "mgl dna-img mgr"
+                         "mgl dna-txt mgr";
+  }
+  .content-3-container {
+    grid-template-columns: 0px 1fr 0px;
+    grid-template-areas: "mnl dadu-img mnr"
+                         "mnl dadu-txt mnr"
+                         "mnl colu-img mnr"
+                         "mnl colu-txt mnr"
+                         "mnl thum-img mnr"
+                         "mnl thum-txt mnr";
+  }
+  .quote {
+    padding-bottom: 50px;
+    padding-right: 0px;
+  }
+}
+
+/* TODO: add media query for super-wide screens and landscape phones */
+/* TODO: make CSS mobile-first */
