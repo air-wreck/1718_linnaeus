@@ -1,6 +1,9 @@
 ''' ped.py
 
 a basic pedigree thing
+
+A linked tree representation of a pedigree. Person objects form nodes, and
+edges are direction toward parents.
 '''
 
 class Person:
@@ -10,13 +13,14 @@ class Person:
     sex = 0  # for now, 0 = male and 1 = female
     infected = 0.0  # probability that this person is infected
                     # a negative number indicates 'unknown'
-    
+
     def __init__(self, name, sex, infected):
         self.name = name
         self.sex = sex
         self.infected = infected
-    
+
     def add_parents(self, f, m):
+        #TODO: ensure that the graph is acyclic
         self.father = f
         self.mother = m
 
@@ -47,7 +51,8 @@ def find_prob(person):
     if person.father == None or person.mother == None:
         # this person does not have a mother or father but has no probability
         print 'error@%s' % person.name
-        print '  error: all founder individuals must have independent probabilities'
+        print ('  error: all founder individuals must have independent '
+              'probabilities')
         return -1
     f = find_prob(person.father)
     m = find_prob(person.mother)
