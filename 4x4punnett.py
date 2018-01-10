@@ -35,7 +35,9 @@ def makeSquare4(p1, p2, incDom=False):
             colLoc='center',
             loc='center',bbox=None)
         table.scale(1, 4)
+        plt.axis('off')
         plt.show()
+        plt.savefig('image.png',dpi=750)
         print text
 
 def formatS(string):
