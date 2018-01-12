@@ -27,19 +27,6 @@ def str2geno(string):
         res += [[allele(string[i]), allele(string[i+1])]]
     return res
 
-''' this is the long way to do it:
-# bind variables to allele objects
-A = allele('A')
-a = allele('a')
-B = allele('B')
-b = allele('b')
-
-# set up the father and mother with any number of traits
-father = [[A, a], [B, b]]
-mother = [[A, A], [b, b]]
-'''
-
-# this is the short way:
 father = str2geno('AaBb')
 mother = str2geno('AAbb')
 
@@ -47,8 +34,8 @@ mother = str2geno('AAbb')
 # this is ovecomplicated, but I really wanted to use a linear algebra function
 def solve(f, m):
     res = []
-    for i, dummy in enumerate(father):
-        res += [np.outer(father[i], mother[i]).flatten().tolist()]
+    for i, dummy in enumerate(f):
+        res += [np.outer(f[i], m[i]).flatten().tolist()]
     return res
 
 # combines possibility results into full genotypes strings
@@ -56,6 +43,8 @@ def combine(arr, depth):
     if depth == len(arr):
         return [allele('')]
     return [i+j for i in arr[depth] for j in combine(arr, depth+1)]
+
+# plots the solution with the colortable.py module
 
 sol = solve(father, mother)
 print 'The possible traits are:'
