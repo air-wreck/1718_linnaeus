@@ -1,60 +1,58 @@
+''' MODULE: colortable.py
+
+This is a custom implementation of a table with matplotlib.pyplot, since the
+original seems to not have the ability to set a cell to a half-color.
+
+See the file colortable_example.py for an example of how to use this class.
+'''
+
 import matplotlib.pyplot as plt
 
 class colortbl():
     header_color = '#c6c6c6'
-    
+
     def __init__(self, data):
+        # save a copy of the data
+        self.data = data
+
         # init axes
-        self.fig, self.axes = plt.subplots(ncols=len(data[0]), nrows=len(data), 
-                                 figsize=(2, 1.5))
+        ncols, nrows = len(data[0]), len(data)
+        self.fig, self.axes = plt.subplots(ncols=ncols, nrows=nrows,
+                                           figsize=(ncols, 0.75*nrows))
         self.fig.subplots_adjust(0.05, 0.05, 0.95, 0.95, wspace=0, hspace=0)
-        
+
         # set styling
         for ax in self.axes.flatten():
-            ax.tick_params(labelbottom=0, labelleft=0, bottom=0, 
+            ax.tick_params(labelbottom=0, labelleft=0, bottom=0,
                            top=0, left=0, right=0)
             ax.axis('tight')
-        
-        # write in data
-        for r, row in enumerate(self.axes):
-            for c, cell in enumerate(row):
-                cell.text(0.5, 0.5, data[r][c], transform=cell.transAxes,
-                          ha='center', va='center')
-    
-    
 
+        # write in data and colorize headers
+        for r, _ in enumerate(self.axes):
+            self.color(r, 0, c1=self.header_color)
+            for c, _ in enumerate(self.axes[0]):
+                self.color(0, c, c1=self.header_color)
+                self.add_text(str(data[r][c]), r, c)
 
-def add_text(text, row, col):
-    axes[row][col].text(0.5, 0.5, text, transform=axes[row][col].transAxes,
-                        ha='center', va='center')
+    def add_text(self, text, row, col):
+        # in case manual override of text is needed
+        self.axes[row][col].text(0.5, 0.5, text,
+                                 transform=self.axes[row][col].transAxes,
+                                 ha='center', va='center')
 
-def add_color(color, row, col):
-    axes[row][col].set_facecolor(color)
+    def color(self, row, col, c1='#fcaba4', c2=None):
+        # colorize cell
+        if c2 == None:
+            # if only one color given, set whole cell to that color
+            self.axes[row][col].set_facecolor(c1)
+        else:
+            # if two colors given, split the cell
+            self.axes[row][col].add_patch(
+                plt.Polygon([[-1.5, -1.5], [1.5, -1.5], [1.5, 1.5]], color=c1)
+            )
+            self.axes[row][col].add_patch(
+                plt.Polygon([[-1.5, -1.5], [-1.5, 1.5], [1.5, 1.5]], color=c2)
+            )
 
-def add_half_color(color1, color2, row, col):
-    axes[row][col].add_patch(
-        plt.Polygon([[-1.5, -1.5], [1.5, -1.5], [1.5, 1.5]], color=color1)
-    )
-    axes[row][col].add_patch(
-        plt.Polygon([[-1.5, -1.5], [-1.5, 1.5], [1.5, 1.5]], color=color2)
-    )
-
-# manually add cell text
-add_text('A', 0, 1)
-add_text('a', 0, 2)
-add_text('a', 1, 0)
-add_text('a', 2, 0)
-add_text('Aa', 1, 1)
-add_text('aa', 1, 2)
-add_text('Aa', 2, 1)
-add_text('aa', 2, 2)
-
-# manually color cells
-for i, _ in enumerate(axes):
-    add_color('#c6c6c6', i, 0)
-for i, _ in enumerate(axes[0]):
-    add_color('#c6c6c6', 0, i)
-
-add_half_color('#fcaba4', '#a4c4fc', 1, 1)
-
-plt.show()
+    def show(self):
+        plt.show()
