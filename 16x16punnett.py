@@ -28,7 +28,9 @@ def makeSquare16(p1, p2, incDom=False):
         colColours= ['0.45']*17,
         colLoc='center',
         loc='center',bbox=None)
+    plt.axis('off')
     plt.show()
+    plt.savefig('image.png',dpi=750)
     #print text
 
 def formatS(string):

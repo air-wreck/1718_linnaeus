@@ -28,7 +28,9 @@ def makeSquare2(p1, p2, incDom=False):
             colLoc='center',
             loc='center',bbox=None)
         table.scale(1, 6)
+        plt.axis('off')
         plt.show()
+        plt.savefig('image.png',dpi=750)
 
 def formatS(string):
     if string[0]<=string[1]:
