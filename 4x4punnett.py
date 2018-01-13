@@ -22,8 +22,10 @@ def makeSquare4(p1, p2, incDom=False):
             for g2 in gametes1:
                 data[count].append(formatS(g1[0]+g2[0])+formatS(g1[1]+g2[1]))
             count+=1
+        phenprobs = prob(p1, p2, incDom)
+        print phenprobs
         colors = setColors(data, incDom)
-        text = analyzeData(data, incDom)
+        #text = analyzeData(data, incDom)
         table = plt.table(
             cellText=data,
             cellColours=colors,
@@ -38,7 +40,32 @@ def makeSquare4(p1, p2, incDom=False):
         plt.axis('off')
         plt.show()
         plt.savefig('image.png',dpi=750)
-        print text
+
+def prob(g1,g2,incDom):
+    g1a = g1[0:2]
+    g1b = g1[2:4]
+    g2a = g2[0:2]
+    g2b = g2[2:4]
+    probsa = probOne(g1a,g2a,incDom)
+    probsb = probOne(g1b,g2b,incDom)
+    phenprobs = {}
+    phenprobs['22'] = probsa['2']*probsb['2']
+    phenprobs['20'] = probsa['2']*probsb['0']
+    phenprobs['02'] = probsa['0']*probsb['2']
+    phenprobs['00'] = probsa['0']*probsb['0']
+    return phenprobs
+
+def probOne(g1, g2, incDom):
+    phenprobs = {}
+    pdom1 = sum(1 for c in g1 if c.isupper())/2.0
+    pdom2 = sum(1 for c in g2 if c.isupper())/2.0
+    phenprobs['2']=pdom1*pdom2
+    if incDom:
+        phenprobs['1']=pdom1*(1-pdom2) + pdom2*(1-pdom1)
+    else:
+        phenprobs['2']+= pdom1*(1-pdom2) + pdom2*(1-pdom1)
+    phenprobs['0']=(1-pdom1)*(1-pdom2)
+    return phenprobs
 
 def formatS(string):
     if string[0]<=string[1]:
