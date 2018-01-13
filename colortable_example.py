@@ -13,13 +13,10 @@ data = [['',  'A',  'a'],
 # create a colortable out of the data
 table = ct.colortbl(data)
 
-# make a cell a single color
-table.color(1, 2, c1='#fcaba4')
-table.color(2, 2, c1='#fcaba4')
-
-# make a cell split color
-table.color(1, 1, c1='#fcaba4', c2='#a4c4fc')
-table.color(2, 1, c1='#fcaba4', c2='#a4c4fc')
+table.color(1, 1, c1='#fcaba4')  # make a cell a single color
+table.color(1, 2, c1='#fcaba4', c2='#a4c4fc')  # make a cell split 2 colors
+table.color(2, 1, c1='#fcaba4', c2='#a4c4fc', c3='#ffe987')  # split 3 colors
+table.color(2, 2, c1='#fcaba4', c2='#a4c4fc', c3='#ffe987', c4='#cdf2c6')  # 4
 
 # display the table with matplotlib
 table.show()

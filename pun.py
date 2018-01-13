@@ -59,9 +59,10 @@ def plot(f, m):
     print square
     table = ct.colortbl(square)
     # TODO: come up with a function for coloring (these are just an example)
-    table.color(1, 1, c1='#fcaba4', c2='#a4c4fc')
-    table.color(1, 2, c1='#fcaba4')
-    table.color(2, 1, c1='#a4c4fc')
+    table.color(1, 1, c1='#fcaba4')
+    table.color(1, 2, c1='#fcaba4', c2='#a4c4fc')
+    table.color(2, 1, c1='#fcaba4', c2='#a4c4fc', c3='#ffe987')
+    table.color(2, 2, c1='#fcaba4', c2='#a4c4fc', c3='#ffe987', c4='#cdf2c6')
     table.show()
 
 print 'Plotting results...'
