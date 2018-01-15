@@ -1,41 +1,14 @@
 ''' ped.py
 
-a basic pedigree thing
+a basic pedigree thing that defines two functions infect() and find_prob()
+should probably be bundled with defs.py, but that can be done later
 
 A linked tree representation of a pedigree. Person objects form nodes, and
-edges are direction toward parents.
+edges are directed toward parents.
 '''
 
-class Person:
-    father = None  # we use a linked representation for now, although we likely
-    mother = None  # want to switch to something easier to modify later
-    name = 'Bob'
-    sex = 0  # for now, 0 = male and 1 = female
-    infected = 0.0  # probability that this person is infected
-                    # a negative number indicates 'unknown'
-
-    def __init__(self, name, sex, infected):
-        self.name = name
-        self.sex = sex
-        self.infected = infected
-
-    def add_parents(self, f, m):
-        #TODO: ensure that the graph is acyclic
-        self.father = f
-        self.mother = m
-
-# construct a basic pedigree tree
-grandpa = Person('grandpa', 0, 1)
-grandma = Person('grandma', 1, 0)
-dad = Person('dad', 0, -1)
-mom = Person('mom', 1, 0)
-son = Person('son', 0, -1)
-daughter = Person('daughter', 1, -1)
-
-# define relationships
-dad.add_parents(grandpa, grandma)
-son.add_parents(dad, mom)
-daughter.add_parents(dad, mom)
+import ped_draw as pd
+from defs import *
 
 # determine probability that a given individual is infected
 def infect(f, m):
@@ -59,5 +32,19 @@ def find_prob(person):
     person.infected = infect(f, m)
     return person.infected
 
-print find_prob(son)
-print find_prob(daughter)
+if __name__ == '__main__':
+    # construct a basic pedigree tree
+    grandpa = Person('grandpa', Sex.m, 1)
+    grandma = Person('grandma', Sex.f, 0)
+    dad = Person('dad', Sex.m, -1)
+    mom = Person('mom', Sex.f, 0)
+    son = Person('son', Sex.m, -1)
+    daughter = Person('daughter', Sex.f, -1)
+
+    # define relationships
+    dad.add_parents(grandpa, grandma)
+    son.add_parents(dad, mom)
+    daughter.add_parents(dad, mom)
+
+    print find_prob(son)
+    print find_prob(daughter)
