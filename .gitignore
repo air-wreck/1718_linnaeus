@@ -1,0 +1,6 @@
+# ignore compiled Python files
+*.pyc
+
+# ignore graphviz intermediate and final files
+*.dot
+*.pdf
