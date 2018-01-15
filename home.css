@@ -1,0 +1,141 @@
+.front-page {
+  height: calc(100% - 51px);
+  width: 100%;
+}
+
+.front-page h1 {
+  font-family: "Rubik";
+  color: #78bc12;
+  font-size: 500%;
+  margin: 0px;
+}
+
+.front-page h2 {
+  font-family: 'Courgette', cursive;
+  color: #a5e544;
+  margin: 5px;
+}
+
+.title-text {
+  left: 15%;
+  top: 25%;
+  position: absolute;
+}
+
+.title-img {
+  right: 15%;
+  bottom: 15%;
+  position: absolute;
+  z-index: -1;
+}
+
+.content-1-container {
+  display: grid;
+  grid-column-gap: 20px;
+  grid-template-columns: 100px 1fr 1fr 100px;
+  grid-template-rows: 130px 1fr 130px 1fr;
+  grid-template-areas: "mgl ped-img pun-img mgr"
+                       "mgl ped-txt pun-txt mgr"
+                       "mgl vir-img dna-img mgr"
+                       "mgl vir-txt dna-txt mgr";
+}
+
+.content-2 ul {
+  list-style-type: none;
+}
+
+.content-2 li {
+  display: inline-block;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.content-2 li a {
+  color: inherit;
+}
+
+.content-3-container {
+  display: grid;
+  grid-column-gap: 50px;
+  grid-template-columns: 100px 150px 1fr 100px;
+  grid-template-rows: 1fr;
+  grid-template-areas: "mnl dadu-img dadu-txt mnr"
+                       "mnl colu-img colu-txt mnr"
+                       "mnl thum-img thum-txt mnr";
+}
+
+.quote {
+  text-align: left;
+  font-family: "Raleway";
+}
+
+.quote h1 {
+  display: inline;
+  padding-right: 20px;
+}
+
+/* condense title once it gets cramped */
+@media (max-width: 1100px) {
+  .title-img {
+    right: 10px;
+    bottom: 30px;
+    max-width: 100%;
+  }
+}
+
+/* remove margins on moderately small screens */
+@media (max-width: 900px) {
+  .content-1-container {
+    grid-template-columns: 0px 1fr 1fr 0px;
+  }
+  .content-3-container {
+    grid-template-columns: 0px 150px 1fr 0px;
+  }
+}
+
+/* redo table layout for very small (mobile) screens)
+   also condense title layout even further
+   also condense navigation bar */
+@media (max-width: 768px) {
+  .nav-bar li a {
+    display: none;
+  }
+  .narrow-menu {
+    display: block;
+  }
+  .title-text {
+    left: 30px;
+    top: 100px;
+  }
+  .content-1-container {
+    grid-template-columns: 0px 1fr 0px;
+    grid-template-rows: 130px 1fr
+                        130px 1fr
+                        130px 1fr
+                        130px 1fr;
+    grid-template-areas: "mgl ped-img mgr"
+                         "mgl ped-txt mgr"
+                         "mgl pun-img mgr"
+                         "mgl pun-txt mgr"
+                         "mgl vir-img mgr"
+                         "mgl vir-txt mgr"
+                         "mgl dna-img mgr"
+                         "mgl dna-txt mgr";
+  }
+  .content-3-container {
+    grid-template-columns: 0px 1fr 0px;
+    grid-template-areas: "mnl dadu-img mnr"
+                         "mnl dadu-txt mnr"
+                         "mnl colu-img mnr"
+                         "mnl colu-txt mnr"
+                         "mnl thum-img mnr"
+                         "mnl thum-txt mnr";
+  }
+  .quote {
+    padding-bottom: 50px;
+    padding-right: 0px;
+  }
+}
+
+/* TODO: add media query for super-wide screens and landscape phones */
+/* TODO: make CSS mobile-first */
