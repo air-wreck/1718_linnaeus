@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def makeSquare8(p1, p2, incDom=False):
+def makeSquare8(p1, p2):
     gametes1 = []
     gametes2 = []
     for i in range(2):
@@ -15,8 +15,10 @@ def makeSquare8(p1, p2, incDom=False):
         for g2 in gametes1:
             data[count].append(formatS(g1[0]+g2[0])+formatS(g1[1]+g2[1])+formatS(g1[2]+g2[2]))
         count+=1
-    colors = setColors(data, incDom)
-    text = analyzeData(data, incDom)
+    phenprobs = prob(p1,p2)
+    print phenprobs
+    colors = setColors(data)
+    #text = analyzeData(data)
     table = plt.table(
         cellText=data,
         cellColours=colors,
@@ -28,8 +30,38 @@ def makeSquare8(p1, p2, incDom=False):
         colLoc='center',
         loc='center',bbox=None)
     table.scale(1, 2)
+    plt.axis('off')
     plt.show()
-    print text
+    plt.savefig('image.png',dpi=750)
+
+def prob(g1,g2):
+    g1a = g1[0:2]
+    g1b = g1[2:4]
+    g1c = g1[4:6]
+    g2a = g2[0:2]
+    g2b = g2[2:4]
+    g2c = g2[4:6]
+    probsa = probOne(g1a,g2a)
+    probsb = probOne(g1b,g2b)
+    probsc = probOne(g1c,g2c)
+    phenprobs = {}
+    phenprobs['222'] = probsa['2']*probsb['2']*probsc['2']
+    phenprobs['220'] = probsa['2']*probsb['2']*probsc['0']
+    phenprobs['202'] = probsa['2']*probsb['0']*probsc['2']
+    phenprobs['022'] = probsa['0']*probsb['2']*probsc['2']
+    phenprobs['200'] = probsa['2']*probsb['0']*probsc['0']
+    phenprobs['020'] = probsa['0']*probsb['2']*probsc['0']
+    phenprobs['002'] = probsa['0']*probsb['0']*probsc['2']
+    phenprobs['000'] = probsa['0']*probsb['0']*probsc['0']
+    return phenprobs
+    
+def probOne(g1, g2):
+    phenprobs = {}
+    pdom1 = sum(1 for c in g1 if c.isupper())/2.0
+    pdom2 = sum(1 for c in g2 if c.isupper())/2.0
+    phenprobs['2']=pdom1*pdom2 + pdom1*(1-pdom2) + pdom2*(1-pdom1)
+    phenprobs['0']=(1-pdom1)*(1-pdom2)
+    return phenprobs
 
 def formatS(string):
     if string[0]<=string[1]:
@@ -37,7 +69,7 @@ def formatS(string):
     else:
         return string[1]+string[0]
 
-def setColors(data, incDom):
+def setColors(data):
     colors = [[],[],[],[],[],[],[],[]]
     j = 0
     c= [0,0,0]
@@ -52,10 +84,7 @@ def setColors(data, incDom):
                     elif box[0+2*i:2+2*i].islower():
                         c[i] = 1
                     else: 
-                        if incDom:
-                            c[i] = 0.7
-                        else:
-                            c[i] = 0.5
+                        c[i] = 0.5
                 if c[0]==0.5 and c[1]==0.5 and c[2]==0.5:
                     colors[j].append((.6,.6,.6))
                 else:
@@ -63,7 +92,7 @@ def setColors(data, incDom):
         j+=1
     return colors
 
-def analyzeData(data, incDom):
+def analyzeData(data):
     text = [['']*8]*8
     for i in range(0,8):
         for j in range(1,9):
@@ -73,8 +102,5 @@ def analyzeData(data, incDom):
                 elif data[i][j][(0+2*k):(2+2*k)].islower():
                     text[i][j-1]+="Trait " + str(k+1) + ": Homozygous recessive. Recessive phenotype."
                 else:
-                    if incDom:
-                        text[i][j-1]+="Trait " + str(k+1) + ": Heterozygous. Intermediate phenotype."
-                    else:
-                        text[i][j-1]+="Trait " + str(k+1) + ": Heterozygous. Dominant phenotype."
+                    text[i][j-1]+="Trait " + str(k+1) + ": Heterozygous. Dominant phenotype."
     return text

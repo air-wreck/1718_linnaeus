@@ -1,0 +1,30 @@
+.punnett-page {
+  height: calc(100% - 51px);
+  width: 100%;
+}
+
+.punnett-page h1 {
+  font-family: "Rubik";
+  color: #78bc12;
+  font-size: 500%;
+  margin: 0px;
+}
+
+.punnett-page h2 {
+  font-family: 'Courgette', cursive;
+  color: #78bc12;
+  font-size:150%;
+  margin: 5px;
+}
+
+.subtitle-text {
+  left: 5%;
+  top: 10%;
+  position: absolute;
+}
+
+.caption1 {
+  left: 5%;
+  top: 20%;
+  position: absolute;
+}

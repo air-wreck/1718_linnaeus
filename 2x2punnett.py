@@ -14,8 +14,9 @@ def makeSquare2(p1, p2, incDom=False):
             for j in p1:
                 data[count].append(formatS(j+i))
             count+=1
-        text = analyzeData(data, incDom)
-        print text
+        phenprobs = prob(p1,p2,incDom)
+        print phenprobs
+        #text = analyzeData(data, incDom)
         colors = setColors(data, incDom)
         table = plt.table(
             cellText=data,
@@ -28,8 +29,22 @@ def makeSquare2(p1, p2, incDom=False):
             colLoc='center',
             loc='center',bbox=None)
         table.scale(1, 6)
+        plt.axis('off')
         plt.show()
-
+        plt.savefig('image.png',dpi=750)
+        
+def prob(g1, g2, incDom):
+    phenprobs = {}
+    pdom1 = sum(1 for c in g1 if c.isupper())/2.0
+    pdom2 = sum(1 for c in g2 if c.isupper())/2.0
+    phenprobs['2']=pdom1*pdom2
+    if incDom:
+        phenprobs['1']=pdom1*(1-pdom2) + pdom2*(1-pdom1)
+    else:
+        phenprobs['2']+= pdom1*(1-pdom2) + pdom2*(1-pdom1)
+    phenprobs['0']=(1-pdom1)*(1-pdom2)
+    return phenprobs
+    
 def formatS(string):
     if string[0]<=string[1]:
         return string[0]+string[1]
