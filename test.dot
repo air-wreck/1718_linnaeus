@@ -1,0 +1,28 @@
+// test
+graph {
+	graph [splines=ortho]
+	node [fixedsize=true fontname=helvetica style=filled]
+	dad [fillcolor="#ffbbaa" shape=square]
+	mom [fillcolor="#ffffff" shape=circle]
+	0 [shape=point style=invis width=0]
+	{rank=same; dad -- 0 -- mom;}
+	1 [shape=point style=invis width=0]
+	2 [shape=point style=invis width=0]
+	3 [shape=point style=invis width=0]
+	4 [shape=point style=invis width=0]
+	5 [shape=point style=invis width=0]
+	{rank=same; 1 -- 2 -- 3 -- 4 -- 5;}
+	0 -- 3 [constraint=true]
+	son1 [fillcolor="#ffddd4" shape=square]
+	son2 [fillcolor="#ffc1b2" shape=square]
+	son3 [fillcolor="#ff9980" shape=square]
+	son4 [fillcolor="#ff7857" shape=square]
+	dau1 [fillcolor="#ff8f74" shape=circle]
+	dau2 [fillcolor="#fff9f8" shape=circle]
+	1 -- son1 [constraint=true]
+	1 -- son2 [constraint=true]
+	2 -- son3 [constraint=true]
+	4 -- son4 [constraint=true]
+	5 -- dau1 [constraint=true]
+	5 -- dau2 [constraint=true]
+}
