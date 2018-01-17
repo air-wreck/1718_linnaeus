@@ -14,13 +14,16 @@ print ('\tEnter \'4\' for 16x16')
 while True:
     command = raw_input('Please enter a square size: ')
     if command == '1':
+        punnett2x2.makeSquare2()
         break
     elif command == '2':
+        punnett4x4.makeSquare4()
         break
     elif command == '3':
+        punnett8x8.makeSquare8()
         break
     elif command == '4':
+        punnett16x16.makeSquare16()
         break
     else:
         print ('Command not recognized. Please try again.')
-print "blegh"

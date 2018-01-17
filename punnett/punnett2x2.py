@@ -1,16 +1,15 @@
 import matplotlib.pyplot as plt
 
 def makeSquare2():
-    p1 = raw_input("Please enter the alleles of the father.")
-    p2 = raw_input("Please enter the alleles of the mother.")
+    p1 = raw_input("Please enter the alleles of the father: ")
+    p2 = raw_input("Please enter the alleles of the mother: ")
     global inherit
-    inherit = inheritlist(raw_input("Please enter autd for autosomal, inc for incomplete dominance, cod for codominance, and xl for x-linked."))
+    inherit = inheritlist(raw_input("Please enter aut for autosomal, inc for incomplete dominance, cod for codominance, and xl for x-linked: "))
     go = test(p1, p2)
     if go == 1:
         print "You inputted more than two alleles for each parent. Please try again."
     elif go == 2:
         print "You used more than one letter to represent alleles. Please try again."
-    go = test(p1, p2)
     else:
         data=[[],[]]
         count = 0
@@ -21,7 +20,6 @@ def makeSquare2():
             count+=1
         phenprobs = prob(p1,p2)
         print phenprobs
-        #text = analyzeData(data, incDom)
         colors = setColors(data)
         table = plt.table(
             cellText=data,
@@ -58,7 +56,7 @@ def inheritlist(x):
             'inc': "Incomplete Dominance",
             'cod': "Codominance",
             'xl': 'X-Linked',
-            }.get(x, "defaulted to Autosomal Dominant")
+            }.get(x, "Defaulted to Autosomal Dominant")
 
 def formatS(string):
     if string[0]<=string[1]:
