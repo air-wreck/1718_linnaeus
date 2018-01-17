@@ -19,7 +19,6 @@ def makeSquare16(p1, p2):
     phenprobs = prob(p1,p2)
     print phenprobs
     colors = setColors(data)
-    #text = analyzeData(data)
     table = plt.table(
         cellText=data,
         cellColours=colors,
@@ -33,7 +32,6 @@ def makeSquare16(p1, p2):
     plt.axis('off')
     plt.show()
     plt.savefig('image.png',dpi=750)
-    #print text
 
 def prob(g1,g2):
     g1a = g1[0:2]
@@ -112,16 +110,3 @@ def setColors(data):
                     colors[j].append(tuple(c))
         j+=1
     return colors
-
-'''def analyzeData(data):
-    text = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']]
-    for i in range(0,8):
-        for j in range(1,9):
-            for k in range(0,3):
-                if data[i][j][(0+2*k):(2+2*k)].isupper():
-                    text[i][j-1]+="Trait " + str(k+1) + ": Homozygous dominant. Dominant phenotype." 
-                elif data[i][j][(0+2*k):(2+2*k)].islower():
-                    text[i][j-1]+="Trait " + str(k+1) + ": Homozygous recessive. Recessive phenotype."
-                else:
-                    text[i][j-1]+="Trait " + str(k+1) + ": Heterozygous. Dominant phenotype."
-    return text'''
