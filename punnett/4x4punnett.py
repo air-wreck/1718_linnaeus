@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
 
-def makeSquare4(p1, p2):
+def makeSquare4():
+    p1 = raw_input("Please enter the alleles of the father.")
+    p2 = raw_input("Please enter the alleles of the mother.")
+    global inherit
+    inherit = inheritlist(raw_input("Please enter autd for autosomal, inc for incomplete dominance, cod for codominance, and xl for x-linked."))
     go = test(p1, p2)
     if go == 1:
         print "You inputted more than four alleles for each parent. Please try again."
@@ -37,9 +41,18 @@ def makeSquare4(p1, p2):
             colLoc='center',
             loc='center',bbox=None)
         table.scale(1, 4)
+        plt.title(inheritance)
         plt.axis('off')
         plt.show()
         plt.savefig('image.png',dpi=750)
+        
+def inheritlist(x):
+        return {
+            'autd': "Autosomal Dominance",
+            'inc': "Incomplete Dominance",
+            'cod': "Codominance",
+            'xl': 'X-Linked',
+            }.get(x, "defaulted to Autosomal Dominant")
 
 def prob(g1,g2):
     g1a = g1[0:2]
