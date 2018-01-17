@@ -1,11 +1,16 @@
 import matplotlib.pyplot as plt
 
-def makeSquare2(p1, p2, incDom=False):
+def makeSquare2():
+    p1 = raw_input("Please enter the alleles of the father.")
+    p2 = raw_input("Please enter the alleles of the mother.")
+    global inherit
+    inherit = inheritlist(raw_input("Please enter autd for autosomal, inc for incomplete dominance, cod for codominance, and xl for x-linked."))
     go = test(p1, p2)
     if go == 1:
         print "You inputted more than two alleles for each parent. Please try again."
     elif go == 2:
         print "You used more than one letter to represent alleles. Please try again."
+    go = test(p1, p2)
     else:
         data=[[],[]]
         count = 0
@@ -14,10 +19,10 @@ def makeSquare2(p1, p2, incDom=False):
             for j in p1:
                 data[count].append(formatS(j+i))
             count+=1
-        phenprobs = prob(p1,p2,incDom)
+        phenprobs = prob(p1,p2)
         print phenprobs
         #text = analyzeData(data, incDom)
-        colors = setColors(data, incDom)
+        colors = setColors(data)
         table = plt.table(
             cellText=data,
             cellColours=colors,
@@ -29,11 +34,12 @@ def makeSquare2(p1, p2, incDom=False):
             colLoc='center',
             loc='center',bbox=None)
         table.scale(1, 6)
+        plt.title(inherit)
         plt.axis('off')
         plt.show()
         plt.savefig('image.png',dpi=750)
         
-def prob(g1, g2, incDom):
+def prob(g1, g2):
     phenprobs = {}
     pdom1 = sum(1 for c in g1 if c.isupper())/2.0
     pdom2 = sum(1 for c in g2 if c.isupper())/2.0
@@ -45,13 +51,22 @@ def prob(g1, g2, incDom):
     phenprobs['0']=(1-pdom1)*(1-pdom2)
     return phenprobs
     
+        
+def inheritlist(x):
+        return {
+            'autd': "Autosomal Dominance",
+            'inc': "Incomplete Dominance",
+            'cod': "Codominance",
+            'xl': 'X-Linked',
+            }.get(x, "defaulted to Autosomal Dominant")
+
 def formatS(string):
     if string[0]<=string[1]:
         return string[0]+string[1]
     else:
         return string[1]+string[0]
 
-def setColors(data, incDom):
+def setColors(data):
     colors = [[],[]]
     i = 0
     for row in data:
@@ -61,7 +76,7 @@ def setColors(data, incDom):
             elif box.isupper():
                 colors[i].append((1,.25,.35))
             elif box[0].upper() in box:
-                if incDom:
+                if inherit == "inc":
                     colors[i].append((1,.35,.65))
                 else:
                     colors[i].append((1,.25,.35))
@@ -70,7 +85,7 @@ def setColors(data, incDom):
         i+=1
     return colors 
 
-def analyzeData(data, incDom):
+def analyzeData(data):
     text = [[],[]]
     for i in range(0,2):
         for j in range(1,3):
@@ -79,7 +94,7 @@ def analyzeData(data, incDom):
             elif data[i][j].islower():
                 text[i].append("Homozygous recessive. Recessive phenotype")
             else:
-                if incDom:
+                if inherit == "inc":
                     text[i].append("Heterozygous. Intermediate phenotype.")
                 else:
                     text[i].append("Heterozygous. Dominant phenotype.")
