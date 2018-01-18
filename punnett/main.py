@@ -1,4 +1,3 @@
-import os.path
 import punnett2x2
 import punnett4x4
 import punnett8x8
@@ -8,16 +7,18 @@ def probTable(probs):
     print '\n\nOffspring Phenotype Probabilities\n'
     header = '\t'
     for i in range(1,(int(command)+1)):
-        header+='%-20s' %('Trait: '+str(i))
+        header+='%-30s' %('Trait '+str(i) + ':')
     header+='Probability:'
     print header
     for key in reversed(sorted(probs.keys())):
         line = '\t'
         for x in key:
             if x=='2':
-                line+='%-20s' %'Dominant'
+                line+='%-30s' %'Dominant'
+            elif x=='1':
+                line+='%-30s' %'Intermediate/Codominant'
             elif x=='0':
-                line+='%-20s' %'Recessive'
+                line+='%-30s' %'Recessive'
         line+='%9s' %(str(round(probs[key]*100,4))+'%')
         print line
     
