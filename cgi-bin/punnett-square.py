@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys, os, cgitb
+'''
 # ideally, the paths will be changed for the final project so that this is not
 # necessary to do
 sys.path.insert(1, os.path.join(sys.path[0], '../punnett'))
@@ -16,9 +17,18 @@ psquare.color(1, 1, c1='#a4c4fc')
 psquare.color(2, 2, c1='#fcaba4')
 psquare.color(1, 2, c1='#fcaba4', c2='#a4c4fc')
 psquare.color(2, 1, c1='#fcaba4', c2='#a4c4fc')
+'''
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 2*np.pi)
+y = np.cos(x)
+plt.plot(x, y)
+plt.savefig('colortable.png')
 
 # print the image to stdout
 cgitb.enable()
 print 'Content-Type: image/png'
 print ''
-print psquare.to_png()
+# print psquare.to_png()
+print file('colortable.png', 'r').read()
