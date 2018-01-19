@@ -63,6 +63,7 @@ def plot(f, m):
     table.color(1, 2, c1='#fcaba4', c2='#a4c4fc')
     table.color(2, 1, c1='#fcaba4', c2='#a4c4fc', c3='#ffe987')
     table.color(2, 2, c1='#fcaba4', c2='#a4c4fc', c3='#ffe987', c4='#cdf2c6')
+    table.title('a Punnett square')
     table.show()
 
 print 'Plotting results...'
