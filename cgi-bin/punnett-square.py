@@ -18,6 +18,7 @@ psquare.color(1, 2, c1='#fcaba4', c2='#a4c4fc')
 psquare.color(2, 1, c1='#fcaba4', c2='#a4c4fc')
 
 # print the image to stdout
+cgitb.enable()
 print 'Content-Type: image/png'
 print ''
 print psquare.to_png()
