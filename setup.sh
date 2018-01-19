@@ -1,8 +1,12 @@
-#!/usr/bin/sh
+#!/bin/bash
 
 # setup the repository for web hosting
 # meant for Unix systems
 # if this is run in the web server, it might need to be run as superuser
+# you also might need to mark it as executable first:
+# 
+# sudo chmod +x setup.sh
+# sudo ./setup.sh
 
 # create a dummy image buffer and set the permissions
 touch cgi-bin/colortable.png
