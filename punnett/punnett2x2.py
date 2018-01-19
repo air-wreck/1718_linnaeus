@@ -29,11 +29,16 @@ def makeSquare2():
         count+=1
     
     if cod:
+        data.insert(0,['',p2[0],p2[1]])
         table = ct.colortbl(data)
-        for i in (0,1):
+        for i in (1,2):
             for j in (1,2):
                 if str(data[i][j])[0] != str(data[i][j])[1]:
-                    table.color(i, j, c1='#ff0000', c2='#ffffff')
+                    table.color(i, j, c1='#ffffff', c2='#ff4059')
+                elif data[i][j].isupper():
+                    table.color(i, j, '#ff4059')
+                else:
+                    table.color(i, j, '#ffffff')
         phenprobs = prob(p1,p2)
         table.show()
     else:
@@ -84,7 +89,7 @@ def inheritlist(x):
         inc, cod, xl = False, False, False
     
     return {
-        'autd': "Autosomal Dominance",
+        'aut': "Autosomal Dominance",
         'inc': "Incomplete Dominance",
         'cod': "Codominance",
         'xl': 'X-Linked',

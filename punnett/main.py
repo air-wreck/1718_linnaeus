@@ -2,6 +2,7 @@ import punnett2x2
 import punnett4x4
 import punnett8x8
 import punnett16x16
+import matplotlib.pyplot as plt
 
 def probTable(probs):
     print '\n\nOffspring Phenotype Probabilities\n'
