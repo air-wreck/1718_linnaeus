@@ -4,3 +4,6 @@
 # ignore graphviz intermediate and final files
 *.dot
 *.pdf
+
+# ignore images
+*.png
