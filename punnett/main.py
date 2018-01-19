@@ -4,21 +4,38 @@ import punnett8x8
 import punnett16x16
 import matplotlib.pyplot as plt
 
+xl = False
+
 def probTable(probs):
     print '\n\nOffspring Phenotype Probabilities\n'
     header = '\t'
+    global xl
+    if xl:
+        header+='%-30s' %'Gender'
     for i in range(1,(int(command)+1)):
         header+='%-30s' %('Trait '+str(i) + ':')
     header+='Probability:'
     print header
     for key in reversed(sorted(probs.keys())):
         line = '\t'
-        for x in key:
-            if x=='2':
+        if not xl:
+            for x in key:
+                if x=='2':
+                    line+='%-30s' %'Dominant'
+                elif x=='1':
+                    line+='%-30s' %'Intermediate/Codominant'
+                elif x=='0':
+                    line+='%-30s' %'Recessive'
+        else:
+            if key[0]=='F':
+                line+='%-30s' %'Female'
+            else:
+                line+='%-30s' %'Male'
+            if key[1]=='2':
                 line+='%-30s' %'Dominant'
-            elif x=='1':
-                line+='%-30s' %'Intermediate/Codominant'
-            elif x=='0':
+            elif key[1]=='1':
+                line+='%-30s' %'Carrier'
+            elif key[1]=='0':
                 line+='%-30s' %'Recessive'
         line+='%9s' %(str(round(probs[key]*100,4))+'%')
         print line
@@ -37,7 +54,9 @@ while make:
     while True:
         command = raw_input('Please enter a square size: ')
         if command == '1':
-            probs= punnett2x2.makeSquare2()
+            probs, xlink= punnett2x2.makeSquare2() 
+            global xl
+            xl = xlink
             probTable(probs)
             break
         elif command == '2':

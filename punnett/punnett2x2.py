@@ -7,14 +7,17 @@ cod = False
 xl = False
 
 def makeSquare2():
-    while True:
-        print 'Please enter \'aut\' for autosomal,', \
+    print 'Please enter \'aut\' for autosomal,', \
         '\'inc\' for incomplete dominance, \'cod\' for codominance, and xl for x-linked.'
-        global inherit
-        inherit = inheritlist(raw_input('(If the input is invalid, autosomal will be used as a default)\n'))
+    global inherit
+    inherit = inheritlist(raw_input('(If the input is invalid, autosomal will be used as a default)\n'))
+    while True:
         p1 = raw_input("Please enter the alleles of the father: ")
         p2 = raw_input("Please enter the alleles of the mother: ")
-        go = test(p1, p2)
+        if xl:
+            go = xltest(p1, p2)
+        else:
+            go = test(p1,p2)
         if go == '':
             break
         else:
@@ -60,20 +63,28 @@ def makeSquare2():
         plt.show()
         
     #plt.savefig('image.png',dpi=750)
-    return phenprobs
+    return phenprobs, xl
         
 def prob(g1, g2):
     phenprobs = {}
-    pdom1 = sum(1 for c in g1 if c.isupper())/2.0
-    pdom2 = sum(1 for c in g2 if c.isupper())/2.0
-    phenprobs['2']=pdom1*pdom2
-    if inc or cod:
-        phenprobs['1']=pdom1*(1-pdom2) + pdom2*(1-pdom1)
-    else:
-        phenprobs['2']+= pdom1*(1-pdom2) + pdom2*(1-pdom1)
-    phenprobs['0']=(1-pdom1)*(1-pdom2)
+    if not xl:
+        pdom1 = sum(1 for c in g1 if c.isupper())/2.0
+        pdom2 = sum(1 for c in g2 if c.isupper())/2.0
+        phenprobs['2']=pdom1*pdom2
+        if inc or cod:
+            phenprobs['1']=pdom1*(1-pdom2) + pdom2*(1-pdom1)
+        else:
+            phenprobs['2']+= pdom1*(1-pdom2) + pdom2*(1-pdom1)
+        phenprobs['0']=(1-pdom1)*(1-pdom2)
+    else: 
+        pdom1 = sum(1 for c in g1 if c=='X')/1.0
+        pdom2 = sum(1 for c in g2 if c.isupper())/2.0
+        phenprobs['F2'] = pdom1*pdom2
+        phenprobs['F1'] = pdom1*(1-pdom2) + (1-pdom1)*pdom2
+        phenprobs['F0'] = (1-pdom2)*(1-pdom1)
+        phenprobs['M2'] = pdom2
+        phenprobs['M0'] = (1-pdom2)
     return phenprobs
-    
         
 def inheritlist(x):
     global inc
@@ -96,10 +107,16 @@ def inheritlist(x):
         }.get(x, "Defaulted to Autosomal Dominant")
 
 def formatS(string):
-    if string[0]<=string[1]:
-        return string[0]+string[1]
+    if (not xl) or 'Y' not in string:
+        if string[0]<=string[1]:
+            return string[0]+string[1]
+        else:
+            return string[1]+string[0]
     else:
-        return string[1]+string[0]
+        if string[0]=='Y':
+            return string[1]+string[0]
+        else: 
+            return string[0]+string[1]
 
 def setColors(data):
     colors = [[],[]]
@@ -113,6 +130,11 @@ def setColors(data):
             elif box[0].upper() in box:
                 if inc:
                     colors[i].append((1,.35,.65))
+                elif xl:
+                    if box[0].isupper():
+                        colors[i].append((1,.25,.35))
+                    else:
+                        colors[i].append('w')
                 else:
                     colors[i].append((1,.25,.35))
             else:
@@ -147,3 +169,11 @@ def test(p1, p2):
     if p1[0].upper() != p1[1].upper():
         return '\nPlease use the same letter for both parent genotypes. Try again.'
     return ''
+    
+def xltest(p1,p2):
+    if re.sub('[X,x]','',p1) != 'Y' or re.sub('[X,x]','',p2) != '':
+        return "\nPlease enter appropriate alleles for each parent (Father: X, x, Y; Mother: X, x)."
+    if len(p1)!=2 or len(p2) !=2:
+        return '\nPlease input exactly two alleles for each parent. Try again.'
+    return ''
+    
