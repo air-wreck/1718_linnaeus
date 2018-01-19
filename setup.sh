@@ -11,6 +11,8 @@
 touch cgi-bin/colortable.png
 chmod 777 cgi-bin/colortable.png  # probably not the safest way to do it
 
-# set up hard links for Python to compile correct modules
-ln punnett/allele.py cgi-bin/allele.py
-ln punnett/colortable.py cgi-bin/colortable.py
+# copy the modules that Python needs to compile, since the unprivileged apache
+# user can't compile them from hard links
+rm cgi-bin/*.py
+cp punnett/allele.py cgi-bin/allele.py
+cp punnett/colortable.py cgi-bin/colortable.py

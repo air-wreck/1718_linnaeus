@@ -53,7 +53,7 @@ class colortbl():
         lim1, lim2 = 0.06, 0.02
         if c2 == None:
             # if only one color given, set whole cell to that color
-            # cell.facecolor() will NOT work with CGI scripts for some reason
+            # cell.set_facecolor() will NOT work with CGI scripts
             cell.add_patch(
                 plt.Polygon([[-lim1, lim1], [lim1, lim1], [lim1, -lim1],
                              [-lim1, -lim1]], color=c1)
