@@ -60,15 +60,24 @@
     </div>
   </div>
 
-  <!-- testing the cgi scripts -->
+  <!-- use python cgi to generate and retrieve punnett square image -->
   <script type="text/javascript">
     function load_pun() {
       var pun = document.getElementById('pun-img');
       var father = document.getElementById('father').value;
       var mother = document.getElementById('mother').value;
       var title = document.getElementById('title').value;
-      pun.src = 'cgi-bin/punnett-square?father='+father+'&mother='+mother+
-                '&title='+title;
+      /* let's not crash the server again... */
+      test = RegExp('^[a-zA-Z]{2,8}$');
+      if (father.length == mother.length && father.length % 2 == 0 &&
+          test.test(father) && test.test(mother)) {
+        pun.src = 'cgi-bin/punnett-square?father='+father+'&mother='+mother+
+                  '&title='+title;
+      } else {
+        window.alert('Error: invalid genotypes. Make sure that genotypes are'+
+                     ' the same length and at most eight characters.' +
+                     ' They must be of even length and contain only letters.');
+      }
     }
   </script>
   <div>
