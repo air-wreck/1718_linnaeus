@@ -1,6 +1,16 @@
 import matplotlib.pyplot as plt
+import re
 
-def makeSquare8(p1, p2):
+def makeSquare8():
+    while True:
+        p1 = raw_input("Please enter the alleles of the father: ").strip()
+        p2 = raw_input("Please enter the alleles of the mother: ").strip()
+        go = test(p1, p2)
+        if go == '':
+            break
+        else:
+            print go
+            
     gametes1 = []
     gametes2 = []
     for i in range(2):
@@ -8,6 +18,7 @@ def makeSquare8(p1, p2):
             for k in range(4,6):
                 gametes1.append(p1[i]+p1[j]+p1[k])
                 gametes2.append(p2[i]+p2[j]+p2[k])
+                
     data = [[],[],[],[],[],[],[],[]]
     count = 0
     for g1 in gametes2:
@@ -15,10 +26,11 @@ def makeSquare8(p1, p2):
         for g2 in gametes1:
             data[count].append(formatS(g1[0]+g2[0])+formatS(g1[1]+g2[1])+formatS(g1[2]+g2[2]))
         count+=1
+        
     phenprobs = prob(p1,p2)
-    print phenprobs
     colors = setColors(data)
     #text = analyzeData(data)
+    
     table = plt.table(
         cellText=data,
         cellColours=colors,
@@ -32,7 +44,8 @@ def makeSquare8(p1, p2):
     table.scale(1, 2)
     plt.axis('off')
     plt.show()
-    plt.savefig('image.png',dpi=750)
+    #plt.savefig('image.png',dpi=750)
+    return phenprobs
 
 def prob(g1,g2):
     g1a = g1[0:2]
@@ -45,14 +58,12 @@ def prob(g1,g2):
     probsb = probOne(g1b,g2b)
     probsc = probOne(g1c,g2c)
     phenprobs = {}
-    phenprobs['222'] = probsa['2']*probsb['2']*probsc['2']
-    phenprobs['220'] = probsa['2']*probsb['2']*probsc['0']
-    phenprobs['202'] = probsa['2']*probsb['0']*probsc['2']
-    phenprobs['022'] = probsa['0']*probsb['2']*probsc['2']
-    phenprobs['200'] = probsa['2']*probsb['0']*probsc['0']
-    phenprobs['020'] = probsa['0']*probsb['2']*probsc['0']
-    phenprobs['002'] = probsa['0']*probsb['0']*probsc['2']
-    phenprobs['000'] = probsa['0']*probsb['0']*probsc['0']
+    plist = ('0','2')
+    for a in plist:
+        for b in plist:
+            for c in plist:
+                tag = a+b+c
+                phenprobs[tag] = probsa[a]*probsb[b]*probsc[c]
     return phenprobs
     
 def probOne(g1, g2):
@@ -98,9 +109,41 @@ def analyzeData(data):
         for j in range(1,9):
             for k in range(0,3):
                 if data[i][j][(0+2*k):(2+2*k)].isupper():
-                    text[i][j-1]+="Trait " + str(k+1) + ": Homozygous dominant. Dominant phenotype." 
+                    text[i][j-1]+="Trait " + str(k+1) + ": Homozygous dominant.\n" 
                 elif data[i][j][(0+2*k):(2+2*k)].islower():
-                    text[i][j-1]+="Trait " + str(k+1) + ": Homozygous recessive. Recessive phenotype."
+                    text[i][j-1]+="Trait " + str(k+1) + ": Homozygous recessive.\n"
                 else:
-                    text[i][j-1]+="Trait " + str(k+1) + ": Heterozygous. Dominant phenotype."
+                    text[i][j-1]+="Trait " + str(k+1) + ": Heterozygous.\n"
     return text
+
+def test(p1, p2):
+    p1 = p1.upper()
+    p2 = p2.upper()
+    if re.sub('[^A-Za-x]','',p1) != p1 or re.sub('[^A-Za-x]','',p2) != p2:
+        return '\nPlease input letters for alleles. Try again.'
+    if len(p1)!=6 or len(p2) !=6:
+        return '\nPlease input exactly six alleles for each parent. Try again.'
+    letters = {}
+    for p in (p1, p2):
+        letters2 = {}
+        for letter in p:
+            if letter not in letters2:
+                letters2[letter]=1
+            else:
+                letters2[letter]+=1
+            if letter not in letters:
+                letters[letter]=1
+            else:
+                letters[letter]+=1
+        if len(letters2) != 3:
+            return '\nPlease use three different letters in each parent genotype.Try again.'
+    if len(letters) != 3:
+        return '\nPlease use the same three letters for both parent genotypes. Try again.'
+    for letter in letters:
+        if letters[letter] != 4 or letters2[letter] != 2:
+            return '\nPlease provide two alleles for each gene. Try again.'
+    if p1[0].upper() != p1[1].upper() or p2[0].upper() != p2[1].upper():
+        return '\nPlease group the alleles by gene. Try again.'
+    if p1[2].upper() != p1[3].upper() or p2[2].upper() != p2[3].upper():
+        return '\nPlease group the alleles by gene. Try again.'
+    return ''
