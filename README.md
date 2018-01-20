@@ -3,7 +3,7 @@ CSE 2017-18 final project by Nelson, Karena and Eric
 
 ### introduction
 Biology is the world around us. This is therefore a very powerful tool for the
-world around us.
+world around us. Try it [here](http://54.191.167.183/1718_linnaeus/home.html).
 
 ### getting started
 If you just want to use the service, you can access the website from the link
@@ -26,8 +26,8 @@ Apache server correctly. Edit your `httpd.conf` file with the lines:
 </Directory>
 ```
 
-where <ROOT> stands in for the document root of your server. These changes will
-take effect after you restart Apache.
+where `<ROOT>` stands in for the document root of your server. These changes
+will take effect after you restart Apache.
 
 Additionally, you will need to load the CGI module to run the scripts. This
 will vary according to your system, but it will generally take the form:
