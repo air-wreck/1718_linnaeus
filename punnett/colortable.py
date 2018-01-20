@@ -23,6 +23,8 @@ class colortbl():
         self.fig, self.axes = plt.subplots(ncols=ncols, nrows=nrows-1,
                                            figsize=(ncols*width, nrows*height))
         # may have to adjust margins for super large tables, but not an issue
+        # it seems to work fine with the Ubuntu backend but not macOS
+        # not yet tested on Windows
         self.fig.subplots_adjust(0.05, 0.05, 0.95, 0.95, wspace=0, hspace=0)
         self.fig.subplots_adjust(top=1.0-(1.0/(len(self.data)+1)))
 
