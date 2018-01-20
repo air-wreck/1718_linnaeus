@@ -5,7 +5,8 @@ original seems to not have the ability to set a cell to a half-color.
 
 See the file colortable_example.py for an example of how to use this class.
 '''
-
+import matplotlib
+matplotlib.use('Agg')  # Dr. Agrawal confirmed?
 import matplotlib.pyplot as plt
 import numpy as np
 
