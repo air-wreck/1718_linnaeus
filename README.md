@@ -5,31 +5,46 @@ CSE 2017-18 final project by Nelson, Karena and Eric
 Biology is the world around us. This is therefore a very powerful tool for the
 world around us.
 
+### getting started
+If you just want to use the service, you can access the website from the link
+above. If you want to try and tweak the code for yourself, you will need to get
+more involved. Obviously, you first need to clone this repository over your
+favorite protocol.
+
+If you want to set up the server yourself, you will need to first install the
+dependencies listed at the bottom of this guide. Then, you need to set up your
+Apache server correctly. Edit your `httpd.conf` file with the lines:
+
+```
+<Directory <ROOT>/1718_linnaeus/cgi-bin>
+  Options ExecCGI
+  SetHandler cgi-script
+</Directory>
+<Directory <ROOT>/1718_linnaeus>
+  Options +ExecCGI
+  AddHandler cgi-script .py
+</Directory>
+```
+
+where <ROOT> stands in for the document root of your server. These changes will
+take effect after you restart Apache.
+
+Additionally, you will need to load the CGI module to run the scripts. This
+will vary according to your system, but it will generally take the form:
+
+```
+LoadModule cgi_module <...>
+```
+
+The rest of the setup can be handled automatically by the `setup.sh` script,
+which you may have to run with `sudo`.
+
 ### repository
 This repository is organized into a few different directories. The root
 directory contains all of the `*.html` pages. These pages reference files in
-the `/img` and `/css` directories for the appropriate resources. `/pedigree`
-constains all of the Python scripts for drawing and solving pedigrees, and
-`/punnett` contains all of the scripts for Punnett Squares. These scripts will
-eventually be integrated into the website for functionality. Overall, it looks
-like this:
-
-```
-.
-├── README.md
-├── *.html
-├── css
-│   └── *.css
-├── img
-│   ├── illustrator
-│   │   └── *.ai
-│   └── png
-│       └── *.png
-├── pedigree
-│   └── *.py
-├── punnett
-│   └── *.py
-```
+the `/img`, `/css`, and `/cgi-bin` directories for the appropriate resources.
+`/pedigree` contains all of the Python scripts for drawing and solving
+pedigrees, and `/punnett` contains all of the scripts for Punnett Squares.
 
 ### dependencies
 This software requires the Python packages `matplotlib`, `numpy`, and
@@ -42,3 +57,6 @@ instructions for your specific system here:
 * [numpy](http://www.numpy.org/)
 * [graphviz Python](http://graphviz.readthedocs.io/en/stable/manual.html)
 * [graphviz](https://graphviz.gitlab.io/)
+
+Additionally, the server is currently hosted as an Apache web server, so you
+will need Apache if you want to mirror this.

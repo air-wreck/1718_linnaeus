@@ -23,6 +23,7 @@ class colortbl():
                                            figsize=(ncols*width, nrows*height))
         # may have to adjust margins for super large tables, but not an issue
         self.fig.subplots_adjust(0.05, 0.05, 0.95, 0.95, wspace=0, hspace=0)
+        self.fig.subplots_adjust(top=1.0-(1.0/(len(self.data)+1)))
 
         # set styling
         for ax in self.axes.flatten():
@@ -36,11 +37,10 @@ class colortbl():
             for c, _ in enumerate(self.axes[0]):
                 self.color(0, c, c1=self.header_color)
                 self.add_text(str(data[r][c]), r, c)
-    
+
     def title(self, text):
-        self.fig.subplots_adjust(top=1.0-(1.0/(len(self.data)+1)))
-        self.fig.suptitle(text)   
-    
+        self.fig.suptitle(text)
+
     def add_text(self, text, row, col):
         # in case manual override of text is needed
         self.axes[row][col].text(0.5, 0.5, text,
@@ -53,7 +53,11 @@ class colortbl():
         lim1, lim2 = 0.06, 0.02
         if c2 == None:
             # if only one color given, set whole cell to that color
-            cell.set_facecolor(c1)
+            # cell.set_facecolor() will NOT work with CGI scripts
+            cell.add_patch(
+                plt.Polygon([[-lim1, lim1], [lim1, lim1], [lim1, -lim1],
+                             [-lim1, -lim1]], color=c1)
+            )
         elif c3 == None:
             # if two colors given, split the cell
             cell.add_patch(
@@ -95,3 +99,7 @@ class colortbl():
 
     def show(self):
         plt.show()
+
+    def to_png(self):
+        plt.savefig('colortable.png')
+        return file('colortable.png', 'r').read()

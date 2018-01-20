@@ -1,5 +1,4 @@
 .punnett-page {
-  height: calc(100% - 51px);
   width: 100%;
 }
 
@@ -20,11 +19,9 @@
 .subtitle-text {
   left: 5%;
   top: 10%;
-  position: absolute;
 }
 
 .caption1 {
   left: 5%;
   top: 20%;
-  position: absolute;
 }

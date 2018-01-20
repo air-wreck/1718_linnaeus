@@ -4,3 +4,9 @@
 # ignore graphviz intermediate and final files
 *.dot
 *.pdf
+
+# ignore images
+*.png
+
+# ignore the hard links in the cgi-bin directory
+cgi-bin/*.py
