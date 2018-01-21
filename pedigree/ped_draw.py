@@ -18,12 +18,17 @@ class Draw():
         self.name = name
         self.next_hidden = 0  # next available hidden node ID
         self.nodes = []  # list of currently existing named nodes
+
+        # create the graph and set attributes for pedigree
         self.dot = Graph(comment=name, format='pdf')
         self.dot.graph_attr['splines'] = 'ortho'
         self.dot.node_attr['fontname'] = 'helvetica'
         self.dot.node_attr['fixedsize'] = 'true'
         self.dot.node_attr['style'] = 'filled'
         self.dot.node_attr['height'] = '0.5'
+        self.dot.body.append('\tlabelloc="t";')
+        self.dot.body.append('\tlabel="'+name+'";')
+        self.dot.body.append('\t{rank=max; Colors [shape=box, width=1.0, fillcolor=#ff7756:#ffffff, gradientangle=90];}')
 
 
     #########################
@@ -63,6 +68,8 @@ class Draw():
             self.dot.edge(pair[0], pair[1], constraint=constraint)
 
     def show(self):
+        # render and display self
+        # return generated DOT source for convenience
         self.dot.render(self.name+'.dot', view=True)
         return self.dot.source
 
@@ -74,6 +81,16 @@ class Draw():
     def draw_marriage(self, father, mother, children):
         # accepts two Person objects and draws the marriage between them
         # takes a list of children as arg until i figure out how to do that
+
+        # if unknown, find the probability
+        # reject the probability if invalid
+        for p in [father, mother]+children:
+            if ps.find_prob(p) < 0:
+                print 'err: unable to determine probability for individual %s'\
+                       % p.get()[0]
+                return
+
+        # append these people to our list of nodes
         if father.name not in self.nodes:
             self.indiv(father)
             self.nodes += [father.name]
