@@ -11,19 +11,19 @@ See file ped_draw_example.py for an example of how to use this module
 '''
 
 from graphviz import Graph
-from defs import *
+import ped_solve as ps
 
 class Draw():
-    next_hidden = 0  # next available hidden node ID
-    nodes = []  # list of currently existing named nodes
-
     def __init__(self, name):
         self.name = name
+        self.next_hidden = 0  # next available hidden node ID
+        self.nodes = []  # list of currently existing named nodes
         self.dot = Graph(comment=name, format='pdf')
         self.dot.graph_attr['splines'] = 'ortho'
         self.dot.node_attr['fontname'] = 'helvetica'
         self.dot.node_attr['fixedsize'] = 'true'
         self.dot.node_attr['style'] = 'filled'
+        self.dot.node_attr['height'] = '0.5'
 
 
     #########################
@@ -38,7 +38,7 @@ class Draw():
     def indiv(self, person):
         # define an individual node from a Person
         shape = 'square'
-        if person.sex == Sex.f:
+        if person.sex == ps.Sex.f:
             shape = 'circle'
 
         # shade the node based on infection probability
