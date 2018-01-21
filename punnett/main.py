@@ -11,11 +11,14 @@ import punnett4x4
 import punnett8x8
 import punnett16x16
 import matplotlib.pyplot as plt
+import os
 
+global xl
 xl = False
 
-def help():
-    print 'help'
+def help(): #opens help documentation upon user request
+    os.system('notepad.exe help.txt')
+    return 
     
 def probTable(probs): #prints probability of obtaining certain phenotype
     print '\n\nOffspring Phenotype Probabilities\n'
@@ -53,7 +56,9 @@ def probTable(probs): #prints probability of obtaining certain phenotype
     
 #user interface
 print ('\n\nPunnett Square Creator\n')
-print ('Enter \'help\' at any time for more detailed instructions.')
+print ('Note: For all functions to run properly, Canopy cannot be in interactive mode.')
+print ('Please also ensure that the folder \'punnett\' is selected as the working directory.')
+print ('Enter \'help\' at any time for more detailed instructions/information.')
 print ('\nThis program can support the following square sizes:\n')
 print ('\tEnter \'1\' for 2x2')
 print ('\tEnter \'2\' for 4x4')
@@ -86,16 +91,19 @@ while make:
             break
         elif command.lower() == 'help':
             help()
+            print '\n'
         else:
             print ('Command not recognized. Please try again.') #error checking
             
     while True: #can leave program here
         cont = raw_input('Is this the desired Punnett Square?\n\tEnter \'Y\' for yes\n\tEnter \'N\' for no\n\n\t')
-        if cont == 'Y' or cont == 'y':
+        if cont == 'N' or cont == 'n':
             break
-        elif cont == 'N' or cont == 'n':
+        elif cont == 'Y' or cont == 'y':
             make = False
             break 
+        elif cont.lower() == 'help':
+            help()
         else:
             print ('\nCommand not recognized. Please try again.')
 

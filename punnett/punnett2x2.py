@@ -11,6 +11,7 @@ To use interactively, just type makeSquare2().
 
 import matplotlib.pyplot as plt
 import re
+import os
 import colortable as ct
 
 #value of global variables reflect current mode of inheritance
@@ -22,11 +23,14 @@ def makeSquare2(): #Creates 2x2 Punnett Square;
     global inherit
     inherit = inheritlist(raw_input('Please enter \'aut\' for autosomal,'
         '\'inc\' for incomplete dominance, \'cod\' for codominance, and \'xl\' for x-linked.\n')) #User inputs inheritance format
-    if inherit == "Defaulted to Autosomal Dominant":#error checking if user doesn't enter according to rules
-        while inherit == "Defaulted to Autosomal Dominant":
+    if inherit == "Defaulted to Autosomal Dominant" or inherit == "help":#error checking if user doesn't enter according to rules
+        while inherit == "Defaulted to Autosomal Dominant" or inherit == 'help':
+            if inherit == 'help':
+                os.system('notepad.exe help.txt')
             print "Please try again."
             inherit = inheritlist(raw_input('Please enter \'aut\' for autosomal,'
         '\'inc\' for incomplete dominance, \'cod\' for codominance, and xl for x-linked.\n')) #User inputs inheritance format
+    
     while True:
         p1 = raw_input("Please enter the alleles of the father: ")#enter father alleles
         p2 = raw_input("Please enter the alleles of the mother: ")#enter mother alleles
@@ -36,6 +40,9 @@ def makeSquare2(): #Creates 2x2 Punnett Square;
             go = test(p1,p2)#test for appropriate alleles
         if go == '':
             break #proceeds if input is valid
+        elif p1=='help' or p2=='help':
+            os.system('notepad.exe help.txt')
+            print '\n'
         else:
             print go #prints error message if input is invalid
             
@@ -128,6 +135,7 @@ def inheritlist(x): #dictionary storing names of each type of inheritance
         'inc': "Incomplete Dominance",
         'cod': "Codominance",
         'xl': 'X-Linked',
+        'help': 'help',
         }.get(x, "Defaulted to Autosomal Dominant")
 
 def formatS(string): #edits genotype so that capital allele always precedes lowercase
@@ -191,7 +199,7 @@ def test(p1, p2): #Tests for the proper input of 2x2 inputs
         return '\nPlease input exactly two alleles for each parent. Try again.' #checks if there aren't enough alleles
     if p1[0].upper() != p1[1].upper() or p2[0].upper() != p2[1].upper():
         return '\nPlease use the same letter in each parent genotype.Try again.' #checks if one parent has 2 different letters for one gene
-    if p1[0].upper() != p1[1].upper():
+    if p1.upper() != p2.upper():
         return '\nPlease use the same letter for both parent genotypes. Try again.' #checks if there are different alleles in each parent
     return ''
     
