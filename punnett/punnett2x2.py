@@ -6,11 +6,15 @@ inc = False
 cod = False
 xl = False
 
-def makeSquare2():
-    print 'Please enter \'aut\' for autosomal,', \
-        '\'inc\' for incomplete dominance, \'cod\' for codominance, and xl for x-linked.'
+def makeSquare2(): #Creates 2x2 Punnett Square;
     global inherit
-    inherit = inheritlist(raw_input('(If the input is invalid, autosomal will be used as a default)\n'))
+    inherit = inheritlist(raw_input('Please enter \'aut\' for autosomal,'
+        '\'inc\' for incomplete dominance, \'cod\' for codominance, and \'xl\' for x-linked.\n')) #User inputs inheritance format
+    if inherit == "Defaulted to Autosomal Dominant":#error checking if user doesn't enter according to rules
+        while inherit == "Defaulted to Autosomal Dominant":
+            print "Please try again."
+            inherit = inheritlist(raw_input('Please enter \'aut\' for autosomal,'
+        '\'inc\' for incomplete dominance, \'cod\' for codominance, and xl for x-linked.\n')) #User inputs inheritance format
     while True:
         p1 = raw_input("Please enter the alleles of the father: ")
         p2 = raw_input("Please enter the alleles of the mother: ")
