@@ -3,7 +3,8 @@
 a simple punnett square solver for the 2x2 size
 
 This program can solve a Punnett square for any number of traits with two
-alleles. The output is returned as a punnett square drawn using matplotlib and the chance of inheriting certain traits.
+alleles. The output is returned as a punnett square drawn using matplotlib along 
+with a matrix of probabilities of offspring phenotypes
 
 To use interactively, just type makeSquare2().
 '''
@@ -12,6 +13,7 @@ import matplotlib.pyplot as plt
 import re
 import colortable as ct
 
+#value of global variables reflect current mode of inheritance
 inc = False
 cod = False
 xl = False
@@ -33,14 +35,14 @@ def makeSquare2(): #Creates 2x2 Punnett Square;
         else:
             go = test(p1,p2)#test for appropriate alleles
         if go == '':
-            break
+            break #proceeds if input is valid
         else:
-            print go
+            print go #prints error message if input is invalid
             
     data=[[],[]] #create list of genotypes
     count = 0
     for i in p2:
-        data[count].append(i)#add one gamete from mom
+        data[count].append(i)#add one gamete from mother
         for j in p1:
             data[count].append(formatS(j+i)) #add one gamete from father
         count+=1
@@ -48,16 +50,17 @@ def makeSquare2(): #Creates 2x2 Punnett Square;
     if cod: #prints two colors in one cell if codominant in nature
         data.insert(0,['',p2[0],p2[1]])
         table = ct.colortbl(data)
-        for i in (1,2):
+        for i in (1,2): #parses through offspring cells
             for j in (1,2):
-                if str(data[i][j])[0] != str(data[i][j])[1]:
+                if str(data[i][j])[0] != str(data[i][j])[1]: #if heterozygous
                     table.color(i, j, c1='#ffffff', c2='#ff4059')
-                elif data[i][j].isupper():
+                elif data[i][j].isupper(): #if homozygous dominant
                     table.color(i, j, '#ff4059')
-                else:
+                else: #if homozygous recessive
                     table.color(i, j, '#ffffff')
         phenprobs = prob(p1,p2)
         table.show()
+        
     else: #prints one color per cell based on phenotype
         phenprobs = prob(p1,p2)
         colors = setColors(data)
@@ -82,17 +85,23 @@ def makeSquare2(): #Creates 2x2 Punnett Square;
 def prob(g1, g2): #calculate probability of inheriting specific traits
     phenprobs = {}
     if not xl:
+        #determine frequency of dominant allele in parent genotypes
         pdom1 = sum(1 for c in g1 if c.isupper())/2.0
         pdom2 = sum(1 for c in g2 if c.isupper())/2.0
+        
+        #for offspring, '2' represents dominant phenotype, '1' intermediate, '0' recessive
         phenprobs['2']=pdom1*pdom2
         if inc or cod:
             phenprobs['1']=pdom1*(1-pdom2) + pdom2*(1-pdom1)
         else:
             phenprobs['2']+= pdom1*(1-pdom2) + pdom2*(1-pdom1)
         phenprobs['0']=(1-pdom1)*(1-pdom2)
-    else: 
+        
+    else: #if mode of inheritance is x-linked
         pdom1 = sum(1 for c in g1 if c=='X')/1.0
         pdom2 = sum(1 for c in g2 if c.isupper())/2.0
+        
+        #'F' represents female offspring, 'M' represents male 
         phenprobs['F2'] = pdom1*pdom2
         phenprobs['F1'] = pdom1*(1-pdom2) + (1-pdom1)*pdom2
         phenprobs['F0'] = (1-pdom2)*(1-pdom1)
@@ -104,6 +113,7 @@ def inheritlist(x): #dictionary storing names of each type of inheritance
     global inc
     global cod
     global xl
+    #updates global variable statuses
     if x == 'inc':
         inc = True
     elif x == 'cod':
@@ -112,7 +122,7 @@ def inheritlist(x): #dictionary storing names of each type of inheritance
         xl = True
     else:
         inc, cod, xl = False, False, False
-    
+    #returns appropriate name based on user input
     return {
         'aut': "Autosomal Dominance",
         'inc': "Incomplete Dominance",
@@ -120,43 +130,44 @@ def inheritlist(x): #dictionary storing names of each type of inheritance
         'xl': 'X-Linked',
         }.get(x, "Defaulted to Autosomal Dominant")
 
-def formatS(string): #tests if x-linked inheritance is properly inputted
+def formatS(string): #edits genotype so that capital allele always precedes lowercase
     if (not xl) or 'Y' not in string:
         if string[0]<=string[1]:
             return string[0]+string[1]
         else:
             return string[1]+string[0]
     else:
+        #exception - if x-linked, X allele should precede Y allele
         if string[0]=='Y':
             return string[1]+string[0]
         else: 
             return string[0]+string[1]
 
-def setColors(data): #determines the color of each box
+def setColors(data): #determines the color of each box based on offspring phenotype
     colors = [[],[]]
     i = 0
     for row in data:
         for box in row:
-            if len(box) == 1:
+            if len(box) == 1: #parent alleles - gray
                 colors[i].append('0.45')
-            elif box.isupper():
+            elif box.isupper(): #dominant phenotype - red
                 colors[i].append((1,.25,.35))
             elif box[0].upper() in box:
-                if inc:
+                if inc: #intermediate phenotype - pink
                     colors[i].append((1,.35,.65))
                 elif xl:
-                    if box[0].isupper():
+                    if box[0].isupper(): 
                         colors[i].append((1,.25,.35))
                     else:
                         colors[i].append('w')
-                else:
+                else: 
                     colors[i].append((1,.25,.35))
-            else:
+            else: #recessive phenotype - white
                 colors[i].append('w')
         i+=1
     return colors 
 
-def analyzeData(data): #displays the specific phenotype of each cell
+def analyzeData(data): #displays text for the specific phenotype of each cell
     text = [[],[]]
     for i in range(0,2):
         for j in range(1,3):

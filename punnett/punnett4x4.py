@@ -32,7 +32,7 @@ def makeSquare4():#Creates a 4x4 punnett square and plots it; autosomal only
     count = 0
     for g1 in gametes2: #appends everything together to create genotypes of possible offspring
         data[count].append(g1)
-        for g2 in gametes:
+        for g2 in gametes1:
             data[count].append(formatS(g1[0]+g2[0])+formatS(g1[1]+g2[1])) 
         count+=1
         
@@ -58,6 +58,7 @@ def makeSquare4():#Creates a 4x4 punnett square and plots it; autosomal only
     return phenprobs
         
 def prob(g1,g2): #calculates probability of each theoretical phenotype
+    #splits parent genotypes up by trait
     g1a = g1[0:2]
     g1b = g1[2:4]
     g2a = g2[0:2]
@@ -74,13 +75,16 @@ def prob(g1,g2): #calculates probability of each theoretical phenotype
 
 def probOne(g1, g2): #calculates 2x2 probability 
     phenprobs = {}
+    #determines frequency of dominant allele 
     pdom1 = sum(1 for c in g1 if c.isupper())/2.0
     pdom2 = sum(1 for c in g2 if c.isupper())/2.0
+    #'2' represents dominant phenotype in offspring, '0' recessive
     phenprobs['2']=pdom1*pdom2 +pdom1*(1-pdom2) + pdom2*(1-pdom1)
     phenprobs['0']=(1-pdom1)*(1-pdom2)
     return phenprobs
 
 def formatS(string): #formats genotypes properly in each individual cell
+    #uppercase letter should precede lowercase letter
     if string[0]<=string[1]:
         return string[0]+string[1]
     else:
@@ -91,17 +95,17 @@ def setColors(data): #colors each cell depending on phenotype
     i = 0
     for row in data:
         for box in row:
-            if len(box) == 2:
+            if len(box) == 2: #parent alleles - gray
                 colors[i].append('0.45')
-            elif box.isupper():
+            elif box.isupper(): #both dominant - magenta
                 colors[i].append('m')
             elif (box[0].upper() in box) and (box[2].upper() in box):
                 colors[i].append('m')
-            elif box[0].upper() in box:
-                colors[i].append((1,.35,.65))
-            elif box[2].upper() in box:
+            elif box[0].upper() in box: #first trait dominant - pink
+                colors[i].append((1,.35,.65)) 
+            elif box[2].upper() in box: #second trait dominant - blue
                 colors[i].append('c')
-            else:
+            else: #both recessive - white
                 colors[i].append('w')
         i+=1
     return colors

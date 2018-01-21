@@ -58,6 +58,7 @@ def makeSquare8():#Creates a 8x8 punnett square and plots it; autosomal only
     return phenprobs
 
 def prob(g1,g2):#calculates probability of each theoretical phenotype
+    #splits parent genotypes up by trait
     g1a = g1[0:2]
     g1b = g1[2:4]
     g1c = g1[4:6]
@@ -78,13 +79,16 @@ def prob(g1,g2):#calculates probability of each theoretical phenotype
     
 def probOne(g1, g2):#2x2 individual probability calculation based on each genotype
     phenprobs = {}
+    #determines frequency of dominant allele 
     pdom1 = sum(1 for c in g1 if c.isupper())/2.0
     pdom2 = sum(1 for c in g2 if c.isupper())/2.0
+    #'2' represents dominant phenotype in offspring, '0' recessive
     phenprobs['2']=pdom1*pdom2 + pdom1*(1-pdom2) + pdom2*(1-pdom1)
     phenprobs['0']=(1-pdom1)*(1-pdom2)
     return phenprobs
 
 def formatS(string): #formats the genotypes
+    #uppercase letter should precede lowercase letter
     if string[0]<=string[1]:
         return string[0]+string[1]
     else:
@@ -96,10 +100,10 @@ def setColors(data): #gives each individual cell a color
     c= [0,0,0]
     for row in data:
         for box in row:
-            if len(box) == 3:
+            if len(box) == 3: #parent alleles - gray
                 colors[j].append('0.45')
             else:
-                for i in range(0,3):
+                for i in range(0,3): #each trait is assigned a channel in RGB
                     if box[0+2*i:2+2*i].isupper():
                         c[i] = 0.5
                     elif box[0+2*i:2+2*i].islower():

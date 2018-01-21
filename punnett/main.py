@@ -14,6 +14,9 @@ import matplotlib.pyplot as plt
 
 xl = False
 
+def help():
+    print 'help'
+    
 def probTable(probs): #prints probability of obtaining certain phenotype
     print '\n\nOffspring Phenotype Probabilities\n'
     header = '\t'
@@ -47,9 +50,11 @@ def probTable(probs): #prints probability of obtaining certain phenotype
                 line+='%-30s' %'Recessive'
         line+='%9s' %(str(round(probs[key]*100,4))+'%')
         print line
-    #user interface
+    
+#user interface
 print ('\n\nPunnett Square Creator\n')
-print ('This program can support the following square sizes:\n')
+print ('Enter \'help\' at any time for more detailed instructions.')
+print ('\nThis program can support the following square sizes:\n')
 print ('\tEnter \'1\' for 2x2')
 print ('\tEnter \'2\' for 4x4')
 print ('\tEnter \'3\' for 8x8')
@@ -60,7 +65,7 @@ make = True
 
 while make:
     while True:
-        command = raw_input('Please enter a square size: ') #input size of punnett square
+        command = raw_input('Please enter a square size: ').strip() #input size of punnett square
         if command == '1':
             probs, xlink= punnett2x2.makeSquare2() 
             global xl
@@ -79,6 +84,8 @@ while make:
             probs= punnett16x16.makeSquare16()
             probTable(probs)
             break
+        elif command.lower() == 'help':
+            help()
         else:
             print ('Command not recognized. Please try again.') #error checking
             
