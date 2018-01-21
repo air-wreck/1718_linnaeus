@@ -1,3 +1,11 @@
+''' main.py
+
+The main program for Linnaeus's punnett square functionality.
+
+This program calls upon the other programs and is able to create Punnett squares for each size.
+To use interactively, just run the program.
+'''
+#import other programs
 import punnett2x2
 import punnett4x4
 import punnett8x8
@@ -6,17 +14,17 @@ import matplotlib.pyplot as plt
 
 xl = False
 
-def probTable(probs):
+def probTable(probs): #prints probability of obtaining certain phenotype
     print '\n\nOffspring Phenotype Probabilities\n'
     header = '\t'
     global xl
-    if xl:
+    if xl: #print separate cols based on the sex of the individual
         header+='%-30s' %'Gender'
     for i in range(1,(int(command)+1)):
         header+='%-30s' %('Trait '+str(i) + ':')
     header+='Probability:'
     print header
-    for key in reversed(sorted(probs.keys())):
+    for key in reversed(sorted(probs.keys())): #depending on inheritance type, display different results
         line = '\t'
         if not xl:
             for x in key:
@@ -27,7 +35,7 @@ def probTable(probs):
                 elif x=='0':
                     line+='%-30s' %'Recessive'
         else:
-            if key[0]=='F':
+            if key[0]=='F': 
                 line+='%-30s' %'Female'
             else:
                 line+='%-30s' %'Male'
@@ -39,7 +47,7 @@ def probTable(probs):
                 line+='%-30s' %'Recessive'
         line+='%9s' %(str(round(probs[key]*100,4))+'%')
         print line
-    
+    #user interface
 print ('\n\nPunnett Square Creator\n')
 print ('This program can support the following square sizes:\n')
 print ('\tEnter \'1\' for 2x2')
@@ -52,7 +60,7 @@ make = True
 
 while make:
     while True:
-        command = raw_input('Please enter a square size: ')
+        command = raw_input('Please enter a square size: ') #input size of punnett square
         if command == '1':
             probs, xlink= punnett2x2.makeSquare2() 
             global xl
@@ -72,10 +80,10 @@ while make:
             probTable(probs)
             break
         else:
-            print ('Command not recognized. Please try again.')
+            print ('Command not recognized. Please try again.') #error checking
             
-    while True:
-        cont = raw_input('Create another Punnett square?\n\tEnter \'Y\' for yes\n\tEnter \'N\' for no\n\n\t')
+    while True: #can leave program here
+        cont = raw_input('Is this the desired Punnett Square?\n\tEnter \'Y\' for yes\n\tEnter \'N\' for no\n\n\t')
         if cont == 'Y' or cont == 'y':
             break
         elif cont == 'N' or cont == 'n':

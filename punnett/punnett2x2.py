@@ -1,3 +1,13 @@
+''' punnett2x2.py
+
+a simple punnett square solver for the 2x2 size
+
+This program can solve a Punnett square for any number of traits with two
+alleles. The output is returned as a punnett square drawn using matplotlib and the chance of inheriting certain traits.
+
+To use interactively, just type makeSquare2().
+'''
+
 import matplotlib.pyplot as plt
 import re
 import colortable as ct
@@ -6,32 +16,36 @@ inc = False
 cod = False
 xl = False
 
-def makeSquare2():
-    print 'Please enter \'aut\' for autosomal,', \
-        '\'inc\' for incomplete dominance, \'cod\' for codominance, and xl for x-linked.'
+def makeSquare2(): #Creates 2x2 Punnett Square;
     global inherit
-    inherit = inheritlist(raw_input('(If the input is invalid, autosomal will be used as a default)\n'))
+    inherit = inheritlist(raw_input('Please enter \'aut\' for autosomal,'
+        '\'inc\' for incomplete dominance, \'cod\' for codominance, and \'xl\' for x-linked.\n')) #User inputs inheritance format
+    if inherit == "Defaulted to Autosomal Dominant":#error checking if user doesn't enter according to rules
+        while inherit == "Defaulted to Autosomal Dominant":
+            print "Please try again."
+            inherit = inheritlist(raw_input('Please enter \'aut\' for autosomal,'
+        '\'inc\' for incomplete dominance, \'cod\' for codominance, and xl for x-linked.\n')) #User inputs inheritance format
     while True:
-        p1 = raw_input("Please enter the alleles of the father: ")
-        p2 = raw_input("Please enter the alleles of the mother: ")
+        p1 = raw_input("Please enter the alleles of the father: ")#enter father alleles
+        p2 = raw_input("Please enter the alleles of the mother: ")#enter mother alleles
         if xl:
-            go = xltest(p1, p2)
+            go = xltest(p1, p2) #test for appropriate alleles
         else:
-            go = test(p1,p2)
+            go = test(p1,p2)#test for appropriate alleles
         if go == '':
             break
         else:
             print go
             
-    data=[[],[]]
+    data=[[],[]] #create list of genotypes
     count = 0
     for i in p2:
-        data[count].append(i)
+        data[count].append(i)#add one gamete from mom
         for j in p1:
-            data[count].append(formatS(j+i))
+            data[count].append(formatS(j+i)) #add one gamete from father
         count+=1
     
-    if cod:
+    if cod: #prints two colors in one cell if codominant in nature
         data.insert(0,['',p2[0],p2[1]])
         table = ct.colortbl(data)
         for i in (1,2):
@@ -44,10 +58,10 @@ def makeSquare2():
                     table.color(i, j, '#ffffff')
         phenprobs = prob(p1,p2)
         table.show()
-    else:
+    else: #prints one color per cell based on phenotype
         phenprobs = prob(p1,p2)
         colors = setColors(data)
-        table = plt.table(
+        table = plt.table( #initialize table
             cellText=data,
             cellColours=colors,
             cellLoc='center',
@@ -58,14 +72,14 @@ def makeSquare2():
             colLoc='center',
             loc='center',bbox=None)
         table.scale(1, 6)
-        plt.title(inherit)
+        plt.title(inherit) 
         plt.axis('off')
-        plt.show()
+        plt.show() #show table
         
     #plt.savefig('image.png',dpi=750)
     return phenprobs, xl
         
-def prob(g1, g2):
+def prob(g1, g2): #calculate probability of inheriting specific traits
     phenprobs = {}
     if not xl:
         pdom1 = sum(1 for c in g1 if c.isupper())/2.0
@@ -86,7 +100,7 @@ def prob(g1, g2):
         phenprobs['M0'] = (1-pdom2)
     return phenprobs
         
-def inheritlist(x):
+def inheritlist(x): #dictionary storing names of each type of inheritance
     global inc
     global cod
     global xl
@@ -106,7 +120,7 @@ def inheritlist(x):
         'xl': 'X-Linked',
         }.get(x, "Defaulted to Autosomal Dominant")
 
-def formatS(string):
+def formatS(string): #tests if x-linked inheritance is properly inputted
     if (not xl) or 'Y' not in string:
         if string[0]<=string[1]:
             return string[0]+string[1]
@@ -118,7 +132,7 @@ def formatS(string):
         else: 
             return string[0]+string[1]
 
-def setColors(data):
+def setColors(data): #determines the color of each box
     colors = [[],[]]
     i = 0
     for row in data:
@@ -142,7 +156,7 @@ def setColors(data):
         i+=1
     return colors 
 
-def analyzeData(data):
+def analyzeData(data): #displays the specific phenotype of each cell
     text = [[],[]]
     for i in range(0,2):
         for j in range(1,3):
@@ -157,21 +171,21 @@ def analyzeData(data):
                     text[i].append("Heterozygous. Dominant phenotype.")
     return text
     
-def test(p1, p2):
+def test(p1, p2): #Tests for the proper input of 2x2 inputs
     p1 = p1.upper()
     p2 = p2.upper()
-    if re.sub('[^A-Za-x]','',p1) != p1 or re.sub('[^A-Za-x]','',p2) != p2:
+    if re.sub('[^A-Za-x]','',p1) != p1 or re.sub('[^A-Za-x]','',p2) != p2: #if the alleles aren't some form of letters, then error
         return '\nPlease input letters for alleles. Try again.'
     if len(p1)!=2 or len(p2) !=2:
-        return '\nPlease input exactly two alleles for each parent. Try again.'
+        return '\nPlease input exactly two alleles for each parent. Try again.' #checks if there aren't enough alleles
     if p1[0].upper() != p1[1].upper() or p2[0].upper() != p2[1].upper():
-        return '\nPlease use the same letter in each parent genotype.Try again.'
+        return '\nPlease use the same letter in each parent genotype.Try again.' #checks if one parent has 2 different letters for one gene
     if p1[0].upper() != p1[1].upper():
-        return '\nPlease use the same letter for both parent genotypes. Try again.'
+        return '\nPlease use the same letter for both parent genotypes. Try again.' #checks if there are different alleles in each parent
     return ''
     
 def xltest(p1,p2):
-    if re.sub('[X,x]','',p1) != 'Y' or re.sub('[X,x]','',p2) != '':
+    if re.sub('[X,x]','',p1) != 'Y' or re.sub('[X,x]','',p2) != '': #if alleles aren't X/x/Y for male or X/x for female, then error
         return "\nPlease enter appropriate alleles for each parent (Father: X, x, Y; Mother: X, x)."
     if len(p1)!=2 or len(p2) !=2:
         return '\nPlease input exactly two alleles for each parent. Try again.'

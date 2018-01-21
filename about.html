@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Linnaeus</title>
+  <title>About Linnaeus</title>
   <link rel="stylesheet" type="text/css" href="css/main.css">
-  <link rel="stylesheet" type="text/css" href="css/punnett.css">
 
   <!-- Google fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
@@ -56,44 +55,16 @@
       </div>
     </ul>
   </div>
-  <div class="punnett-page">
-    <div class="subtitle-text">
-      <h1>Punnett Squares</h1>
-    </div>
-  </div>
 
-  <!-- use python cgi to generate and retrieve punnett square image -->
-  <script type="text/javascript">
-    function load_pun() {
-      var pun = document.getElementById('pun-img');
-      var father = document.getElementById('father').value;
-      var mother = document.getElementById('mother').value;
-      var title = document.getElementById('title').value;
-      /* let's not crash the server again... */
-      test = RegExp('^[a-zA-Z]{2,8}$');
-      if (father.length == mother.length && father.length % 2 == 0 &&
-          test.test(father) && test.test(mother)) {
-        pun.src = 'cgi-bin/punnett-square?father='+father+'&mother='+mother+
-                  '&title='+title;
-      } else {
-        window.alert('Error: invalid genotypes. Make sure that genotypes are'+
-                     ' the same length and at most eight characters.' +
-                     ' They must be of even length and contain only letters.');
-      }
-    }
-  </script>
+  <!-- style later, get the content down first -->
   <div>
-    Father's genotype:
-    <input id="father" type="text" name="father" value="Aa"><br>
-    Mother's genotype:
-    <input id="mother" type="text" name="mother" value="Aa"><br>
-    Title:
-    <input id="title" type="text" name="title" value="example"><br>
-    <button onclick="load_pun();">Solve Punnett Square</button>
-  </div>
-  <div>
-    <img id="pun-img" src="cgi-bin/punnett-square?father=Aa&mother=Aa&title=example">
-    <p>N.B. May take a long time for larger genotypes. Coloring is just for show and doesn't mean anything for now. Patience is a virtue.</p>
+    <div style="float: left; width: 50%;">
+      <img src="img/png/dna.png">
+    </div>
+    <div style="float: left; width: 50%;">
+      <h1>Biology is the world around us.</h1>
+      <p>Biology is an increasingly important field that is demanding more and more computation. <h1><i>Linnaeus</i></h1> provides a modern, scalable solution to the challenges facing computational biology. Aimed toward both persons wishing to figure out their family's past, the risks that diseases pose to the present, or high school and college students, <h1><i>Linnaeus</i></h1> enhances learning and gives you the chance to explore advanced visual concepts with serious tools.</p>
+    </div>
   </div>
 </body>
 </html>

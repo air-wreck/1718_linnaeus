@@ -1,18 +1,28 @@
+''' punnett16x16.py
+
+a simple punnett square solver for the 16x16 size
+
+This program can solve a Punnett square for any number of traits with sixteen
+alleles. The output is returned as a punnett square drawn using matplotlib and the chance of inheriting certain traits.
+
+To use interactively, just type makeSquare16().
+'''
+
 import matplotlib.pyplot as plt
 import re
 
-def makeSquare16():
+def makeSquare16(): #Creates a punnett square and plots it (16x16)
     while True:
-        p1 = raw_input("Please enter the alleles of the father: ").strip()
-        p2 = raw_input("Please enter the alleles of the mother: ").strip()
-        go = test(p1, p2)
+        p1 = raw_input("Please enter the alleles of the father: ").strip()#enter raw input and gets rid of excess whitespace
+        p2 = raw_input("Please enter the alleles of the mother: ").strip()#enter raw input and gets rid of excess whitespace
+        go = test(p1, p2) #Tests it for proper input
         if go == '':
             break
         else:
             print go
             
-    gametes1 = []
-    gametes2 = []
+    gametes1 = [] #stores gametes for father
+    gametes2 = [] #stores gametes for mother
     for i in range(2):
         for j in range(2,4):
             for k in range(4,6):
@@ -22,7 +32,7 @@ def makeSquare16():
                     
     data = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
     count = 0
-    for g1 in gametes2:
+    for g1 in gametes2:#appends everything together to create genotypes of possible offspring
         data[count].append(g1)
         for g2 in gametes1:
             data[count].append(formatS(g1[0]+g2[0])+formatS(g1[1]+g2[1])+formatS(g1[2]+g2[2])+formatS(g1[3]+g2[3]))
@@ -31,7 +41,7 @@ def makeSquare16():
     phenprobs = prob(p1,p2)
     colors = setColors(data)
     
-    table = plt.table(
+    table = plt.table(#initialize table
         cellText=data,
         cellColours=colors,
         cellLoc='center',
@@ -46,7 +56,7 @@ def makeSquare16():
     #plt.savefig('image.png',dpi=750)
     return phenprobs
 
-def prob(g1,g2):
+def prob(g1,g2): #calculates probability of each theoretical phenotype
     g1a = g1[0:2]
     g1b = g1[2:4]
     g1c = g1[4:6]
@@ -55,13 +65,13 @@ def prob(g1,g2):
     g2b = g2[2:4]
     g2c = g2[4:6]
     g2d = g2[6:8]
-    probsa = probOne(g1a,g2a)
-    probsb = probOne(g1b,g2b)
-    probsc = probOne(g1c,g2c)
-    probsd = probOne(g1d,g2d)
+    probsa = probOne(g1a,g2a)#calls the individual 2x2 probability generator
+    probsb = probOne(g1b,g2b)#calls the individual 2x2 probability generator
+    probsc = probOne(g1c,g2c)#calls the individual 2x2 probability generator
+    probsd = probOne(g1d,g2d)#calls the individual 2x2 probability generator
     phenprobs = {}
     plist = ('0','2')
-    for a in plist:
+    for a in plist:#figure out probabilities with indepdendent probability
         for b in plist:
             for c in plist:
                 for d in plist:
@@ -69,7 +79,7 @@ def prob(g1,g2):
                     phenprobs[tag] = probsa[a]*probsb[b]*probsc[c]*probsd[d]
     return phenprobs
     
-def probOne(g1, g2):
+def probOne(g1, g2):#2x2 individual probability calculation based on each genotype
     phenprobs = {}
     pdom1 = sum(1 for c in g1 if c.isupper())/2.0
     pdom2 = sum(1 for c in g2 if c.isupper())/2.0
@@ -77,13 +87,13 @@ def probOne(g1, g2):
     phenprobs['0']=(1-pdom1)*(1-pdom2)
     return phenprobs
 
-def formatS(string):
+def formatS(string):#formats the genotypes
     if string[0]<=string[1]:
         return string[0]+string[1]
     else:
         return string[1]+string[0]
 
-def setColors(data):
+def setColors(data):#gives each individual cell a color
     colors = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
     j = 0
     c= [0,0,0]
@@ -115,15 +125,15 @@ def setColors(data):
         j+=1
     return colors
     
-def test(p1, p2):
+def test(p1, p2):#tests for proper input
     p1 = p1.upper()
     p2 = p2.upper()
-    if re.sub('[^A-Za-x]','',p1) != p1 or re.sub('[^A-Za-x]','',p2) != p2:
+    if re.sub('[^A-Za-x]','',p1) != p1 or re.sub('[^A-Za-x]','',p2) != p2: #Tests if only letters are used via regex
         return '\nPlease input letters for alleles. Try again.'
-    if len(p1)!=8 or len(p2) !=8:
+    if len(p1)!=8 or len(p2) !=8:#checks for proper size of input
         return '\nPlease input exactly eight alleles for each parent. Try again.'
     letters = {}
-    for p in (p1, p2):
+    for p in (p1, p2):#checks if there aren't 4 letters being used
         letters2 = {}
         for letter in p:
             if letter not in letters2:
@@ -134,17 +144,17 @@ def test(p1, p2):
                 letters[letter]=1
             else:
                 letters[letter]+=1
-        if len(letters2) != 4:
+        if len(letters2) != 4: #checks if each parent has 4 unique letters used
             return '\nPlease use four different letters in each parent genotype.Try again.'
-    if len(letters) != 4:
+    if len(letters) != 4: #checks if different letters are used by both parents
         return '\nPlease use the same four letters for both parent genotypes. Try again.'
     for letter in letters:
-        if letters[letter] != 4 or letters2[letter] != 2:
+        if letters[letter] != 4 or letters2[letter] != 2: #checks if each gene has two letters/alleles
             return '\nPlease provide two alleles for each gene. Try again.'
-    if p1[0].upper() != p1[1].upper() or p2[0].upper() != p2[1].upper():
+    if p1[0].upper() != p1[1].upper() or p2[0].upper() != p2[1].upper():#checks if not grouped by letter/gene
         return '\nPlease group the alleles by gene. Try again.'
-    if p1[2].upper() != p1[3].upper() or p2[2].upper() != p2[3].upper():
+    if p1[2].upper() != p1[3].upper() or p2[2].upper() != p2[3].upper():#checks if not grouped by letter/gene
         return '\nPlease group the alleles by gene. Try again.'
-    if p1[4].upper() != p1[5].upper() or p2[4].upper() != p2[5].upper():
+    if p1[4].upper() != p1[5].upper() or p2[4].upper() != p2[5].upper():#checks if not grouped by letter/gene
         return '\nPlease group the alleles by gene. Try again.'
     return ''
