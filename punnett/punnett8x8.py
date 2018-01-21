@@ -1,3 +1,13 @@
+''' punnett8x8.py
+
+a simple punnett square solver for the 8x8 size
+
+This program can solve a Punnett square for any number of traits with eight
+alleles. The output is returned as a punnett square drawn using matplotlib and the chance of inheriting certain traits.
+
+To use interactively, just type makeSquare8().
+'''
+
 import matplotlib.pyplot as plt
 import re
 

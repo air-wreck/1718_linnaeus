@@ -1,3 +1,13 @@
+''' punnett4x4.py
+
+a simple punnett square solver for the 4x4 size
+
+This program can solve a Punnett square for any number of traits with four
+alleles. The output is returned as a punnett square drawn using matplotlib and the chance of inheriting certain traits.
+
+To use interactively, just type makeSquare4().
+'''
+
 import matplotlib.pyplot as plt
 import re
 
@@ -22,7 +32,7 @@ def makeSquare4():#Creates a 4x4 punnett square and plots it; autosomal only
     count = 0
     for g1 in gametes2: #appends everything together to create genotypes of possible offspring
         data[count].append(g1)
-        for g2 in gametes1
+        for g2 in gametes:
             data[count].append(formatS(g1[0]+g2[0])+formatS(g1[1]+g2[1])) 
         count+=1
         

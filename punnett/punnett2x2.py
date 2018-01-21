@@ -1,3 +1,13 @@
+''' punnett2x2.py
+
+a simple punnett square solver for the 2x2 size
+
+This program can solve a Punnett square for any number of traits with two
+alleles. The output is returned as a punnett square drawn using matplotlib and the chance of inheriting certain traits.
+
+To use interactively, just type makeSquare2().
+'''
+
 import matplotlib.pyplot as plt
 import re
 import colortable as ct

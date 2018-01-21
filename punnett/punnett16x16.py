@@ -1,3 +1,13 @@
+''' punnett16x16.py
+
+a simple punnett square solver for the 16x16 size
+
+This program can solve a Punnett square for any number of traits with sixteen
+alleles. The output is returned as a punnett square drawn using matplotlib and the chance of inheriting certain traits.
+
+To use interactively, just type makeSquare16().
+'''
+
 import matplotlib.pyplot as plt
 import re
 
@@ -141,10 +151,10 @@ def test(p1, p2):#tests for proper input
     for letter in letters:
         if letters[letter] != 4 or letters2[letter] != 2: #checks if each gene has two letters/alleles
             return '\nPlease provide two alleles for each gene. Try again.'
-    if p1[0].upper() != p1[1].upper() or p2[0].upper() != p2[1].upper():checks if not grouped by letter/gene
+    if p1[0].upper() != p1[1].upper() or p2[0].upper() != p2[1].upper():#checks if not grouped by letter/gene
         return '\nPlease group the alleles by gene. Try again.'
-    if p1[2].upper() != p1[3].upper() or p2[2].upper() != p2[3].upper():checks if not grouped by letter/gene
+    if p1[2].upper() != p1[3].upper() or p2[2].upper() != p2[3].upper():#checks if not grouped by letter/gene
         return '\nPlease group the alleles by gene. Try again.'
-    if p1[4].upper() != p1[5].upper() or p2[4].upper() != p2[5].upper():checks if not grouped by letter/gene
+    if p1[4].upper() != p1[5].upper() or p2[4].upper() != p2[5].upper():#checks if not grouped by letter/gene
         return '\nPlease group the alleles by gene. Try again.'
     return ''
