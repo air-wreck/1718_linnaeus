@@ -167,11 +167,11 @@ def test(p1, p2): #Tests for the proper input of 2x2 inputs
     if re.sub('[^A-Za-x]','',p1) != p1 or re.sub('[^A-Za-x]','',p2) != p2: #if the alleles aren't some form of letters, then error
         return '\nPlease input letters for alleles. Try again.'
     if len(p1)!=2 or len(p2) !=2:
-        return '\nPlease input exactly two alleles for each parent. Try again.'
+        return '\nPlease input exactly two alleles for each parent. Try again.' #checks if there aren't enough alleles
     if p1[0].upper() != p1[1].upper() or p2[0].upper() != p2[1].upper():
-        return '\nPlease use the same letter in each parent genotype.Try again.'
+        return '\nPlease use the same letter in each parent genotype.Try again.' #checks if one parent has 2 different letters for one gene
     if p1[0].upper() != p1[1].upper():
-        return '\nPlease use the same letter for both parent genotypes. Try again.'
+        return '\nPlease use the same letter for both parent genotypes. Try again.' #checks if there are different alleles in each parent
     return ''
     
 def xltest(p1,p2):
