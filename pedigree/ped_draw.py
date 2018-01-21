@@ -28,7 +28,6 @@ class Draw():
         self.dot.node_attr['height'] = '0.5'
         self.dot.body.append('\tlabelloc="t";')
         self.dot.body.append('\tlabel="'+name+'";')
-        self.dot.body.append('\t{rank=max; Colors [shape=box, width=1.0, fillcolor=#ff7756:#ffffff, gradientangle=90];}')
 
 
     #########################
