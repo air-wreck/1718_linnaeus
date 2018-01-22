@@ -1,3 +1,5 @@
+/* CSS specific to home.html */
+
 .front-page {
   height: calc(100% - 51px);
   width: 100%;
@@ -52,6 +54,11 @@
 
 .content-2 li a {
   color: inherit;
+  transition: all 0.2s ease-in;
+}
+
+.content-2 li a:hover {
+  color: #a5e544;
 }
 
 .content-3-container {
