@@ -111,8 +111,8 @@ def help_ped(args):
         print 'set a parents-child relationship'
         print 'arguments:'
         print '  [String] child name'
-        print '  [String] first parent name'
-        print '  [String] second parent name'
+        print '  [String] father name'
+        print '  [String] mother name'
         print 'example:'
         print '  set Bob Nelson Karena'  # hehe...
     elif args[0] == 'unset':
@@ -205,6 +205,7 @@ def unset(args):
     [i for i in pedigree if i.name == args[0]][0].add_parents(None, None)
 
 # remove and individual and all his or her children
+# TODO: make this recursive
 def delete(args):
     if len(args) == 0:
         print 'error: del: takes one or more arguments'

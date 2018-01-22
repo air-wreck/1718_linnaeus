@@ -37,7 +37,10 @@ LoadModule cgi_module <...>
 ```
 
 The rest of the setup can be handled automatically by the `setup.sh` script,
-which you may have to run with `sudo`.
+which you may have to run with `sudo`. There is one important exception: due
+to issues with the Apache user's PATH, the absolute path to the  `dot` binary
+on your system is required. Paste this into the `cgi-bin/dot_path` once you've
+run `setup.sh`, or you'll get a nasty bug.
 
 ### repository
 This repository is organized into a few different directories. The root

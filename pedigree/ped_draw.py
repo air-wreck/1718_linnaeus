@@ -14,16 +14,20 @@ from graphviz import Graph
 import ped_solve as ps
 
 class Draw():
-    def __init__(self, name):
+    def __init__(self, name, format='pdf'):
         self.name = name
         self.next_hidden = 0  # next available hidden node ID
         self.nodes = []  # list of currently existing named nodes
-        self.dot = Graph(comment=name, format='pdf')
+
+        # create the graph and set attributes for pedigree
+        self.dot = Graph(comment=name, format=format)
         self.dot.graph_attr['splines'] = 'ortho'
         self.dot.node_attr['fontname'] = 'helvetica'
         self.dot.node_attr['fixedsize'] = 'true'
         self.dot.node_attr['style'] = 'filled'
         self.dot.node_attr['height'] = '0.5'
+        self.dot.body.append('\tlabelloc="t";')
+        self.dot.body.append('\tlabel="'+name+'";')
 
 
     #########################
@@ -62,7 +66,13 @@ class Draw():
         for pair in edgelist:
             self.dot.edge(pair[0], pair[1], constraint=constraint)
 
+    def render(self):
+        # render self to DOT, but do not display
+        return self.dot.source
+
     def show(self):
+        # render and display self
+        # return generated DOT source for convenience
         self.dot.render(self.name+'.dot', view=True)
         return self.dot.source
 
@@ -71,9 +81,21 @@ class Draw():
     # FAMILY PLOTTING FUNCTIONS
     ###########################
 
-    def draw_marriage(self, father, mother, children):
+    def draw_marriage(self, father, mother, children, silent=False):
         # accepts two Person objects and draws the marriage between them
         # takes a list of children as arg until i figure out how to do that
+        # silent allows no stdout printing for CGI script
+
+        # if unknown, find the probability
+        # reject the probability if invalid
+        for p in [father, mother]+children:
+            if ps.find_prob(p) < 0:
+                if not silent:
+                    print 'err: unable to determine probability for individual %s'\
+                       % p.get()[0]
+                return -1  # failure
+
+        # append these people to our list of nodes
         if father.name not in self.nodes:
             self.indiv(father)
             self.nodes += [father.name]
@@ -124,3 +146,5 @@ class Draw():
             # link the final child to the correct node
             self.edges([[str(self.next_hidden+N-1), children[-1].name]])
             self.next_hidden += N
+
+            return 1  # success

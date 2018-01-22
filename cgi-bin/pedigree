@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+
+import os, sys, subprocess, urllib2
+sys.path.insert(0, '/usr/local/lib/python2.7/site-packages')
+import ped_solve as ps
+import ped_draw as pd
+
+# if we're geting a pedigree the legitimate way, it should already be validated
+# deal with potential attackers later
+
+# for debugging
+#os.environ['QUERY_STRING'] = 'p0=Joan,f,1,,&p1=John,m,1,,&p2=Joel,m,-1,John,Joan'
+
+# TODO: what to do if QUERY_STRING is empty? invalid?
+query = [urllib2.unquote(i.split('=')[1]) for i in os.getenv('QUERY_STRING').split('&')]
+
+# read query into pedigree list
+pedigree = []
+for p in query:
+    p_attr = p.split(',')
+    gend = lambda sex: ps.Sex.f if sex == 'f' else ps.Sex.m
+    pedigree += [ps.Person(p_attr[0], gend(p_attr[1]), float(p_attr[2]))]
+
+# set up parent-child relationships
+for i, p in enumerate(query):
+    p_attr = p.split(',')
+    if p_attr[3] != '' and p_attr[4] != '':
+        # this assumes that the parent exists
+        ped_get = lambda name: [p for p in pedigree if p.name == name][0]
+        pedigree[i].add_parents(ped_get(p_attr[3]), ped_get(p_attr[4]))
+
+# solve the entire pedigree list fist
+for p in pedigree:
+    if ps.find_prob(p, silent=True) < 0:
+        print 'Content-Type: text/html'
+        print ''
+        print 'Error: pedigree could not be solved'
+        sys.exit(0)
+
+# identify all marriages
+# for now, we assume that all relationships are monogamous and generational
+marriages = []
+for individual in pedigree:
+    if individual.father != None:
+        # has this marriage already been found?
+        # i.e. is this a sibling of an already found child?
+        for union in marriages:
+            if (union[0] == individual.father and
+                union[1] == individual.mother):
+                union[2] += [individual]
+                break
+        else:
+            marriages += [[individual.father, individual.mother,
+                          [individual]]]
+
+# make pedigree drawing
+ped = pd.Draw('ped', format='png')
+for i in marriages:
+    ped.draw_marriage(i[0], i[1], i[2])
+
+# return the rendered png to the client
+print 'Content-Type: image/png'
+print ''
+dot_file = open('ped.dot', 'w')
+dot_file.write(ped.render())
+dot_file.close()
+dot_bin = file('dot_path', 'r').read()  # system specific absolute path to dot
+status = subprocess.call(dot_bin.strip()+' -Tpng ped.dot -O', shell=True)
+print file('ped.dot.png', 'r').read()
+# print status
