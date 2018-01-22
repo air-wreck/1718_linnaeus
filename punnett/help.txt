@@ -22,8 +22,8 @@ Modes of Inheritance Information:
 	(inc) Incomplete dominance. If both the dominant and the recessive allele are present, an intermediate phenotype will be expressed.
 	(ex. AA: dominant; Aa: intermediate; aa: recessive)
 
-	(cod) Codominance. If both alles are present, both phenotypes will be expressed.
-	(ex. AA: first phenotype; Aa: first and second phenotypes; aa: second phenotype)
+	(cod) Codominance. Alleles are represented as two different capital letters. If both alles are present, both phenotypes will be expressed.
+	(ex. AA: first phenotype; AB: first and second phenotypes; BB: second phenotype)
 
 	(xl) X-linked. The alleles for this trait are linked to the X sex chromosome.
 	The dominant allele is represented by a capital X.
@@ -37,7 +37,8 @@ Allele Input Information:
 	If you receive an error message, please re-enter the alleles for the parent genotypes. 
 	Examples of acceptable genotype inputs are shown below (the letters you input may differ from those shown).
 
-	2x2   | aut, inc, cod | Father: Aa        Mother: Aa
+	2x2   | aut, inc|       Father: Aa        Mother: Aa
+	      | cod |           Father: AB        Mother: BB
 	      | xl |            Father: xY        Mother: Xx
 		
 	4x4   |                 Father: AaBB      Mother: AABb

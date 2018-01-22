@@ -10,17 +10,29 @@ To use interactively, just type makeSquare8().
 
 import matplotlib.pyplot as plt
 import re
+import os
 
 def makeSquare8():#Creates a 8x8 punnett square and plots it; autosomal only
-    while True:
+    while True: #loops until valid user input
         p1 = raw_input("Please enter the alleles of the father: ").strip() #enter raw input and gets rid of excess whitespace
-        p2 = raw_input("Please enter the alleles of the mother: ").strip() #enter raw input and gets rid of excess whitespace
-        go = test(p1, p2) #tests for proper input
-        if go == '':
-            break
+        if p1=='help': #opens help documentation
+            os.system('notepad.exe help.txt')
+            print '\n'
         else:
-            print go
-            
+            p2 = raw_input("Please enter the alleles of the mother: ").strip() #enter raw input and gets rid of excess whitespace
+            if p2=='help': #opens help documentation
+                os.system('notepad.exe help.txt')
+                print '\n'
+            else:
+                go = test(p1, p2) #tests for proper input
+                if go == '':
+                    break
+                else:
+                    print go
+    
+    #edits genotypes to have uppercase allele always precede lowercase 
+    p1 = sorted(p1[:2])+sorted(p1[2:4])+sorted(p1[4:6])
+    p2 = sorted(p2[:2])+sorted(p2[2:4])+sorted(p2[4:6])        
     gametes1 = [] #stores gametes for father
     gametes2 = [] #stores gametes for mother
     for i in range(2):
