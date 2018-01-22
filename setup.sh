@@ -29,8 +29,8 @@ cp pedigree/ped_draw.py cgi-bin/ped_draw.py
 cp pedigree/ped_solve.py cgi-bin/ped_solve.py
 
 # setup the location of the dot binary
-touch dot_path
-chmod +r dot_path
+touch cgi-bin/dot_path
+chmod +r cgi-bin/dot_path
 
 # friendly warning to finish setup
 echo 'WARNING: make sure you set up cgi-bin/dot_path, or else'
