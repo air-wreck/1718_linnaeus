@@ -1,4 +1,11 @@
-# this file provides an example of how to use the colortable module
+'''colortable_example.py
+
+This file provides a basic example of how to use the colortable module. The table 
+created supports cells with one color, two colors, three colors, and four colors.
+
+For the code relating to the actual creation of the table, see colortable.py
+
+'''
 
 # import the module
 import colortable as ct

@@ -6,7 +6,7 @@ original seems to not have the ability to set a cell to a half-color.
 See the file colortable_example.py for an example of how to use this class.
 '''
 import matplotlib
-matplotlib.use('Agg')  # Dr. Agrawal confirmed?
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -41,7 +41,7 @@ class colortbl():
                 self.color(0, c, c1=self.header_color)
                 self.add_text(str(data[r][c]), r, c)
 
-    def title(self, text):
+    def title(self, text): #add a title to the table
         self.fig.suptitle(text)
 
     def add_text(self, text, row, col):
@@ -100,9 +100,9 @@ class colortbl():
                 plt.Polygon([[lim1, -lim1], [-lim1, -lim1], [0, 0]], color=c4)
             )
 
-    def show(self):
+    def show(self): #displays table
         plt.show()
 
-    def to_png(self):
+    def to_png(self): #save table as png file
         plt.savefig('colortable.png')
         return file('colortable.png', 'r').read()
