@@ -37,15 +37,17 @@ def infect(f, m):
     return 0.5 * (f + m)
 
 # recursively determine the probability for a given person
-def find_prob(person):
+def find_prob(person, silent=False):
+    # silent allows no stdout printing for CGI script
     if person.infected >= 0:
         # this person has an independent probability
         return person.infected
     if person.father == None or person.mother == None:
         # this person does not have a mother or father but has no probability
-        print 'error@%s' % person.name
-        print ('  error: all founder individuals must have independent '
-              'probabilities')
+        if not silent:
+            print 'error@%s' % person.name
+            print ('  error: all founder individuals must have independent '
+                   'probabilities')
         return -1
     f = find_prob(person.father)
     m = find_prob(person.mother)
