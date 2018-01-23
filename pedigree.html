@@ -15,6 +15,16 @@ Very plain page for web-based pedigree stuff
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
 </head>
 <body>
+  <!-- JS for creating custom alert/warning box -->
+  <script type="text/javascript">
+    function warn_user(text) {
+      var alert_box = document.getElementById('alert');
+      var alert_text = document.getElementById('alert-text');
+      alert_text.innerHTML = text;
+      alert_box.style.display = 'inline-block';
+    }
+  </script>
+
   <!-- JS for constructing and validating information on client-side to be sent to server -->
   <script type="text/javascript">
     var row_id = 1;  // the next available row_id
@@ -64,14 +74,14 @@ Very plain page for web-based pedigree stuff
         name = row[1].value;
         if (row[1].value == '') {
           // all names must be non-empty
-          alert('error: undefined name');
+          warn_user('Undefined name');
           return -1;
         }
         sex = row[3].value;
         prob = parseFloat(row[5].value);
         if (row[5].value == '') {
           // all probabilities must be non-empty
-          alert('error: undefined probability (use -1 if unknown)');
+          warn_user('Undefined probability (use -1 if unknown)');
           return -1;
         }
         father = row[7].value;
@@ -83,11 +93,19 @@ Very plain page for web-based pedigree stuff
     function verify() {
       // verify that the pedigree is valid
       // we can afford to be inefficient, since pedigrees are small
+
+      // is there even anyone in the pedigree?
+      if (pedigree.length == 0) {
+        warn_user('No individuals found');
+        return -1;
+      }
+
+      // check further conditions for each individual in the pedigree
       for (var i = 0; i < pedigree.length; i++) {
         // no duplicates
         for (var j = 0; j < pedigree.length; j++) {
           if (pedigree[i].name == pedigree[j].name && i != j) {
-            window.alert('error: duplicate individual found');
+            warn_user('Duplicate individual found');
             return -1;
           }
         }
@@ -95,7 +113,7 @@ Very plain page for web-based pedigree stuff
         // parents either both exist or both don't exist
         if ((pedigree[i].father != '' && pedigree[i].mother == '') ||
             (pedigree[i].father == '' && pedigree[i].mother != '')) {
-              window.alert('error: each individual must have exactly 0 or 2 parents');
+              warn_user('Each individual must have exactly 0 or 2 parents');
               return -1;
             }
         else if (pedigree[i].father != '' && pedigree[i].mother != '') {
@@ -106,13 +124,13 @@ Very plain page for web-based pedigree stuff
             }
           }
           if (found_parents < 2) {
-            window.alert('error: specified parents not found in pedigree');
+            warn_user('Specified parents not found in pedigree');
             return -1;
           }
         } else {
           // founder has independent probability
           if (pedigree[i].prob < 0) {
-            window.alert('error: founders must have independent probability');
+            warn_user('Founders must have independent probability');
             return -1;
           }
         }
@@ -120,7 +138,7 @@ Very plain page for web-based pedigree stuff
         //probability is in range [0, 1]
         if ((pedigree[i].father == '' && pedigree[i].prob < 0) ||
             pedigree[i].prob > 1) {
-              window.alert('error: probabilities must be in range [0, 1]')
+              warn_user('Probabilities must be in range [0, 1]')
               return -1;
             }
 
@@ -129,7 +147,7 @@ Very plain page for web-based pedigree stuff
         // her own parent
         for (var j = 0; j < pedigree.length; j++) {
           if ((pedigree[i].father == pedigree[j].name && pedigree[j].sex == 'f') || (pedigree[i].mother == pedigree[j].name && pedigree[j].sex == 'm')) {
-            window.alert('error: father must be male and mother must be female');
+            warn_user('Father must be male and mother must be female');
             return -1;
           }
         }
@@ -209,18 +227,26 @@ Very plain page for web-based pedigree stuff
     </ul>
   </div>
   <div id="instructions">
-    <p>Welcome to Linnaeus: the online pedigree maker!</p><br>
+    <div style="text-align: center;"><h1>Welcome to Linnaeus: the online pedigree maker!</h1></div><br>
     <div class="notice"><strong><u>Instructions:</u></strong> add or delete individuals as you like and define relationships among them. The probability of infection must be between 0 and 1, although a child is permitted to have an unknown probability (-1) as long as he or she has parents. Leave parents blank if this person has no parents in the pedigree. Note that individuals are identified by name (case sensitive), so you cannot have a duplicate name.</div>
     <p>Note that this only graphs families; if there is an individual without a family, he or she will not be plotted</p>
     <p>This is currently highly unstable: a good-looking pedigree might look terrible if you add or subtract a single person. This is mostly a proof-of-concept.</p>
   </div>
+
   <!-- container for the image, retrieved from the server -->
-  <div id="ped"><img id="ped-img" src=""></div>
+  <div id="ped">
+    <!-- error message, which starts out hidden -->
+    <div id="alert" class="alert" style="display: none;"><strong style="color: #b73000;"><b>Error: </b></strong><span id="alert-text"></span><span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span></div><br>
+    <!-- the actual image -->
+    <img id="ped-img" src="">
+  </div>
+
   <!-- buttons on top for user interaction -->
   <div id="buttons">
     <button class="button" onclick="add_row();">Add Individual</button>
     <button class="button" onclick="make_ped();">Build Pedigree</button>
   </div>
+
   <!-- div storing the list of individuals -->
   <div id="list"></div>
 </body>

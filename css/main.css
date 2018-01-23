@@ -129,7 +129,7 @@ html, body {
 }
 
 .content-1 p {
-  font-family: "Raleway";
+  font-family: "Open Sans";
 }
 
 .content-2 {
@@ -149,19 +149,27 @@ html, body {
   color: #bbbbbb;
 }
 
-.content-3 {
-  text-align: center;
-  background-color: #e5e5e5;
-  float: left;
-  box-sizing: border-box;
-  width: 100%;
-  padding: 40px;
+.alert {
+    text-align: left;
+    padding: 10px;
+    padding-left: 15px;
+    background-color: #ff9696;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    width: 500px;
+    border-radius: 10px;
 }
 
-.content-3 h2 {
-  font-family: "Raleway";
-  color: #78bc12;
+.closebtn {
+    margin-left: 15px;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: all .2s ease-in;
 }
+.closebtn:hover {color: white;}
 
 .footer {
   background-color: #a5e544;
@@ -171,4 +179,14 @@ html, body {
   float: left;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* condense menu when screen gets too small */
+@media (max-width: 768px) {
+  .nav-bar li a {
+    display: none;
+  }
+  .narrow-menu {
+    display: block;
+  }
 }

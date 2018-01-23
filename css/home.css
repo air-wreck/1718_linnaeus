@@ -61,26 +61,6 @@
   color: #a5e544;
 }
 
-.content-3-container {
-  display: grid;
-  grid-column-gap: 50px;
-  grid-template-columns: 100px 150px 1fr 100px;
-  grid-template-rows: 1fr;
-  grid-template-areas: "mnl dadu-img dadu-txt mnr"
-                       "mnl colu-img colu-txt mnr"
-                       "mnl thum-img thum-txt mnr";
-}
-
-.quote {
-  text-align: left;
-  font-family: "Raleway";
-}
-
-.quote h1 {
-  display: inline;
-  padding-right: 20px;
-}
-
 /* condense title once it gets cramped */
 @media (max-width: 1100px) {
   .title-img {
@@ -95,21 +75,11 @@
   .content-1-container {
     grid-template-columns: 0px 1fr 1fr 0px;
   }
-  .content-3-container {
-    grid-template-columns: 0px 150px 1fr 0px;
-  }
 }
 
 /* redo table layout for very small (mobile) screens)
-   also condense title layout even further
-   also condense navigation bar */
+   also condense title layout even further */
 @media (max-width: 768px) {
-  .nav-bar li a {
-    display: none;
-  }
-  .narrow-menu {
-    display: block;
-  }
   .title-text {
     left: 30px;
     top: 100px;
@@ -128,19 +98,6 @@
                          "mgl vir-txt mgr"
                          "mgl dna-img mgr"
                          "mgl dna-txt mgr";
-  }
-  .content-3-container {
-    grid-template-columns: 0px 1fr 0px;
-    grid-template-areas: "mnl dadu-img mnr"
-                         "mnl dadu-txt mnr"
-                         "mnl colu-img mnr"
-                         "mnl colu-txt mnr"
-                         "mnl thum-img mnr"
-                         "mnl thum-txt mnr";
-  }
-  .quote {
-    padding-bottom: 50px;
-    padding-right: 0px;
   }
 }
 

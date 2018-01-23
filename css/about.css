@@ -1,0 +1,18 @@
+/* CSS specific to about.html */
+
+* {
+  font-family: "Open Sans";
+}
+
+strong {
+  color: #a5e544;
+}
+
+.about-container {
+  background: url('../img/png/dna.png') no-repeat center center;
+  padding: 50px;
+  width: 100%;
+  background-color: transparent;
+  text-align: center;
+  box-sizing: border-box;
+}
