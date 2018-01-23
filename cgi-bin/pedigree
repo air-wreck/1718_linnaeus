@@ -54,7 +54,7 @@ for individual in pedigree:
                           [individual]]]
 
 # make pedigree drawing
-ped = pd.Draw('ped', format='png')
+ped = pd.Draw('Rendered Pedigree', format='png')
 for i in marriages:
     ped.draw_marriage(i[0], i[1], i[2])
 

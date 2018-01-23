@@ -1,0 +1,59 @@
+/* CSS specific to pedigree.html */
+
+* {font-family: "Open Sans";}
+
+.notice {
+  font-family: "Open Sans";
+  padding: 20px;
+  background-color: #ffec82;
+  width: calc(100% - 170px);
+  margin-left: 65px;
+  border-radius: 10px;
+}
+.notice strong {color: #b79b00;}
+#instructions p {margin: 30px;}
+
+.indiv {
+  background-color: #eaeaea;
+  padding: 10px;
+  font-family: "Open Sans";
+  border-top: 2px solid #b2b2b2;
+  font-size: 10pt;
+}
+.indiv input {
+  background-color: #eaeaea;
+  border: 0;
+  outline: 0;
+  border-bottom: 3px solid #a5e544;
+  font-family: "Open Sans";
+  font-size: 10pt;
+  padding: 3px;
+  margin-right: 10px;
+  transition: all .2s ease-in;
+}
+.indiv input:hover {background-color: white;}
+.indiv input:focus {background-color: white;}
+
+.indiv select {
+  background-color: #a5e544;
+  font-family: "Open Sans";
+  font-size: 10pt;
+  border: 1px solid  #a5e544;
+  outline: 0;
+  height: 30px;
+  margin-right: 10px;
+  transition: all .2s ease-in;
+}
+.indiv select:hover {background-color: white;}
+.indiv select:focus {background-color: white;}
+
+.indiv .delete-button {
+  background-color: #ff9696;
+  border: 2px solid #ff9696;
+  margin-left: 10px;
+}
+.indiv .delete-button:hover {background-color: white;}
+
+#buttons {text-align: center; padding-bottom: 20px;}
+#ped {text-align: center;}
+#list {text-align: center;}

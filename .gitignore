@@ -13,3 +13,6 @@ cgi-bin/*.py
 
 # ignore the system-specific dot bin path
 cgi-bin/dot_path
+
+# ignore mac-specific Finder layout
+*.DS_Store

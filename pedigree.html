@@ -8,6 +8,11 @@ Very plain page for web-based pedigree stuff
 
 <head>
   <title>Pedigree</title>
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="css/pedigree.css">
+
+  <!-- Google fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
 </head>
 <body>
   <!-- JS for constructing and validating information on client-side to be sent to server -->
@@ -37,10 +42,10 @@ Very plain page for web-based pedigree stuff
           <option value="m">male</option>\
           <option value="f">female</option>\
         </select>\
-        Probability: <input type="number" name="prob">\
+        Probability: <input type="number" name="prob" style="width: 50px;">\
         Father: <input type="text" name="father" value="">\
         Mother: <input type="text" name="mother" value="">\
-        <button onclick="delete_row(\'row'+row_id.toString()+'\');">Delete Individual</button>\
+        <button class="button delete-button" onclick="delete_row(\'row'+row_id.toString()+'\');">Delete Individual</button>\
       </div>';
       list.insertAdjacentHTML('beforeend', text);
       row_id++;
@@ -154,20 +159,69 @@ Very plain page for web-based pedigree stuff
       }
     }
   </script>
+  <!-- menu bar for small screens -->
+  <script type="text/javascript">
+  window.onclick = function(event) {
+    menu = document.getElementById("dropdown");
+    if (event.target.matches("#dropbtn") || event.target.matches(".menu")) {
+      if (menu.style.display == "none" || menu.style.display == "") {
+        menu.style.display = "block";
+      } else {
+        menu.style.display = "none";
+      }
+    } else {
+      menu.style.display = "none";
+    }
+  };
+  </script>
+</head>
+<body>
+  <!-- navigation bar -->
+  <div class="nav-bar">
+    <ul>
+      <div style="float: left;">
+        <li><span><b>Linnaeus</b></span></li>
+      </div>
+      <div style="float: right;">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="pedigree.html">Pedigree</a></li>
+        <li><a href="punnett.html">Punnett Square</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </div>
+      <div style="float: right;" class="narrow-menu">
+        <!-- this is such a sketchy way to make a menu button -->
+          <button id="dropbtn">
+            <div class="menu"></div>
+            <div class="menu"></div>
+            <div class="menu"></div>
+          </button>
+
+          <!-- the actual dropdown menu -->
+          <div id="dropdown">
+            <a href="home.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="pedigree.html">Pedigree</a>
+            <a href="punnett.html">Punnett Square</a>
+            <a href="contact.html">Contact</a>
+          </div>
+      </div>
+    </ul>
+  </div>
   <div id="instructions">
     <p>Welcome to Linnaeus: the online pedigree maker!</p><br>
-    <p>Instructions: add or delete individuals as you like and define relationships among them. The probability of infection must be between 0 and 1, although a child is permitted to have an unknown probability (-1) as long as the parent probabilities are known (and this applies recursively). Leave parents blank if this person has no parents in the pedigree. Note that individuals are identified by name, so you cannot have a duplicate name.</p>
+    <div class="notice"><strong><u>Instructions:</u></strong> add or delete individuals as you like and define relationships among them. The probability of infection must be between 0 and 1, although a child is permitted to have an unknown probability (-1) as long as he or she has parents. Leave parents blank if this person has no parents in the pedigree. Note that individuals are identified by name (case sensitive), so you cannot have a duplicate name.</div>
     <p>Note that this only graphs families; if there is an individual without a family, he or she will not be plotted</p>
     <p>This is currently highly unstable: a good-looking pedigree might look terrible if you add or subtract a single person. This is mostly a proof-of-concept.</p>
   </div>
+  <!-- container for the image, retrieved from the server -->
+  <div id="ped"><img id="ped-img" src=""></div>
   <!-- buttons on top for user interaction -->
   <div id="buttons">
-    <button onclick="add_row();">Add Individual</button>
-    <button onclick="make_ped();">Build Pedigree</button>
+    <button class="button" onclick="add_row();">Add Individual</button>
+    <button class="button" onclick="make_ped();">Build Pedigree</button>
   </div>
   <!-- div storing the list of individuals -->
   <div id="list"></div>
-  <!-- container for the image, retrieved from the server -->
-  <div id="ped"><img id="ped-img" src=""></div>
 </body>
 </html>
