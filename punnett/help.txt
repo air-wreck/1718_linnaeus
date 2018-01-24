@@ -33,6 +33,15 @@ Modes of Inheritance Information:
 	Standard phenotype expression applies for female offspring. For male offspring, the phenotype corresponds to the single X/x allele.
 	(ex. XY: dominant; xY: recessive)
 
+Title/Name Information:
+	After choosing a square size and mode of inheritance (if applicable), you will be asked to input a title.
+	For a 2x2 square, the title of the Punnett square will read: [Mode of Inheritance] of [Inputted Title]
+	(ex. Incomplete Dominance of Snapdragon Flower Color)
+	For all other sized squares, the title of the Punnett square will simply be the user-inputted title. 
+
+	You will also be asked to input the name of the father and the name of the mother. 
+	These names will be displayed along the top and left side of the Punnett square, adjacent to their respective gametes.  
+
 Allele Input Information:
 	If you receive an error message, please re-enter the alleles for the parent genotypes. 
 	Examples of acceptable genotype inputs are shown below (the letters you input may differ from those shown).
