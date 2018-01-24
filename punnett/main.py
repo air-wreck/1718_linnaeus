@@ -86,6 +86,7 @@ while make: #program loops so user can continue to generate punett squares
             xl = xlink
             cod = codom
             probTable(probs)
+            xl, cod = False, False
             break
         elif command == '2':
             probs= punnett4x4.makeSquare4()
