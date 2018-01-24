@@ -9,6 +9,7 @@ with a matrix of probabilities of offspring phenotypes
 To use interactively, just type makeSquare2().
 '''
 
+
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -35,10 +36,10 @@ def makeSquare2(): #Creates 2x2 Punnett Square;
                 os.system('notepad.exe help.txt')
             print "Please try again."
             inherit = inheritlist(raw_input('Please enter \'aut\' for autosomal,'
-        '\'inc\' for incomplete dominance, \'cod\' for codominance, and xl for x-linked.\n')) #User inputs inheritance format
-    title = raw_input('Please enter the title of your Punnett Square.')
-    father = raw_input("Please enter the father's name.")
-    mother = raw_input("Please enter the mother's name.")
+        '\'inc\' for incomplete dominance, \'cod\' for codominance, and xl for x-linked:\n')) #User inputs inheritance format
+    title = raw_input('Please enter the title of your Punnett Square: ')
+    father = raw_input("Please enter the father's name: ")
+    mother = raw_input("Please enter the mother's name: ")
     while True: #loops until user input is valid
         p1 = raw_input("Please enter the alleles of the father: ")#enter father alleles
         if p1=='help':
@@ -82,12 +83,16 @@ def makeSquare2(): #Creates 2x2 Punnett Square;
                 else: #if phenotype 2
                     table.color(i, j, '#ffffff')
         phenprobs = prob(p1,p2)
-        table.title(inherit)
+        table.title(inherit + ' of ' + title)
+        table.x_label(father)
+        table.y_label(mother)
         table.show()
         
     else: #prints one color per cell based on phenotype
         phenprobs = prob(p1,p2)
         colors = setColors(data)
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
         table = plt.table( #initialize table
             cellText=data,
             cellColours=colors,
@@ -99,13 +104,13 @@ def makeSquare2(): #Creates 2x2 Punnett Square;
             colLoc='center',
             loc='center',bbox=None)
         table.scale(1, 6)
-        plt.title(inherit + " of " + title) 
-        #plt.axis('off')
         plt.xticks([], [])
         plt.yticks([], [])
-        plt.xlabel(father)
-        plt.ylabel(mother)
-        plt.show() #show table
+        plt.text(0.5, 1.1, inherit + ' of ' + title, horizontalalignment = 'center', fontsize = 14, transform = ax.transAxes)
+        ax.set_xlabel(father)
+        ax.xaxis.set_label_position('top')
+        ax.set_ylabel(mother)
+        plt.show()
     #plt.savefig('image.png',dpi=750)
     return phenprobs, xl, cod
         

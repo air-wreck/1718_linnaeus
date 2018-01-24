@@ -21,9 +21,9 @@ def probTable(probs): #prints table of probabilities for offspring phenotypes
     print '\n\nOffspring Phenotype Probabilities\n'
     header = '\t'
     if xl: #print separate cols based on the sex of the individual
-        header+='%-30s' %'Gender'
+        header+='%-25s' %'Gender'
     for i in range(1,(int(command)+1)):
-        header+='%-30s' %('Trait '+str(i) + ':')
+        header+='%-25s' %('Trait '+str(i) + ':')
     header+='Probability:'
     print header
     for key in reversed(sorted(probs.keys())): #parses through each possible phenotype
@@ -32,30 +32,30 @@ def probTable(probs): #prints table of probabilities for offspring phenotypes
             for x in key:
                 if x=='2':
                     if cod: #dominant and recessive phenotypes do not exist in codominance
-                        line+='%-30s' %'Phenotype 1'
+                        line+='%-25s' %'Phenotype 1'
                     else:
-                        line+='%-30s' %'Dominant'
+                        line+='%-25s' %'Dominant'
                 elif x=='1':
                     if cod:
-                        line+='%-30s' %'Both phenotypes'
+                        line+='%-25s' %'Both phenotypes'
                     else:
-                        line+='%-30s' %'Intermediate'
+                        line+='%-25s' %'Intermediate'
                 elif x=='0':
                     if cod:
-                        line+='%-30s' %'Phenotype 2'
+                        line+='%-25s' %'Phenotype 2'
                     else:
-                        line+='%-30s' %'Recessive'
+                        line+='%-25s' %'Recessive'
         else: #prints phenotype headings if x-linked
             if key[0]=='F': 
-                line+='%-30s' %'Female'
+                line+='%-25s' %'Female'
             else:
-                line+='%-30s' %'Male'
+                line+='%-25s' %'Male'
             if key[1]=='2':
-                line+='%-30s' %'Dominant'
+                line+='%-25s' %'Dominant'
             elif key[1]=='1':
-                line+='%-30s' %'Carrier'
+                line+='%-25s' %'Carrier'
             elif key[1]=='0':
-                line+='%-30s' %'Recessive'
+                line+='%-25s' %'Recessive'
         line+='%9s' %(str(round(probs[key]*100,4))+'%')
         print line
     

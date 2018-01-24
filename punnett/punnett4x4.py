@@ -15,9 +15,9 @@ import re
 import os
 
 def makeSquare4():#Creates a 4x4 punnett square and plots it; autosomal only
-    title = raw_input('Please enter the title of your Punnett Square.')
-    father = raw_input("Please enter the father's name.")
-    mother = raw_input("Please enter the mother's name.")
+    title = raw_input('Please enter the title of your Punnett Square: ')
+    father = raw_input("Please enter the father's name: ")
+    mother = raw_input("Please enter the mother's name: ")
     while True: #loops until valid user input
         p1 = raw_input("Please enter the alleles of the father: ").strip() #enter raw input and gets rid of excess whitespace
         if p1=='help': #opens help documentation
@@ -55,7 +55,8 @@ def makeSquare4():#Creates a 4x4 punnett square and plots it; autosomal only
     phenprobs = prob(p1, p2)
     colors = setColors(data)
     #text = analyzeData(data)
-    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
     table = plt.table( #initializes table
         cellText=data,
         cellColours=colors,
@@ -66,13 +67,13 @@ def makeSquare4():#Creates a 4x4 punnett square and plots it; autosomal only
         colColours= ['0.45']*5,
         colLoc='center',
         loc='center',bbox=None)
-    table.scale(1, 4)
-    plt.title(title) 
-   # plt.axis('off')
+    table.scale(1, 3.65)
     plt.xticks([], [])
     plt.yticks([], [])
-    plt.xlabel(father)
-    plt.ylabel(mother)
+    plt.text(0.5, 1.15, title, horizontalalignment = 'center', fontsize = 14, transform = ax.transAxes)
+    ax.set_xlabel(father)
+    ax.xaxis.set_label_position('top')
+    ax.set_ylabel(mother)
     plt.show() #show table
     #plt.savefig('image.png',dpi=750)
     

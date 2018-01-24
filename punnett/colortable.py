@@ -42,7 +42,14 @@ class colortbl():
                 self.add_text(str(data[r][c]), r, c)
 
     def title(self, text): #add a title to the table
-        self.fig.suptitle(text)
+        plt.text(-.1, .4, text, horizontalalignment = 'center', fontsize = 12)
+    
+    def x_label(self, text):
+        (self.axes.flatten())[1].set_xlabel(text)
+        (self.axes.flatten())[1].xaxis.set_label_position('top')
+    
+    def y_label(self, text):
+        self.axes[1][0].set_ylabel(text)
 
     def add_text(self, text, row, col):
         # in case manual override of text is needed

@@ -15,9 +15,9 @@ import re
 import os
 
 def makeSquare16(): #Creates a punnett square and plots it (16x16)
-    title = raw_input('Please enter the title of your Punnett Square.')
-    father = raw_input("Please enter the father's name.")
-    mother = raw_input("Please enter the mother's name.")
+    title = raw_input('Please enter the title of your Punnett Square: ')
+    father = raw_input("Please enter the father's name: ")
+    mother = raw_input("Please enter the mother's name: ")
     while True: #loops until valid user input
         p1 = raw_input("Please enter the alleles of the father: ").strip()#enter raw input and gets rid of excess whitespace
         if p1=='help': #opens help documentation
@@ -58,6 +58,8 @@ def makeSquare16(): #Creates a punnett square and plots it (16x16)
     phenprobs = prob(p1,p2)
     colors = setColors(data)
     
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
     table = plt.table(#initialize table
         cellText=data,
         cellColours=colors,
@@ -68,13 +70,12 @@ def makeSquare16(): #Creates a punnett square and plots it (16x16)
         colColours= ['0.45']*17,
         colLoc='center',
         loc='center',bbox=None)
-   # plt.axis('off')
-    plt.title(title) 
-   # plt.axis('off')
     plt.xticks([], [])
     plt.yticks([], [])
-    plt.xlabel(father)
-    plt.ylabel(mother)
+    plt.text(0.5, 1.1, title, horizontalalignment = 'center', fontsize = 14, transform = ax.transAxes)
+    ax.set_xlabel(father)
+    ax.xaxis.set_label_position('top')
+    ax.set_ylabel(mother)
     plt.show() #show table
     #plt.savefig('image.png',dpi=750)
     return phenprobs
