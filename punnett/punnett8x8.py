@@ -15,6 +15,9 @@ import re
 import os
 
 def makeSquare8():#Creates a 8x8 punnett square and plots it; autosomal only
+    title = raw_input('Please enter the title of your Punnett Square.')
+    father = raw_input("Please enter the father's name.")
+    mother = raw_input("Please enter the mother's name.")
     while True: #loops until valid user input
         p1 = raw_input("Please enter the alleles of the father: ").strip() #enter raw input and gets rid of excess whitespace
         if p1=='help': #opens help documentation
@@ -66,7 +69,13 @@ def makeSquare8():#Creates a 8x8 punnett square and plots it; autosomal only
         colLoc='center',
         loc='center',bbox=None)
     table.scale(1, 2)
-    plt.axis('off')
+    plt.title(title) 
+   # plt.axis('off')
+    plt.xticks([], [])
+    plt.yticks([], [])
+    plt.xlabel(father)
+    plt.ylabel(mother)
+    plt.show() #show table
     plt.show() #output the image of the table
     #plt.savefig('image.png',dpi=750)
     return phenprobs

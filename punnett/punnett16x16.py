@@ -15,6 +15,9 @@ import re
 import os
 
 def makeSquare16(): #Creates a punnett square and plots it (16x16)
+    title = raw_input('Please enter the title of your Punnett Square.')
+    father = raw_input("Please enter the father's name.")
+    mother = raw_input("Please enter the mother's name.")
     while True: #loops until valid user input
         p1 = raw_input("Please enter the alleles of the father: ").strip()#enter raw input and gets rid of excess whitespace
         if p1=='help': #opens help documentation
@@ -65,8 +68,14 @@ def makeSquare16(): #Creates a punnett square and plots it (16x16)
         colColours= ['0.45']*17,
         colLoc='center',
         loc='center',bbox=None)
-    plt.axis('off')
-    plt.show()
+   # plt.axis('off')
+    plt.title(title) 
+   # plt.axis('off')
+    plt.xticks([], [])
+    plt.yticks([], [])
+    plt.xlabel(father)
+    plt.ylabel(mother)
+    plt.show() #show table
     #plt.savefig('image.png',dpi=750)
     return phenprobs
 

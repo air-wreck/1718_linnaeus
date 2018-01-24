@@ -15,6 +15,9 @@ import re
 import os
 
 def makeSquare4():#Creates a 4x4 punnett square and plots it; autosomal only
+    title = raw_input('Please enter the title of your Punnett Square.')
+    father = raw_input("Please enter the father's name.")
+    mother = raw_input("Please enter the mother's name.")
     while True: #loops until valid user input
         p1 = raw_input("Please enter the alleles of the father: ").strip() #enter raw input and gets rid of excess whitespace
         if p1=='help': #opens help documentation
@@ -64,8 +67,13 @@ def makeSquare4():#Creates a 4x4 punnett square and plots it; autosomal only
         colLoc='center',
         loc='center',bbox=None)
     table.scale(1, 4)
-    plt.axis('off')
-    plt.show() #displays table
+    plt.title(title) 
+   # plt.axis('off')
+    plt.xticks([], [])
+    plt.yticks([], [])
+    plt.xlabel(father)
+    plt.ylabel(mother)
+    plt.show() #show table
     #plt.savefig('image.png',dpi=750)
     
     return phenprobs

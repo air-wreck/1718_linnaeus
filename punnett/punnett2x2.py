@@ -32,7 +32,9 @@ def makeSquare2(): #Creates 2x2 Punnett Square;
             print "Please try again."
             inherit = inheritlist(raw_input('Please enter \'aut\' for autosomal,'
         '\'inc\' for incomplete dominance, \'cod\' for codominance, and xl for x-linked.\n')) #User inputs inheritance format
-    
+    title = raw_input('Please enter the title of your Punnett Square.')
+    father = raw_input("Please enter the father's name.")
+    mother = raw_input("Please enter the mother's name.")
     while True: #loops until user input is valid
         p1 = raw_input("Please enter the alleles of the father: ")#enter father alleles
         if p1=='help':
@@ -93,10 +95,13 @@ def makeSquare2(): #Creates 2x2 Punnett Square;
             colLoc='center',
             loc='center',bbox=None)
         table.scale(1, 6)
-        plt.title(inherit) 
-        plt.axis('off')
+        plt.title(inherit + " of " + title) 
+        #plt.axis('off')
+        plt.xticks([], [])
+        plt.yticks([], [])
+        plt.xlabel(father)
+        plt.ylabel(mother)
         plt.show() #show table
-        
     #plt.savefig('image.png',dpi=750)
     return phenprobs, xl, cod
         
@@ -158,7 +163,7 @@ def inheritlist(x): #dictionary storing names of each type of inheritance
         'aut': "Autosomal Dominance",
         'inc': "Incomplete Dominance",
         'cod': "Codominance",
-        'xl': 'X-Linked',
+        'xl': 'X-Linked Inheritance',
         'help': 'help',
         }.get(x, "invalid")
 
