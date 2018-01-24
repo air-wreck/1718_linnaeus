@@ -16,3 +16,6 @@ cgi-bin/dot_path
 
 # ignore mac-specific Finder layout
 *.DS_Store
+
+# ignore the config file for non-server matplotlib use
+punnett/ct_config

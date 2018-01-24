@@ -11,6 +11,10 @@ above. If you want to try and tweak the code for yourself, you will need to get
 more involved. Obviously, you first need to clone this repository over your
 favorite protocol.
 
+If you just want to run some of the example scripts on your computer, you may
+need to write `no-agg` in the `punnett/ct_config` file that the setup script
+will automatically generate. If you are hosting this on a server, this step is not needed, but you will need to read on.
+
 If you want to set up the server yourself, you will need to first install the
 dependencies listed at the bottom of this guide. Then, you need to set up your
 Apache server correctly. Edit your `httpd.conf` file with the lines:

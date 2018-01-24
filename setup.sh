@@ -32,5 +32,13 @@ cp pedigree/ped_solve.py cgi-bin/ped_solve.py
 touch cgi-bin/dot_path
 chmod +r cgi-bin/dot_path
 
+# this config file exists only so that colortable.py can be used outside the
+# production server environment (i.e. load matplotlib with a non-Agg 
+# backend)
+touch punnett/ct_config
+chmod +r punnett/ct_config
+
 # friendly warning to finish setup
 echo 'WARNING: make sure you set up cgi-bin/dot_path, or else'
+echo 'if you are not on a deployment server, set up punnett/ct_config too'
+
