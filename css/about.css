@@ -10,9 +10,25 @@ strong {
 
 .about-container {
   background: url('../img/png/dna.png') no-repeat center center;
-  padding: 50px;
+  padding: 100px;
   width: 100%;
-  background-color: transparent;
+  background-color: #a5e544;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-top-width: 5px;
+  border-bottom-width: 5px;
+  border-top-color: black
+  border-bottom-color: black;
   text-align: center;
+  box-sizing: border-box;
+  font-size: 200%;
+}
+
+.content-21 {
+  text-align: center;
+  padding: 20px;
+  float: left;
+  width: 100%;
+  font-size: 150%;
   box-sizing: border-box;
 }
