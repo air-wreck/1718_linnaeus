@@ -62,7 +62,7 @@ def probTable(probs): #prints table of probabilities for offspring phenotypes
 #user interface
 print ('\n\nPunnett Square Creator\n')
 print ('Note: For all functions to run properly, Canopy cannot be in interactive mode.')
-print ('Please also ensure that the folder \'1718_linnaeus\' is selected as the working directory.')
+print ('Please also ensure that the folder \'punnett\' is selected as the working directory.')
 print ('Enter \'help\' at any time for more detailed instructions/information.')
 print ('\nThis program can support the following square sizes:\n')
 print ('\tEnter \'1\' for 2x2')

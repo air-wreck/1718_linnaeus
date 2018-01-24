@@ -9,9 +9,6 @@ with a matrix of probabilities of offspring phenotypes
 To use interactively, just type makeSquare2().
 '''
 
-
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import colortable as ct
 import re

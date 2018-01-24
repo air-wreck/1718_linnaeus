@@ -8,8 +8,6 @@ alleles. The output is returned as a punnett square drawn using matplotlib and t
 To use interactively, just type makeSquare4().
 '''
 
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import re
 import os
