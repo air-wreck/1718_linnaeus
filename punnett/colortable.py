@@ -8,9 +8,12 @@ See the file colortable_example.py for an example of how to use this class.
 # when we're running on the server, we must use the Agg backend to render to
 # png properly, but when we are just running this as a normal user through
 # the command-line, that is actually undesirable
-if file('ct_config', 'r').read().strip() != 'no-agg':
-    import matplotlib
-    matplotlib.use('Agg')
+try:
+    if file('ct_config', 'r').read().strip() != 'no-agg':
+        import matplotlib
+        matplotlib.use('Agg')
+except:
+    pass
 import matplotlib.pyplot as plt
 import numpy as np
 
