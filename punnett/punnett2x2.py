@@ -9,10 +9,12 @@ with a matrix of probabilities of offspring phenotypes
 To use interactively, just type makeSquare2().
 '''
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import colortable as ct
 import re
 import os
-import colortable as ct
 
 #value of global variables reflect current mode of inheritance
 inc = False
