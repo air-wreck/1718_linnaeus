@@ -22,6 +22,10 @@ cod = False
 xl = False
 
 def makeSquare2(): #Creates 2x2 Punnett Square;
+    global inc
+    global cod
+    global xl
+    inc, cod, xl = False, False, False
     global inherit
     inherit = inheritlist(raw_input('Please enter \'aut\' for autosomal,'
         '\'inc\' for incomplete dominance, \'cod\' for codominance, and \'xl\' for x-linked.\n')) #User inputs inheritance format
