@@ -67,13 +67,12 @@ def to_html(data, colors):
             else:
                 style = ''
                 if len(colors[r][c]) == 1:
-                    style = 'background-color: '+str(colors[r][c])+';'
+                    style = 'background-color: '+str(colors[r][c][0])+';'
                 elif len(colors[r][c]) == 2:
-                    style = 'background: linear-gradient(-45deg,'
-                  +str(colors[r][c][0])+' 50%,'
-                  +str(colors[r][c][1])+' 51%);'
+                    style = 'background: linear-gradient(-45deg,'+str(colors[r][c][0])+' 50%,'+str(colors[r][c][1])+' 51%);'
                 html_str += '<td style="'+style+'">'+str(cell)+'</td>'
         html_str += '</tr>'
+    html_str += '</table>'
     return html_str
 
 def plot(f, m, title=''):

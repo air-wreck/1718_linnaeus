@@ -30,5 +30,6 @@ function colortbl(data, colors) {
     }
     html_str += '</tr>'
   }
+  html_str += '</table>'
   return html_str;
 }

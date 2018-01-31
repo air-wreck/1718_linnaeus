@@ -5,6 +5,7 @@
 import os, urllib2, re, allele
 
 # retrieve and parse HTTP GET request
+os.environ['QUERY_STRING'] = 'father=Aa&mother=Aa'
 query = [i.split('=')[1] for i in os.getenv('QUERY_STRING').split('&')]
 father = query[0]
 mother = query[1]
