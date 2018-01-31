@@ -16,20 +16,15 @@ if len(query) > 2:
 test = re.compile('^[a-zA-Z]{2,8}$')
 if (not bool(test.match(father)) or not bool(test.match(mother)) or
    len(father) != len(mother) or len(father) % 2 == 1):
-    # I'm not sure if it's valid to return another Content-Type on error, but
-    # this should never be reached by a *legitimate* user anyway
     print 'Content-Type: text/html'
     print ''
     print 'Error: invalid query'
 else:
-    # plot the punnett square
-    psquare = allele.plot(father, mother, title=title)
-    psquare.color(1, 1, c1='#a4c4fc')
-    psquare.color(2, 2, c1='#fcaba4')
-    psquare.color(1, 2, c1='#fcaba4', c2='#a4c4fc')
-    psquare.color(2, 1, c1='#fcaba4', c2='#a4c4fc')
+    # solve the punnett square
+    square = allele.solve(father, mother)
+    colors = allele.colorize(square)
 
-    # print the image to stdout
-    print 'Content-Type: image/png'
+    # print the generated html table to stdout
+    print 'Content-Type: text/html'
     print ''
-    print psquare.to_png()
+    print allele.to_html(square, colors)

@@ -11,6 +11,9 @@ Web interface for solving punnett squares
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/punnett.css">
 
+  <!-- JS implementation of colortable -->
+  <script type="text/javascript" src="punnett/colortable.js"></script>
+
   <!-- Google fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
 
@@ -83,6 +86,8 @@ Web interface for solving punnett squares
           test.test(father) && test.test(mother)) {
         pun.src = 'cgi-bin/punnett-square?father='+father+'&mother='+mother+
                   '&title='+title;
+        var tbl = document.getElementById('pun-tbl');
+        tbl.innterHTML = pun.innerHTML;
       } else {
         window.alert('Error: invalid genotypes. Make sure that genotypes are'+
                      ' the same length and at most eight characters.' +
@@ -90,6 +95,22 @@ Web interface for solving punnett squares
       }
     }
   </script>
+
+  <!-- create table with html -->
+  <script type="text/javascript">
+    function pun_exp() {
+      var data = [['', 'A', 'a'],
+                  ['A', 'AA', 'Aa'],
+                  ['a', 'aA', 'aa']];
+      var colors = [[[], [], []],
+                    [[], ['#a4c4fc'], ['#fcaba4', '#a4c4fc']],
+                    [[], ['#fcaba4', '#a4c4fc'], ['#fcaba4']]];
+      var tbl = document.getElementById('pun-tbl');
+      tbl.innerHTML = colortbl(data, colors);
+      console.log(colortbl(data, colors));
+    }
+  </script>
+
   <!-- usage information -->
   <div class="usage">
     <strong><i>Nota Bene!</i></strong> May take a long time for larger genotypes. Coloring is just for show and doesn't mean anything for now. Patience is a virtue.
@@ -108,5 +129,10 @@ Web interface for solving punnett squares
   <div style="text-align: center; margin-top: 20px;">
     <img id="pun-img" src="cgi-bin/punnett-square?father=Aa&mother=Aa&title=example">
   </div>
+
+  <!-- EXPERIMENTAL VERSION -->
+  <div style="text-align: center; margin-top: 50px;"><button class="button" onclick="pun_exp();">Experimental</button></div>
+  <div id="pun-tbl" style="text-align: center;"></div>
+
 </body>
 </html>

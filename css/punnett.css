@@ -51,3 +51,21 @@
   left: 5%;
   top: 20%;
 }
+
+/* the table stuff */
+table {
+  margin: 0px auto;
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid black;
+  padding: 5px;
+}
+
+th {
+  background-color: #bbbbbb;
+  border: 1px solid black;
+  padding: 5px;
+  min-width: 20px;
+}

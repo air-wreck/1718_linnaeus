@@ -42,6 +42,40 @@ def solve(f, m):
         square += [[m_arr[i]] + sol_arr[i]]
     return square
 
+def colorize(data):
+    # in this future, this will actually use codominance or whatever
+    # right now, all this does is colorize the first four cells and leave the
+    # rest blank
+    colorized = []
+    for r, _ in enumerate(data):
+        colorized += [[]]
+        for c, _ in enumerate(data[r]):
+            colorized[r] += [[]]
+    colorized[1][1] = ['#a4c4fc']
+    colorized[2][2] = ['#fcaba4']
+    colorized[1][2] = ['#fcaba4', '#a4c4fc']
+    colorized[2][1] = ['#fcaba4', '#a4c4fc']
+    return colorized
+
+def to_html(data, colors):
+    html_str = '<table>'
+    for r, row in enumerate(data):
+        html_str += '<tr>'
+        for c, cell in enumerate(row):
+            if r == 0 or c == 0:
+                html_str += '<th>'+str(cell)+'</th>'
+            else:
+                style = ''
+                if len(colors[r][c]) == 1:
+                    style = 'background-color: '+str(colors[r][c])+';'
+                elif len(colors[r][c]) == 2:
+                    style = 'background: linear-gradient(-45deg,'
+                  +str(colors[r][c][0])+' 50%,'
+                  +str(colors[r][c][1])+' 51%);'
+                html_str += '<td style="'+style+'">'+str(cell)+'</td>'
+        html_str += '</tr>'
+    return html_str
+
 def plot(f, m, title=''):
     square = solve(f, m)
     table = ct.colortbl(square)
