@@ -11,20 +11,15 @@ Very plain page for web-based pedigree stuff
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/pedigree.css">
 
+  <!-- menu bar for small screens -->
+  <script type="text/javascript" src="js/nav.js"></script>
+  <!-- custom warning box -->
+  <script type="text/javascript" src="js/warn.js"></script>
+
   <!-- Google fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
 </head>
 <body>
-  <!-- JS for creating custom alert/warning box -->
-  <script type="text/javascript">
-    function warn_user(text) {
-      var alert_box = document.getElementById('alert');
-      var alert_text = document.getElementById('alert-text');
-      alert_text.innerHTML = text;
-      alert_box.style.display = 'inline-block';
-    }
-  </script>
-
   <!-- JS for constructing and validating information on client-side to be sent to server -->
   <script type="text/javascript">
     var row_id = 1;  // the next available row_id
@@ -178,21 +173,6 @@ Very plain page for web-based pedigree stuff
     }
   </script>
 
-  <!-- menu bar for small screens -->
-  <script type="text/javascript">
-    window.onclick = function(event) {
-      menu = document.getElementById("dropdown");
-      if (event.target.matches("#dropbtn") || event.target.matches(".menu")) {
-        if (menu.style.display == "none" || menu.style.display == "") {
-          menu.style.display = "block";
-        } else {
-          menu.style.display = "none";
-        }
-      } else {
-        menu.style.display = "none";
-      }
-    };
-  </script>
   <!-- navigation bar -->
   <div class="nav-bar">
     <ul>
