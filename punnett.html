@@ -15,6 +15,8 @@ Web interface for solving punnett squares
   <script type="text/javascript" src="js/nav.js"></script>
   <!-- custom warning box -->
   <script type="text/javascript" src="js/warn.js"></script>
+  <!-- table colorization scheme code -->
+  <script type="text/javascript" src="js/colorize.js"></script>
 
   <!-- Google fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
@@ -60,7 +62,7 @@ Web interface for solving punnett squares
 
   <!-- create table with html -->
   <script type="text/javascript">
-    function colortbl(data, colors) {
+    const colortbl = (data, colors) => {
       /* return an html string with a table based on given data
          styling provided by caller, not callee
 
@@ -78,13 +80,12 @@ Web interface for solving punnett squares
           } else {
             /* for data cells, pick background based on parallel color array */
             style = '';  // style defaults to nothing
-            if (colors[r][c].length == 1) {
-              style = 'background-color: '+colors[r][c].toString()+';';
-            } else if (colors[r][c].length == 2) {
-              style = 'background: linear-gradient(-45deg,'
-                      +colors[r][c][0].toString()+' 50%,'
-                      +colors[r][c][1].toString()+' 50%);'
+            let percent = 100.0 / colors[r][c].length;
+            style = 'background: linear-gradient(-45deg'
+            for (let i = 0; i < colors[r][c].length; i++) {
+              style += ','+colors[r][c][i].toString()+' '+(percent*i).toString()+'%,'+colors[r][c][i].toString()+' '+(percent*(i+1)).toString()+'%';
             }
+            style += ');';
             html_str += '<td style="'+style+'">'+data[r][c].toString()+'</td>';
           }
         }
@@ -94,7 +95,7 @@ Web interface for solving punnett squares
       return html_str;
     }
 
-    function str2geno(string) {
+    const str2geno = (string) => {
       var res = [];
       for (var i = 0; i < string.length; i += 2) {
         res.push([string[i], string[i+1]]);
@@ -102,7 +103,7 @@ Web interface for solving punnett squares
       return res;
     }
 
-    function combine(arr, depth) {
+    const combine = (arr, depth) => {
       if (depth == arr.length) {
         return [''];
       } else {
@@ -117,7 +118,7 @@ Web interface for solving punnett squares
       }
     }
 
-    function add(f, m) {
+    const add = (f, m) => {
       ret = '';
       for (var i in f) {
         ret += f[i]+m[i];
@@ -125,7 +126,7 @@ Web interface for solving punnett squares
       return ret;
     }
 
-    function solve(f, m) {
+    const solve = (f, m) => {
       var f_arr = combine(str2geno(f), 0);
       var m_arr = combine(str2geno(m), 0);
       var sol_arr = [];
@@ -139,37 +140,38 @@ Web interface for solving punnett squares
       for (var i in m_arr) {
         square.push([f_arr[i]].concat(sol_arr[i]));
       }
-      console.log(square);
       return square;
     }
 
-    function dummy_colorize(data) {
-      /* in the future, this will actually use codominance or whatever; right now, it just colorizes first four cells for proof-of-concept */
-      colorized = [];
-      for (var r in data) {
-        colorized.push([]);
-        for (var c in data[r]) {
-          colorized[r].push([]);
-        }
-      }
-      colorized[1][1] = ['#a4c4fc'];
-      colorized[2][2] = ['#fcaba4'];
-      colorized[1][2] = ['#fcaba4', '#a4c4fc'];
-      colorized[2][1] = ['#fcaba4', '#a4c4fc'];
-      return colorized;
-    }
-
-    function load_pun() {
+    const load_pun = () => {
       /* loads the punnett square */
       var father = document.getElementById('father').value;
       var mother = document.getElementById('mother').value;
       var title = document.getElementById('title').value;
-      /* let's not crash the server again...validate data! */
+
+      /* consider the right color mapping function (from colorize.js) to use */
+      let cmap = {
+        'none': color_blank,
+        'uniques': color_uniques,
+        'pairwise': color_pairwise
+      }[document.getElementById('colorization').value];
+
+      /* validate data */
       test = RegExp('^[a-zA-Z]{2,}$');
       if (father.length == mother.length && father.length % 2 == 0 &&
           test.test(father) && test.test(mother)) {
         var data = solve(father, mother);
-        var colors = dummy_colorize(data);
+        var colors = [[]];
+        // set first row of colors to blank
+        for (let i = 0; i < data[0].length; i++)
+          colors[0].push(color_blank());
+        // set subsequent rows to a combined header and data
+        let colorspace = sample_colors(Math.round(data[1][1].length / 2));
+        for (let r = 1; r < data.length; r++) {
+          colors.push([color_blank()]
+                      .concat(data[r].slice(1)
+                      .map((c) => cmap(c, colorspace))));
+        }
         var tbl = document.getElementById('pun-tbl');
         tbl.innerHTML = '<h3>'+title+'</h3>'+colortbl(data, colors);
       } else {
@@ -192,6 +194,12 @@ Web interface for solving punnett squares
     <input id="mother" type="text" name="mother" value="Aa"><br>
     Title:
     <input id="title" type="text" name="title" value="example"><br>
+    Colorization:
+    <select id="colorization" name="colorization">
+      <option value="none">None</option>
+      <option value="uniques">Uniques</option>
+      <option value="pairwise">Pairwise</option>
+    </select>
   </div>
   <div style="text-align: center; margin-top: 10px;"><button class="button" onclick="load_pun();">Solve Punnett Square</button></div>
   <div id="warn-container" style="margin-top: 10px; text-align: center">
