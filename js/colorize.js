@@ -47,14 +47,14 @@ const color_uniques = (cell, colorspace) => {
       colors.push(colorspace.secondary[c_i]);
 
   }
-  return colors;
+  return colors.reverse();
 }
 
 // each pair (Aa) if assigned a color, and is represented by either a dark or
 // light color based on whether the it is dominant (AA, Aa, aA) or recessive
 // (aa): essentially a simple dominant/recessive coloring
 const color_pairwise = (cell, colorspace) => {
-  let is_dom = (g) => g === g.toUpperCase();
+  let is_dom = g => g === g.toUpperCase();
   let colors = [];
   for (let i = 0; i < cell.length; i += 2) {
     let c_i = Math.round(i / 2);
@@ -85,21 +85,17 @@ const sample_colors = (n) => {
   let main = [244, 65, 65];
   let chroma = {main: [], secondary: []};
   let chroma_append = (channel, start=65, stop=244) => {
-    if (start <= stop) {
-      for (let C = start; C <= stop; C++) {
-        // incremement main channels
-        main[channel] = C;
-        chroma.main.push(Array.from(main));
-        // we want to increase the secondary channels by the appropriate amount
-        chroma.secondary.push(main.map((c) => Math.round(0.5 * c + 122)));
-      }
-    } else {
-      for (let C = start; C >= stop; C--) {
-        main[channel] = C;
-        chroma.main.push(Array.from(main));
-        chroma.secondary.push(main.map((c) => Math.round(0.5 * c + 122)));
-      }
+    let push_colors = C => {
+      // increment main channel
+      main[channel] = C;
+      chroma.main.push(Array.from(main));
+      // we want to increase the secondary channels by the appropriate amount
+      chroma.secondary.push(main.map(c => Math.round(0.5 * c + 122)));
     }
+    if (start <= stop)
+      for (let C = start; C <= stop; C++) push_colors(C);
+    else
+      for (let C = start; C >= stop; C--) push_colors(C);
   }
   chroma_append(1, start=65, stop=244);
   chroma_append(0, start=244, stop=65);
@@ -107,8 +103,8 @@ const sample_colors = (n) => {
   chroma_append(1, start=244, stop=65);
   chroma_append(0, start=65, stop=244);
 
-  let rgb_to_hex = (rgb) =>
-    '#'+rgb.map((d) => ('0'+d.toString(16)).slice(-2)).join('');
+  let rgb_to_hex = rgb =>
+    '#'+rgb.map(d => ('0'+d.toString(16)).slice(-2)).join('');
 
   let samples = {main: [], secondary: []};
   let step = Math.round(chroma.main.length / n);

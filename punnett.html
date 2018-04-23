@@ -62,15 +62,9 @@ Web interface for solving punnett squares
 
   <!-- create table with html -->
   <script type="text/javascript">
+    /* returns an HTML string with a table based on given data
+       caller must supply a matching array of [R,G,B] colors to apply to the data */
     const colortbl = (data, colors) => {
-      /* return an html string with a table based on given data
-         styling provided by caller, not callee
-
-      Parameters:
-        String[][] data : the data
-        String[][][] colors : the colors --- please match the data array
-      */
-
       var html_str = '<table>';
       for (var r = 0; r < data.length; r++) {
         html_str += '<tr>';
@@ -81,9 +75,10 @@ Web interface for solving punnett squares
             /* for data cells, pick background based on parallel color array */
             style = '';  // style defaults to nothing
             let percent = 100.0 / colors[r][c].length;
-            style = 'background: linear-gradient(-45deg'
+            style = 'background: linear-gradient(-45deg';
             for (let i = 0; i < colors[r][c].length; i++) {
-              style += ','+colors[r][c][i].toString()+' '+(percent*i).toString()+'%,'+colors[r][c][i].toString()+' '+(percent*(i+1)).toString()+'%';
+              style += ','+colors[r][c][i].toString()+' '+(percent*i).toString()+'%,'
+                          +colors[r][c][i].toString()+' '+(percent*(i+1)).toString()+'%';
             }
             style += ');';
             html_str += '<td style="'+style+'">'+data[r][c].toString()+'</td>';
@@ -95,14 +90,14 @@ Web interface for solving punnett squares
       return html_str;
     }
 
-    const str2geno = (string) => {
-      var res = [];
-      for (var i = 0; i < string.length; i += 2) {
-        res.push([string[i], string[i+1]]);
-      }
-      return res;
-    }
+    /* transforms a genotype string description into a 2D array, e.g.
+       "AaBbCc" -> [["A", "a"], ["B", "b"], ["C", "c"]] */
+    const str2geno = string =>
+      string.split('')
+            .map((el, i) => [el, string[i+1]])
+            .filter((el, i) => i % 2 == 0);
 
+    /* recursively determines the possible offspring for 2D genotype array */
     const combine = (arr, depth) => {
       if (depth == arr.length) {
         return [''];
@@ -118,13 +113,10 @@ Web interface for solving punnett squares
       }
     }
 
-    const add = (f, m) => {
-      ret = '';
-      for (var i in f) {
-        ret += f[i]+m[i];
-      }
-      return ret;
-    }
+    /* weaves two gentotype strings together, e.g.
+       add("ABC", "abc") -> "AaBbCc" */
+    const add = (f, m) =>
+      f.split('').map((el, i) => el + m[i]).join('')
 
     const solve = (f, m) => {
       var f_arr = combine(str2geno(f), 0);
