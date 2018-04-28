@@ -11,7 +11,7 @@ Very plain page for web-based pedigree stuff
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/pedigree.css">
 
-  <!-- menu bar for small screens -->
+  <!-- menu bar -->
   <script type="text/javascript" src="js/nav.js"></script>
   <!-- custom warning box -->
   <script type="text/javascript" src="js/warn.js"></script>
@@ -21,9 +21,6 @@ Very plain page for web-based pedigree stuff
   <script type="text/javascript" src="js/ped_draw.js"></script>
   <script type="text/javascript" src="js/other/viz.js"></script>
   <script type="text/javascript" src="js/other/full.js.opaque"></script>
-
-  <!-- Google fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
 </head>
 <body>
   <script type="text/javascript">
@@ -221,39 +218,6 @@ Very plain page for web-based pedigree stuff
       }
     }
   </script>
-
-  <!-- navigation bar -->
-  <div class="nav-bar">
-    <ul>
-      <div style="float: left;">
-        <li><span><b>Linnaeus</b></span></li>
-      </div>
-      <div style="float: right;">
-        <li><a href="home.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="pedigree.html">Pedigree</a></li>
-        <li><a href="punnett.html">Punnett Square</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </div>
-      <div style="float: right;" class="narrow-menu">
-        <!-- this is such a sketchy way to make a menu button -->
-          <button id="dropbtn">
-            <div class="menu"></div>
-            <div class="menu"></div>
-            <div class="menu"></div>
-          </button>
-
-          <!-- the actual dropdown menu -->
-          <div id="dropdown">
-            <a href="home.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="pedigree.html">Pedigree</a>
-            <a href="punnett.html">Punnett Square</a>
-            <a href="contact.html">Contact</a>
-          </div>
-      </div>
-    </ul>
-  </div>
   <div id="instructions">
     <div style="text-align: center;"><h1>Welcome to Linnaeus: the online pedigree maker!</h1></div><br>
     <div class="notice"><strong><u>Instructions:</u></strong> add or delete individuals as you like and define relationships among them. The probability of infection must be between 0 and 1, although a child is permitted to have an unknown probability (-1) as long as he or she has parents. Leave parents blank if this person has no parents in the pedigree. Note that individuals are identified by name (case sensitive), so you cannot have a duplicate name.</div>

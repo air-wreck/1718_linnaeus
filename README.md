@@ -5,6 +5,18 @@ CSE 2017-18 final project by Nelson, Karena and Eric
 Biology is the world around us. This is therefore a very powerful tool for the
 world around us. Try it [here](http://54.191.167.183/1718_linnaeus/home.html).
 
+### new! april 2018
+The code has been rewritten to work entire in-browser, so there is no longer
+any need for the Apache server environment or all of the aforementioned
+dependencies. All you need is a reasonably recent version of a major browser
+and you're set to go.
+
+This project now uses Graphviz through the `viz.js` project, which you can
+find [here](http://viz-js.com/). (Webassembly is great!) However, you don't
+need to install it before developing, since this repository is almost entirely
+self-contained (except for the icons at the bottom of the home page).
+Actually, you don't even need internet access anymore. 
+
 ### getting started
 If you just want to use the service, you can access the website from the link
 above. If you want to try and tweak the code for yourself, you will need to get

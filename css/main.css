@@ -3,6 +3,26 @@
    is a little more manageable in terms of development
 */
 
+/* font faces */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/Open_Sans/OpenSans-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Raleway";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/Raleway/Raleway-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/Merriweather/Merriweather-Regular.ttf") format("truetype");
+}
+
 html, body {
   padding: 0;
   margin: 0;

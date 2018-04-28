@@ -19,3 +19,6 @@ cgi-bin/dot_path
 
 # ignore the config file for non-server matplotlib use
 punnett/ct_config
+
+# ignore local files (mostly unused font files) on Eric's laptop
+eric_local/*
