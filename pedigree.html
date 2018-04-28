@@ -16,105 +16,129 @@ Very plain page for web-based pedigree stuff
   <!-- custom warning box -->
   <script type="text/javascript" src="js/warn.js"></script>
 
+  <!-- pedigree scripts -->
+  <script type="text/javascript" src="js/ped_solve.js"></script>
+  <script type="text/javascript" src="js/ped_draw.js"></script>
+  <script type="text/javascript" src="js/other/viz.js"></script>
+  <script type="text/javascript" src="js/other/full.js.opaque"></script>
+
   <!-- Google fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
 </head>
 <body>
-  <!-- JS for constructing and validating information on client-side to be sent to server -->
   <script type="text/javascript">
-    var row_id = 1;  // the next available row_id
-    var pedigree = [];  // a list of individuals present with all their data
-    function indiv(name, sex, infected, father, mother) {
-      /* this data type represents all the needed information about an individual */
-      this.name = name;
-      this.sex = sex;
-      this.prob = infected;
-      this.father = father;
-      this.mother = mother;
-    }
-    indiv.prototype.toString = function indivToString() {
-      /* convert an indiv() to a string, useful for generating the proper HTTP GET request */
-      return this.name+','+this.sex+','+this.prob+','+this.father+','+this.mother;
-    }
+    let row_id = 1;  // the next available row_id
+    let pedigree = [];  // a list of individuals present with all their data
 
     /* functions for generating, validating, and rendering pedigree */
-    function add_row() {
+    const add_row = () => {
       // append a row
-      var list = document.getElementById('list');
-      var text = '<div id=row'+row_id.toString()+' class="indiv">\
-        Name: <input type="text" name="name" value="Bob">\
-        Sex: <select name="sex">\
-          <option value="m">male</option>\
-          <option value="f">female</option>\
-        </select>\
-        Probability: <input type="number" name="prob" style="width: 50px;">\
-        Father: <input type="text" name="father" value="">\
-        Mother: <input type="text" name="mother" value="">\
-        <button class="button delete-button" onclick="delete_row(\'row'+row_id.toString()+'\');">Delete Individual</button>\
-      </div>';
-      list.insertAdjacentHTML('beforeend', text);
+      let list = document.getElementById("list");
+      let text = `<div id="row${row_id.toString()}" class="indiv">
+        Name: <input type="text" name="name" value="Bob">
+        Sex: <select name="sex">
+          <option value="m">male</option>
+          <option value="f">female</option>
+        </select>
+        Probability: <input type="number" name="prob" style="width: 50px;">
+        Father: <input type="text" name="father" value="">
+        Mother: <input type="text" name="mother" value="">
+        <button class="button delete-button"
+          onclick="delete_row('row${row_id.toString()}');">
+          Delete Individual
+        </button>`
+      list.insertAdjacentHTML("beforeend", text);
       row_id++;
     }
-    function delete_row(rowid) {
+
+    const delete_row = rowid => {
       // delete a row
-      var row = document.getElementById(rowid);
+      let row = document.getElementById(rowid);
       row.parentNode.removeChild(row);
     }
-    function build() {
+
+    const build = () => {
       // transform HTML list into pedigree array
-      pedigree = [];
-      var rows = document.getElementById('list').childNodes;
-      for (var i = 0; i < rows.length; i++) {
+      pedigree = [];  // reset pedigree
+      let rows = document.getElementById("list").childNodes;
+
+      // first get all individuals
+      for (let i = 0; i < rows.length; i++) {
         row = rows[i].childNodes;
+
         name = row[1].value;
-        if (row[1].value == '') {
+        if (row[1].value === "") {
           // all names must be non-empty
-          warn_user('Undefined name');
+          warn_user("Undefined name");
           return -1;
         }
-        sex = row[3].value;
+
+        sex = Sex.m;
+        if (row[3].value === "f")
+          sex = Sex.f;
+
         prob = parseFloat(row[5].value);
-        if (row[5].value == '') {
+        if (row[5].value === "") {
           // all probabilities must be non-empty
-          warn_user('Undefined probability (use -1 if unknown)');
+          warn_user("Undefined probability (use -1 if unknown)");
           return -1;
         }
-        father = row[7].value;
-        mother = row[9].value;
-        pedigree.push(new indiv(name, sex, prob, father, mother));
+
+        let p = new Person(name, sex, infected=prob);
+        pedigree.push(new Person(name, sex, infected=prob));
       }
-      return 1;
+
+      // now that we have all individuals, associate everyone with parents
+      Array.from(rows).map((row, i) => {
+        let child = pedigree[i];
+        let father = row.childNodes[7].value;
+        let mother = row.childNodes[9].value;
+
+        if (father !== "" && mother !== "") {
+          // find these parents in the array and associate them with child
+          child.add_parents(
+            pedigree[pedigree.findIndex(x => x.name === father)],
+            pedigree[pedigree.findIndex(x => x.name === mother)]);
+        }
+      });
+
+      return 1;  // success!
     }
-    function verify() {
+
+    const verify = () => {
       // verify that the pedigree is valid
       // we can afford to be inefficient, since pedigrees are small
 
       // is there even anyone in the pedigree?
-      if (pedigree.length == 0) {
-        warn_user('No individuals found');
+      if (pedigree.length === 0) {
+        warn_user("No individuals found");
         return -1;
       }
 
       // check further conditions for each individual in the pedigree
-      for (var i = 0; i < pedigree.length; i++) {
+      for (let i = 0; i < pedigree.length; i++) {
+
         // no duplicates
-        for (var j = 0; j < pedigree.length; j++) {
-          if (pedigree[i].name == pedigree[j].name && i != j) {
-            warn_user('Duplicate individual found');
-            return -1;
-          }
+        if (pedigree.some((x, j) =>
+          pedigree[i].name === x.name && i !== j
+          ? true : false
+        )) {
+          warn_user("Duplicate individual found");
+          return -1;
         }
 
         // parents either both exist or both don't exist
-        if ((pedigree[i].father != '' && pedigree[i].mother == '') ||
-            (pedigree[i].father == '' && pedigree[i].mother != '')) {
-              warn_user('Each individual must have exactly 0 or 2 parents');
+        if ((pedigree[i].father !== null && pedigree[i].mother === null) ||
+            (pedigree[i].father === null && pedigree[i].mother !== null)) {
+              warn_user("Each individual must have exactly 0 or 2 parents");
               return -1;
             }
-        else if (pedigree[i].father != '' && pedigree[i].mother != '') {
+        else if (pedigree[i].father !== null
+              && pedigree[i].mother !== null) {
+          /*
           found_parents = 0;
-          for (var j = 0; j < pedigree.length; j++) {
-            if ((pedigree[i].father == pedigree[j].name || pedigree[i].mother == pedigree[j].name) && i != j) {
+          for (let j = 0; j < pedigree.length; j++) {
+            if ((pedigree[i].father === pedigree[j].name || pedigree[i].mother === pedigree[j].name) && i !== j) {
               found_parents++;
             }
           }
@@ -122,51 +146,76 @@ Very plain page for web-based pedigree stuff
             warn_user('Specified parents not found in pedigree');
             return -1;
           }
+          */
         } else {
           // founder has independent probability
-          if (pedigree[i].prob < 0) {
-            warn_user('Founders must have independent probability');
+          if (pedigree[i].infected < 0) {
+            warn_user("Founders must have independent probability");
             return -1;
           }
         }
 
         //probability is in range [0, 1]
-        if ((pedigree[i].father == '' && pedigree[i].prob < 0) ||
-            pedigree[i].prob > 1) {
-              warn_user('Probabilities must be in range [0, 1]')
+        if ((pedigree[i].father === null && pedigree[i].infected < 0) ||
+            pedigree[i].infected > 1) {
+              warn_user("Probabilities must be in range [0, 1]");
               return -1;
             }
 
         // father must be male and mother must be female
         // at this point, we have already checked that someone is not his or
         // her own parent
-        for (var j = 0; j < pedigree.length; j++) {
-          if ((pedigree[i].father == pedigree[j].name && pedigree[j].sex == 'f') || (pedigree[i].mother == pedigree[j].name && pedigree[j].sex == 'm')) {
-            warn_user('Father must be male and mother must be female');
-            return -1;
-          }
+        if (pedigree[i].father !== null && pedigree.some(x =>
+            (pedigree[i].father.name === x.name && x.sex === Sex.f
+          || pedigree[i].mother.name === x.name && x.sex === Sex.m)
+          ? true : false
+        )) {
+          warn_user("Father must be male and mother must be female");
+          return -1;
         }
       }
-      return 1;
+
+      return 1;  // all good
     }
-    function render() {
-      // request the server to build the pedigree
-      var query = '?';
-      for (var i = 0; i < pedigree.length; i++) {
-        if (i > 0) {
-          query += '&';
-        }
-        query += 'p'+i.toString()+'='+pedigree[i].toString();
-      }
-      img = document.getElementById('ped-img');
-      img.src = 'cgi-bin/pedigree'+query;
-      console.log(query)
+
+    let viz = new Viz();
+    const render = () => {
+      // solve pedigree
+      for (let i = 0; i < pedigree.length; i++)
+        find_prob(pedigree[i]);
+
+      // identify all marriages
+      // we assume that all relationships are monogamous and generational
+      let marriages = [];
+      pedigree
+        .filter(indiv => indiv.father !== null)
+        .map(indiv => {
+          // has this marriage already been found?
+          // i.e. is this a sibling of an already found child?
+          if (!marriages.some(union => {
+            if (union[0] == indiv.father && union[1] == indiv.mother) {
+              union[2].push(indiv);
+              return true;
+            }
+            return false;
+          })) marriages.push([indiv.father, indiv.mother, [indiv]]);
+        });
+
+      // generate DOT string description
+      let draw = new Draw('example');
+      marriages.map(x => draw.draw_marriage(x[0], x[1], x[2]));
+
+      // render on page
+      viz.renderSVGElement(draw.render()).then(el => {
+        el.id = "ped-img";
+        document.getElementById("ped-img").outerHTML = el.outerHTML;
+      });
     }
-    function make_ped() {
+
+    const make_ped = () => {
       // put together all the little functions
       if (build() > 0 && verify() > 0) {
         //yay for short-circuiting!
-
         // error messages already provided by verify()
         render();
       }
@@ -216,8 +265,8 @@ Very plain page for web-based pedigree stuff
   <div id="ped">
     <!-- error message, which starts out hidden -->
     <div id="alert" class="alert" style="display: none;"><strong style="color: #b73000;"><b>Error: </b></strong><span id="alert-text"></span><span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span></div><br>
-    <!-- the actual image -->
-    <img id="ped-img" src="">
+    <!-- the actual rendered pedigree -->
+    <svg id="ped-img"></svg>
   </div>
 
   <!-- buttons on top for user interaction -->

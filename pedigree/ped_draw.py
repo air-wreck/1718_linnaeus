@@ -116,7 +116,7 @@ class Draw():
         if len(children) == 1:
             # there is only one child, so no branching for children
             self.indiv(children[0])
-            self.nodes += children[0].name
+            self.nodes += children[0].name  #TODO: sketch?
             self.edges([[str(self.next_hidden-1), children[0].name]])
         elif len(children) > 1:
             # general branching required for children
