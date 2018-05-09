@@ -7,7 +7,7 @@
 }
 
 .punnett-page h1 {
-  font-family: "Rubik";
+  font-family: "Merriweather";
   color: #78bc12;
   font-size: 500%;
   margin: 0px;
@@ -46,6 +46,19 @@
 }
 #entry input:hover {background-color: white;}
 #entry input:focus {background-color: white;}
+
+#entry select {
+  background-color: #a5e544;
+  font-family: "Open Sans";
+  font-size: 10pt;
+  border: 1px solid  #a5e544;
+  outline: 0;
+  height: 30px;
+  margin-right: 10px;
+  transition: all .2s ease-in;
+}
+#entry select:hover {background-color: white;}
+#entry select:focus {background-color: white;}
 
 .caption1 {
   left: 5%;
