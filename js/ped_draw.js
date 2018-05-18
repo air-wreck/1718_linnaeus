@@ -35,7 +35,7 @@ function Draw(title) {
                Math.round(119 + 136 * (1 - person.infected)),
                Math.round(86 + 169 * (1 - person.infected))];
     let color_as_hex = "#"+RGB.map(d =>
-      ("0"+d.toString(16)).slice(-2)).join('');
+      ("0"+d.toString(16)).slice(-2)).join("");
 
     this.src += `${person.name} [fillcolor="${color_as_hex}" shape=${shape}];`;
   }

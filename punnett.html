@@ -30,42 +30,42 @@ Web interface for solving punnett squares
     /* returns an HTML string with a table based on given data
        caller must supply a matching array of [R,G,B] colors to apply to the data */
     const colortbl = (data, colors) => {
-      var html_str = '<table>';
+      var html_str = "<table>";
       for (var r = 0; r < data.length; r++) {
-        html_str += '<tr>';
+        html_str += "<tr>";
         for (var c = 0; c < data.length; c++) {
           if (r == 0 || c == 0) {
-            html_str += '<th>'+data[r][c].toString()+'</th>';
+            html_str += "<th>"+data[r][c].toString()+"</th>";
           } else {
             /* for data cells, pick background based on parallel color array */
-            style = '';  // style defaults to nothing
+            style = "";  // style defaults to nothing
             let percent = 100.0 / colors[r][c].length;
-            style = 'background: linear-gradient(-45deg';
+            style = "background: linear-gradient(-45deg";
             for (let i = 0; i < colors[r][c].length; i++) {
-              style += ','+colors[r][c][i].toString()+' '+(percent*i).toString()+'%,'
-                          +colors[r][c][i].toString()+' '+(percent*(i+1)).toString()+'%';
+              style += ","+colors[r][c][i].toString()+" "+(percent*i).toString()+"%,"
+                          +colors[r][c][i].toString()+" "+(percent*(i+1)).toString()+"%";
             }
-            style += ');';
-            html_str += '<td style="'+style+'">'+data[r][c].toString()+'</td>';
+            style += ");";
+            html_str += "<td style='"+style+"'>"+data[r][c].toString()+"</td>";
           }
         }
-        html_str += '</tr>'
+        html_str += "</tr>"
       }
-      html_str += '</table>'
+      html_str += "</table>"
       return html_str;
     }
 
     /* transforms a genotype string description into a 2D array, e.g.
        "AaBbCc" -> [["A", "a"], ["B", "b"], ["C", "c"]] */
     const str2geno = string =>
-      string.split('')
+      string.split("")
             .map((el, i) => [el, string[i+1]])
             .filter((el, i) => i % 2 == 0);
 
     /* recursively determines the possible offspring for 2D genotype array */
     const combine = (arr, depth) => {
       if (depth == arr.length) {
-        return [''];
+        return [""];
       } else {
         var res = [];
         for (var i in arr[depth]) {
@@ -81,7 +81,7 @@ Web interface for solving punnett squares
     /* weaves two gentotype strings together, e.g.
        add("ABC", "abc") -> "AaBbCc" */
     const add = (f, m) =>
-      f.split('').map((el, i) => el + m[i]).join('')
+      f.split("").map((el, i) => [el, m[i]].sort().join("")).join("")
 
     const solve = (f, m) => {
       var f_arr = combine(str2geno(f), 0);
@@ -93,7 +93,7 @@ Web interface for solving punnett squares
           sol_arr[i].push(add(f_arr[i], m_arr[j]));
         }
       }
-      square = [[''].concat(m_arr)];
+      square = [[""].concat(m_arr)];
       for (var i in m_arr) {
         square.push([f_arr[i]].concat(sol_arr[i]));
       }
@@ -103,19 +103,19 @@ Web interface for solving punnett squares
     var data = []; // expose data for easy CSV downloading later on
     const load_pun = () => {
       /* loads the punnett square */
-      var father = document.getElementById('father').value;
-      var mother = document.getElementById('mother').value;
-      var title = document.getElementById('title').value;
+      var father = document.getElementById("father").value;
+      var mother = document.getElementById("mother").value;
+      var title = document.getElementById("title").value;
 
       /* consider the right color mapping function (from colorize.js) to use */
       let cmap = {
-        'none': color_blank,
-        'uniques': color_uniques,
-        'pairwise': color_pairwise
-      }[document.getElementById('colorization').value];
+        "none": color_blank,
+        "uniques": color_uniques,
+        "pairwise": color_pairwise
+      }[document.getElementById("colorization").value];
 
       /* validate data */
-      test = RegExp('^[a-zA-Z]{2,}$');
+      test = RegExp("^[a-zA-Z]{2,}$");
       if (father.length == mother.length && father.length % 2 == 0 &&
           test.test(father) && test.test(mother)) {
         data = solve(father, mother);
@@ -130,12 +130,12 @@ Web interface for solving punnett squares
                       .concat(data[r].slice(1)
                       .map(c => cmap(c, colorspace))));
         }
-        let tbl = document.getElementById('pun-tbl');
-        tbl.innerHTML = '<h3>'+title+'</h3>'+colortbl(data, colors);
+        let tbl = document.getElementById("pun-tbl");
+        tbl.innerHTML = "<h3>"+title+"</h3>"+colortbl(data, colors);
       } else {
-        warn_user('Error: invalid genotypes. Make sure that genotypes are'+
-                  ' the same length and at most eight characters.' +
-                  ' They must be of even length and contain only letters.');
+        warn_user("Error: invalid genotypes. Make sure that genotypes are"+
+                  " the same length and at most eight characters." +
+                  " They must be of even length and contain only letters.");
       }
     }
   </script>
@@ -169,7 +169,6 @@ Web interface for solving punnett squares
   <div id="pun-tbl" style="margin-top: 10px; text-align: center;"></div>
 
   <!-- just here for now -->
-  <canvas id="canvas"></canvas> <!-- for downloading SVG => PNG -->
   <script type="text/javascript">
     const download_csv = () => {
       let table_as_str = data.map(row => row.join(",")).join("\n");
