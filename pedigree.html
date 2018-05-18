@@ -112,66 +112,53 @@ Very plain page for web-based pedigree stuff
         return -1;
       }
 
-      // check further conditions for each individual in the pedigree
-      for (let i = 0; i < pedigree.length; i++) {
+      pedigree.forEach(person => {
+        const count = name => pedigree.reduce((acc, x) => name === x.name ? acc+1 : acc, 0);
 
         // no duplicates
-        if (pedigree.some((x, j) =>
-          pedigree[i].name === x.name && i !== j
-          ? true : false
-        )) {
+        if (count(person.name) > 1) {
           warn_user("Duplicate individual found");
           return -1;
         }
 
-        // parents either both exist or both don't exist
-        if ((pedigree[i].father !== null && pedigree[i].mother === null) ||
-            (pedigree[i].father === null && pedigree[i].mother !== null)) {
-              warn_user("Each individual must have exactly 0 or 2 parents");
-              return -1;
-            }
-        else if (pedigree[i].father !== null
-              && pedigree[i].mother !== null) {
-          /*
-          found_parents = 0;
-          for (let j = 0; j < pedigree.length; j++) {
-            if ((pedigree[i].father === pedigree[j].name || pedigree[i].mother === pedigree[j].name) && i !== j) {
-              found_parents++;
-            }
-          }
-          if (found_parents < 2) {
-            warn_user('Specified parents not found in pedigree');
+        // different checks based on number of parents
+        if (person.father === null && person.mother === null) {
+          // check for independent probability
+          if (person.infeced < 0) {
+            warn_user("Founder must have independent probability");
             return -1;
           }
-          */
+
+        } else if ([person.father, person.mother].includes(null)) {
+          // INVALID: only one parent specified
+          warn_user("Each individual must have exactly 0 or 2 parents");
+          return -1;
+
         } else {
-          // founder has independent probability
-          if (pedigree[i].infected < 0) {
-            warn_user("Founders must have independent probability");
+          // check for existence of father and mother
+          if (count(person.father.name) === 0 || count(person.mother.name) === 0) {
+            warn_user("Specified parents not found in pedigree");
             return -1;
           }
         }
 
-        //probability is in range [0, 1]
-        if ((pedigree[i].father === null && pedigree[i].infected < 0) ||
-            pedigree[i].infected > 1) {
-              warn_user("Probabilities must be in range [0, 1]");
-              return -1;
-            }
+        // probability in range [0, 1]
+        if ((person.father === null && person.infected) < 0 
+          || person.infected > 1) {
+          warn_user("Probabilities must be in range [0, 1]");
+        return -1;
+        }
 
-        // father must be male and mother must be female
-        // at this point, we have already checked that someone is not his or
-        // her own parent
-        if (pedigree[i].father !== null && pedigree.some(x =>
-            (pedigree[i].father.name === x.name && x.sex === Sex.f
-          || pedigree[i].mother.name === x.name && x.sex === Sex.m)
-          ? true : false
-        )) {
+        // father and mother have proper biological sexes
+        // at this point, an individual is guaranteed not to be his
+        //   own parent
+        if (person.father !== null && pedigree.some(x =>
+            (person.father.name === x.name && x.sex === Sex.f
+          || person.mother.name === x.name && x.sex === Sex.m))) {
           warn_user("Father must be male and mother must be female");
           return -1;
         }
-      }
-
+      });
       return 1;  // all good
     }
 
@@ -199,7 +186,7 @@ Very plain page for web-based pedigree stuff
         });
 
       // generate DOT string description
-      let draw = new Draw('example');
+      let draw = new Draw("example");
       marriages.map(x => draw.draw_marriage(x[0], x[1], x[2]));
 
       // render on page
@@ -266,6 +253,7 @@ Very plain page for web-based pedigree stuff
   <!-- FOR EASIER TESTING -->
   <script type="text/javascript">
   window.addEventListener("load", _ => {
+    console.log("added entires 'a', 'b', and 'c' for testing. delete for production.");
     let name = ["a", "b", "c"];
     let sex = ["m", "f", "m"];
     let prob = [1, 1, -1];

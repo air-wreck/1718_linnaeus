@@ -24,16 +24,16 @@ const color_random = (cell, colorspace) => {
   // randomly choose between 0, 1, 2, or 4 colors
   let tmp = Math.random();
   if (tmp < 0.25) return [];
-  if (tmp < 0.50) return ['#f26e46'];
-  if (tmp < 0.75) return ['#f26e46', '#4286f4'];
-  return ['#f26e46', '#ffbca8', '#4286f4', '#a8c9ff'];
+  if (tmp < 0.50) return ["#f26e46"];
+  if (tmp < 0.75) return ["#f26e46", "#4286f4"];
+  return ["#f26e46", "#ffbca8", "#4286f4", "#a8c9ff"];
 }
 
 // each unique trait (A/a) is assigned a single color (light or dark depending
 // on dominant or recessive), and the cell is shaded the color of all its
 // alleles
 const color_uniques = (cell, colorspace) => {
-  let is_dom = (g) => g === g.toUpperCase();
+  let is_dom = g => g === g.toUpperCase();
   colors = [];
   for (let i = 0; i < cell.length; i += 2) {
     let c_i = Math.round(i / 2);
@@ -45,7 +45,6 @@ const color_uniques = (cell, colorspace) => {
       colors.push(colorspace.main[c_i]);
     else if (!is_dom(cell[i+1]) && !colors.includes(colorspace.secondary[c_i]))
       colors.push(colorspace.secondary[c_i]);
-
   }
   return colors.reverse();
 }
@@ -70,7 +69,7 @@ const color_pairwise = (cell, colorspace) => {
 a given number of sample points (n)
 
 consider switching to chroma.js for better results (if less fun) */
-const sample_colors = (n) => {
+const sample_colors = n => {
   // we represent main sequence colors as tuples (R, G, B), with each channel
   // restricted to the range 65-244
   // order of transformation:
@@ -104,7 +103,7 @@ const sample_colors = (n) => {
   chroma_append(0, start=65, stop=244);
 
   let rgb_to_hex = rgb =>
-    '#'+rgb.map(d => ('0'+d.toString(16)).slice(-2)).join('');
+    "#"+rgb.map(d => ("0"+d.toString(16)).slice(-2)).join("");
 
   let samples = {main: [], secondary: []};
   let step = Math.round(chroma.main.length / n);

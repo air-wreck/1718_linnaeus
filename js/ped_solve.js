@@ -3,7 +3,7 @@
 implements ped_solve.py, except in Javascript */
 
 /* enumerated type for sex */
-const Sex = {m: 'male', f: 'female'};
+const Sex = {m: "male", f: "female"};
 
 /* the Person object represents an individual
    it forms the node in our linked directed acyclic graph */
