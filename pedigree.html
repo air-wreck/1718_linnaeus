@@ -308,9 +308,52 @@ Very plain page for web-based pedigree stuff
   <div id="buttons">
     <button class="button" onclick="add_row();">Add Individual</button>
     <button class="button" onclick="make_ped();">Build Pedigree</button>
+    <button class="button" onclick="download_ped();">Download as Image</button>
   </div>
 
   <!-- div storing the list of individuals -->
   <div id="list"></div>
+
+  <!-- download rendered pedigree SVG as a PNG image -->
+  <script type="text/javascript">
+    let canvas = document.createElement("canvas");
+    let link = document.createElement("a");
+    const download_ped = () => {
+      // possibly check if the pedigree has been rendered yet?
+      let svgURL = new XMLSerializer().serializeToString(document.getElementById("ped-img"));
+      let img = new Image();
+      img.src = "data:image/svg+xml; charset=utf8, " + encodeURIComponent(svgURL);
+      img.onload = event => {
+        canvas.width = event.target.width;
+        canvas.height = event.target.height;
+        canvas.getContext("2d").drawImage(event.target, 0, 0);
+        link.setAttribute("download", "linnaeus_pedigree.png");
+        link.setAttribute("href", canvas.toDataURL().replace("image/png", "image/octet-stream"));
+        link.click();
+      }
+    }
+  </script>
+
+  <!-- FOR EASIER TESTING -->
+  <script type="text/javascript">
+  window.addEventListener("load", _ => {
+    let name = ["a", "b", "c"];
+    let sex = ["m", "f", "m"];
+    let prob = [1, 1, -1];
+    let dad = ["", "", "a"];
+    let mom = ["", "", "b"];
+
+    [...Array(3).keys()].forEach(n => {
+      add_row();
+      Array.from(document.getElementById("row" + (n+1)).childNodes).forEach(input => {
+        if (input.name === "name") input.value = name[n];
+        if (input.name === "sex") input.value = sex[n];
+        if (input.name === "prob") input.value = prob[n];
+        if (input.name === "father") input.value = dad[n];
+        if (input.name === "mother") input.value = mom[n];
+      });
+    });
+  });
+  </script>
 </body>
 </html>

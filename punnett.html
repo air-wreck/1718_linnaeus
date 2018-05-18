@@ -100,6 +100,7 @@ Web interface for solving punnett squares
       return square;
     }
 
+    var data = []; // expose data for easy CSV downloading later on
     const load_pun = () => {
       /* loads the punnett square */
       var father = document.getElementById('father').value;
@@ -117,8 +118,8 @@ Web interface for solving punnett squares
       test = RegExp('^[a-zA-Z]{2,}$');
       if (father.length == mother.length && father.length % 2 == 0 &&
           test.test(father) && test.test(mother)) {
-        var data = solve(father, mother);
-        var colors = [[]];
+        data = solve(father, mother);
+        let colors = [[]];
         // set first row of colors to blank
         for (let i = 0; i < data[0].length; i++)
           colors[0].push(color_blank());
@@ -127,9 +128,9 @@ Web interface for solving punnett squares
         for (let r = 1; r < data.length; r++) {
           colors.push([color_blank()]
                       .concat(data[r].slice(1)
-                      .map((c) => cmap(c, colorspace))));
+                      .map(c => cmap(c, colorspace))));
         }
-        var tbl = document.getElementById('pun-tbl');
+        let tbl = document.getElementById('pun-tbl');
         tbl.innerHTML = '<h3>'+title+'</h3>'+colortbl(data, colors);
       } else {
         warn_user('Error: invalid genotypes. Make sure that genotypes are'+
@@ -158,11 +159,25 @@ Web interface for solving punnett squares
       <option value="pairwise">Pairwise</option>
     </select>
   </div>
-  <div style="text-align: center; margin-top: 10px;"><button class="button" onclick="load_pun();">Solve Punnett Square</button></div>
+  <div style="text-align: center; margin-top: 10px;">
+    <button class="button" onclick="load_pun();">Solve Punnett Square</button>
+    <button class="button" onclick="download_csv();" style="margin-left: 20px;">Download CSV</button>
+  </div>
   <div id="warn-container" style="margin-top: 10px; text-align: center">
-  <div id="alert" class="alert" style="display: none; width: 600px;"><strong style="color: #b73000;"><b>Error: </b></strong><span id="alert-text"></span><span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span></div>
+    <div id="alert" class="alert" style="display: none; width: 600px;"><strong style="color: #b73000;"><b>Error: </b></strong><span id="alert-text"></span><span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span></div>
   </div>
   <div id="pun-tbl" style="margin-top: 10px; text-align: center;"></div>
 
+  <!-- just here for now -->
+  <canvas id="canvas"></canvas> <!-- for downloading SVG => PNG -->
+  <script type="text/javascript">
+    const download_csv = () => {
+      let table_as_str = data.map(row => row.join(",")).join("\n");
+      let link = document.createElement("a");
+      link.setAttribute("download", "linnaeus_punnett.csv");
+      link.setAttribute("href", `data:application/octet-stream,${table_as_str}`);
+      link.click();
+    }
+  </script>
 </body>
 </html>
