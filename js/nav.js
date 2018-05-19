@@ -41,7 +41,7 @@ window.addEventListener("load", event => {
 window.addEventListener("click", event => {
   menu = document.getElementById("dropdown");
   if (event.target.matches("#dropbtn") || event.target.matches(".menu")) {
-    if (menu.style.display == "none" || menu.style.display == "") {
+    if (menu.style.display === "none" || menu.style.display === "") {
       menu.style.display = "block";
     } else {
       menu.style.display = "none";
