@@ -23,6 +23,11 @@ const pretty = (function () {
         <div class="overbar"></div>
         <div class="underbar"></div>`;
       return div;
+    },
+
+    // convenience function for a range from [start, end)
+    range: (start, end) => {
+      return [...Array(end - start).keys()].map(n => n + start);
     }
   };
 }());
