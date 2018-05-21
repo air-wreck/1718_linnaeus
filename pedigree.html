@@ -222,10 +222,10 @@ Very plain page for web-based pedigree stuff
     <div class="content-21" id="popUpDiv" style="display:none">
       <p><h2>How To Read a Pedigree</h2>
       <ul>
-        <li>A circle represents a female. A square represents a male.</li>
-        <li>Two parents are connected by a horizontal line.</li>
-        <li>A vertical line leads to the offspring of two parents.</li>
-        <li>A fully shaded circle/square represents an affected individual.</li>
+        <li>A circle represents a female. A square represents a male.</li><br>
+        <li>Two parents are connected by a horizontal line.</li><br>
+        <li>A vertical line leads to the offspring of two parents.</li><br>
+        <li>A fully shaded circle/square represents an affected individual.</li><br>
         <li>A partially shaded circle/square represents a carrier<sup>1</sup>.</li>
       </ul>
       <br><sup>1</sup> A <strong>carrier</strong> is an individual who has one allele for a disease but does not exhibit the affected phenotype. However, he/she can potentially pass the disease on to offspring.</p>
@@ -241,45 +241,21 @@ Very plain page for web-based pedigree stuff
       else {el.style.display = 'none';}
     }
     function blanket_size(popUpDivVar) {
-      if (typeof window.innerWidth != 'undefined') {
-        viewportheight = window.innerHeight;
-      } else {
-        viewportheight = document.documentElement.clientHeight;
-      }
-      if ((viewportheight > document.body.parentNode.scrollHeight) && (viewportheight > document.body.parentNode.clientHeight)) {
-        blanket_height = viewportheight;
-      } else {
-        if (document.body.parentNode.clientHeight > document.body.parentNode.scrollHeight) {
-          blanket_height = document.body.parentNode.clientHeight;
-        } else {
-          blanket_height = document.body.parentNode.scrollHeight;
-        }
-      }
+      blanket_height = document.body.parentNode.scrollHeight;  
       var blanket = document.getElementById('blanket');
       blanket.style.height = blanket_height + 'px';
       var popUpDiv = document.getElementById(popUpDivVar);
       popUpDiv_height=blanket_height/2-(blanket_height*.2);
       popUpDiv.style.top = popUpDiv_height + 'px';
     }
+
     function window_pos(popUpDivVar) {
-      if (typeof window.innerWidth != 'undefined') {
-        viewportwidth = window.innerHeight;
-      } else {
-        viewportwidth = document.documentElement.clientHeight;
-      }
-      if ((viewportwidth > document.body.parentNode.scrollWidth) && (viewportwidth > document.body.parentNode.clientWidth)) {
-        window_width = viewportwidth;
-      } else {
-        if (document.body.parentNode.clientWidth > document.body.parentNode.scrollWidth) {
-          window_width = document.body.parentNode.clientWidth;
-        } else {
-          window_width = document.body.parentNode.scrollWidth;
-        }
-      }
+      window_width = document.body.parentNode.scrollWidth;
       var popUpDiv = document.getElementById(popUpDivVar);
       window_width=window_width/2-(window_width*.1);
       popUpDiv.style.left = window_width + 'px';
     }
+
     function popup(windowname) {
       blanket_size(windowname);
       window_pos(windowname);
@@ -360,5 +336,6 @@ Very plain page for web-based pedigree stuff
     });
   }
   </script>
+
 </body>
 </html>
