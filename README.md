@@ -9,73 +9,36 @@ world around us. Try it [here](http://54.191.167.183/1718_linnaeus/home.html).
 The code has been rewritten to work entire in-browser, so there is no longer
 any need for the Apache server environment or all of the aforementioned
 dependencies. All you need is a reasonably recent version of a major browser
-and you're set to go.
+and you're set to go. Maybe we'll look to transpiling to ES5 later on.
 
 This project now uses Graphviz through the `viz.js` project, which you can
-find [here](http://viz-js.com/). (Webassembly is great!) However, you don't
+find [here](http://viz-js.com/). (Yay for asm.js?) However, you don't
 need to install it before developing, since this repository is almost entirely
 self-contained (except for the icons at the bottom of the home page).
-Actually, you don't even need internet access anymore. 
+Actually, you don't even need internet access anymore.
 
 ### getting started
-If you just want to use the service, you can access the website from the link
-above. If you want to try and tweak the code for yourself, you will need to get
-more involved. Obviously, you first need to clone this repository over your
-favorite protocol.
+You can get started by simply visiting the link above. You can look through the
+source code, but we unfortunately aren't accepting pull requests right now,
+since this is a school project and it would be a violation of academic
+integrity to have someone else write some of the code for us.
 
-If you just want to run some of the example scripts on your computer, you may
-need to write `no-agg` in the `punnett/ct_config` file that the setup script
-will automatically generate. If you are hosting this on a server, this step is not needed, but you will need to read on.
-
-If you want to set up the server yourself, you will need to first install the
-dependencies listed at the bottom of this guide. Then, you need to set up your
-Apache server correctly. Edit your `httpd.conf` file with the lines:
-
-```
-<Directory <ROOT>/1718_linnaeus/cgi-bin>
-  Options ExecCGI
-  SetHandler cgi-script
-</Directory>
-<Directory <ROOT>/1718_linnaeus>
-  Options +ExecCGI
-  AddHandler cgi-script .py
-</Directory>
-```
-
-where `<ROOT>` stands in for the document root of your server. These changes
-will take effect after you restart Apache.
-
-Additionally, you will need to load the CGI module to run the scripts. This
-will vary according to your system, but it will generally take the form:
-
-```
-LoadModule cgi_module <...>
-```
-
-The rest of the setup can be handled automatically by the `setup.sh` script,
-which you may have to run with `sudo`. There is one important exception: due
-to issues with the Apache user's PATH, the absolute path to the  `dot` binary
-on your system is required. Paste this into the `cgi-bin/dot_path` once you've
-run `setup.sh`, or you'll get a nasty bug.
-
-### repository
+### this repository
 This repository is organized into a few different directories. The root
 directory contains all of the `*.html` pages. These pages reference files in
-the `/img`, `/css`, and `/cgi-bin` directories for the appropriate resources.
+the `/img`, `/css`, and `/js` directories for the appropriate resources. In
+addition, `/js` has the additional subdirectory `/js/other`, which stores all
+external code.
+
 `/pedigree` contains all of the Python scripts for drawing and solving
-pedigrees, and `/punnett` contains all of the scripts for Punnett Squares.
+pedigrees, and `/punnett` contains all of the scripts for Punnett Squares. We
+are in the process of converting these to Javascript targeting the client-side.
 
 ### dependencies
-This software requires the Python packages `matplotlib`, `numpy`, and
-`graphviz`. `numpy` is already a dependency of `matplotlib`, so you likely do
-not need to install it separately. For `graphviz`, you will need to install
-both the actual program and the Python bindings. You can find installation
-instructions for your specific system here:
+The only outside dependency used by this project is the `viz.js` project, but
+the necessary Javascript is included in this repository already, so you likely
+don't have to worry about that.
 
-* [matplotlib](https://matplotlib.org/)
-* [numpy](http://www.numpy.org/)
-* [graphviz Python](http://graphviz.readthedocs.io/en/stable/manual.html)
-* [graphviz](https://graphviz.gitlab.io/)
-
-Additionally, the server is currently hosted as an Apache web server, so you
-will need Apache if you want to mirror this.
+### work to do
+We still need to implement the rest of our pedigree/Punnett functionality in
+Javascript. Also, someone should get around to writing those unit tests.
