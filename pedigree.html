@@ -39,7 +39,7 @@ Very plain page for web-based pedigree stuff
           <option value="f">female</option>
         </select>
         Probability: ${pretty.input("id='prob"+row_id.toString()
-          +"' type='number' name='prob' style='width: 50px;' step='0.01' "
+          +"' type='number' name='prob' style='width: 50px;' step='any' "
           +"min='-1' max='1'").outerHTML}
         Father: ${pretty.input("id='father"+row_id.toString()
           +"' type='text' name='father' value=''").outerHTML}
@@ -94,7 +94,7 @@ Very plain page for web-based pedigree stuff
 
       // now that we have all individuals, associate everyone with parents
       // we have already done some error checking by this point
-      row_nums.forEach(n => {
+      return row_nums.map(n => {
         let name = document.getElementById("name" + n).value;
         let child = pedigree[pedigree.findIndex(x => x.name === name)];
         let father = document.getElementById("father" + n).value;
@@ -104,10 +104,12 @@ Very plain page for web-based pedigree stuff
           child.add_parents(
             pedigree[pedigree.findIndex(x => x.name === father)],
             pedigree[pedigree.findIndex(x => x.name === mother)]);
+        } else if ([father, mother].some(p => p !== "")) {
+          pretty.warn_user("Each individual must have exactly 0 or 2 parents");
+          return -1;
         }
-      });
-
-      return 1;  // success!
+        return 1;
+      }).includes(-1) ? -1 : 1;
     }
 
     const verify = () => {
@@ -120,6 +122,7 @@ Very plain page for web-based pedigree stuff
         return -1;
       }
 
+      // go through each person in pedigree and ensure that he is valid
       return pedigree.map(person => {
         const count = name =>
           pedigree.reduce((acc, x) => name === x.name ? acc+1 : acc, 0);
@@ -131,36 +134,38 @@ Very plain page for web-based pedigree stuff
         }
 
         // different checks based on number of parents
+        // at this point, it is guaranteed that # of parents is either 0 or 2
         if (person.father === null && person.mother === null) {
-          // check for independent probability
+          // 0 parents: check for independent probability
           if (person.infected < 0) {
             pretty.warn_user("Founder must have independent probability");
             return -1;
           }
 
-        } else if ([person.father, person.mother].includes(null)) {
-          // INVALID: only one parent specified
-          pretty.warn_user("Each individual must have exactly 0 or 2 parents");
-          return -1;
-
-        } else {
-          // check for existence of father and mother
+        } else if (![person.father, person.mother].includes(null)) {
+          // 2 parents: check for existence of father and mother
           if (!person.father || !person.mother) {
             pretty.warn_user("Specified parents not found in pedigree");
+            return -1;
+          }
+
+          // a person cannot be his own parent
+          if ([person.father.name, person.mother.name].includes(person.name)) {
+            pretty.warn_user("Parent and offspring cannot coincide");
             return -1;
           }
         }
 
         // probability in range [0, 1]
-        if ((person.father === null && person.infected) < 0
+        if ((person.father === null && person.infected < 0)
          || person.infected > 1) {
           pretty.warn_user("Probabilities must be in range [0, 1]");
           return -1;
         }
 
         // father and mother have proper biological sexes
-        // at this point, an individual is guaranteed not to be his
-        //   own parent
+        // this also catches duplicate parents
+        // at this point, an individual is guaranteed not to be his own parent
         if (person.father !== null && pedigree.some(x =>
            (person.father.name === x.name && x.sex === ped_solve.Sex.f
          || person.mother.name === x.name && x.sex === ped_solve.Sex.m))) {
@@ -172,15 +177,16 @@ Very plain page for web-based pedigree stuff
 
     let viz = new Viz();
     const render = () => {
-      // solve pedigree
-      pedigree.forEach(ped_solve.find_prob);
+      // solve pedigree based on infection model specified by user
+      let model = document.getElementById("select-infect").value;
+      pedigree.forEach(person => ped_solve.find_prob(person, model));
 
       // identify all marriages
       // we assume that all relationships are monogamous and generational
       let marriages = [];
       pedigree
         .filter(indiv => indiv.father !== null)
-        .map(indiv => {
+        .forEach(indiv => {
           // has this marriage already been found?
           // i.e. is this a sibling of an already found child?
           if (!marriages.some(union => {
@@ -201,6 +207,49 @@ Very plain page for web-based pedigree stuff
         new_el.id = "ped-img";
         let old_el = document.getElementById("ped-img");
         old_el.parentNode.replaceChild(new_el, old_el);
+
+        // add hover info box effect
+        let graph = document.getElementById("graph0");
+        Array.from(graph.childNodes)
+          .filter(el => el.id && el.id.slice(0, 4) === "node")
+          .forEach(node => {
+            let name = Array.from(node.childNodes)
+              .filter(child => child.tagName === "text")[0].innerHTML;
+            let person = pedigree[pedigree.findIndex(indiv =>
+              indiv.name === name)];
+            node.addEventListener("mouseover", event => {
+              let info = document.createElement("div");
+              info.style.left = event.pageX + "px";
+              info.style.top = event.pageY + "px";
+              info.className = "info";
+              info.innerHTML = `<strong>${person.name}</strong><br>
+                Sex: ${person.sex}<br>
+                ${person.father !== null
+                  ? `Parents: ${person.father.name}, ${person.mother.name}`
+                  : ""}
+                Infection Chance: ${Math.round(person.infected * 100)}%`;
+              document.body.appendChild(info);
+
+              // remove info box when mouse leaves
+              let rm = () => {
+                info.parentNode.removeChild(info);
+                node.removeEventListener("mouseout", rm);
+              }
+              node.addEventListener("mouseout", rm);
+            });
+          });
+
+        // get rid of pesky title text so it doesn't show on hover
+        Array.from(graph.childNodes)
+          .filter(el => el.tagName === "title")
+          .forEach(title => title.parentNode.removeChild(title));
+        Array.from(graph.childNodes)
+          .filter(el => el.id && ["node", "edge"].includes(el.id.slice(0, 4)))
+          .forEach(child => {
+            let title = Array.from(child.childNodes)
+              .filter(c => c.tagName === "title")[0];
+            child.removeChild(title);
+          });
       });
     }
 
@@ -242,7 +291,7 @@ Very plain page for web-based pedigree stuff
       else {el.style.display = 'none';}
     }
     function blanket_size(popUpDivVar) {
-      blanket_height = document.body.parentNode.scrollHeight;  
+      blanket_height = document.body.parentNode.scrollHeight;
       var blanket = document.getElementById('blanket');
       blanket.style.height = blanket_height + 'px';
       var popUpDiv = document.getElementById(popUpDivVar);
@@ -280,6 +329,13 @@ Very plain page for web-based pedigree stuff
 
   <!-- buttons on top for user interaction -->
   <div id="buttons">
+    <div style="display: inline-block; font-size: 10pt;">
+      Infection Model:<br>
+      <select id="select-infect" class="button">
+        <option value="avg">Average</option>
+        <option value="auto_dom">Autosomal Dominant</option>
+      </select>
+    </div>
     <button class="button" onclick="add_row();">Add Individual</button>
     <button class="button" onclick="make_ped();">Build Pedigree</button>
     <button class="button" onclick="download_ped();">Download as Image</button>
@@ -320,13 +376,13 @@ Very plain page for web-based pedigree stuff
    && window.location.href.split("?")[1].split("=")[1] === "testing") {
     window.addEventListener("load", _ => {
       console.log("you are in ?mode=testing. test entries have been added.");
-      let name = ["a", "b", "c"];
+      let name = ["John", "Jane", "Joe"];
       let sex = ["m", "f", "m"];
       let prob = [1, 1, -1];
-      let dad = ["", "", "a"];
-      let mom = ["", "", "b"];
+      let dad = ["", "", "John"];
+      let mom = ["", "", "Jane"];
 
-      [...Array(3).keys()].map(n => n+1).forEach(n => {
+      pretty.range(1, 4).forEach(n => {
         add_row();
         document.getElementById("name"+n).value = name[n-1];
         document.getElementById("sex"+n).value = sex[n-1];
@@ -337,6 +393,5 @@ Very plain page for web-based pedigree stuff
     });
   }
   </script>
-
 </body>
 </html>

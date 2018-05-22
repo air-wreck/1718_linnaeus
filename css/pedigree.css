@@ -67,6 +67,18 @@
   z-index: 9002;
 }
 
+/* pop-up individual info box */
+.info {
+  position: absolute;
+  z-index: 5;
+  border: 1px solid #a5e544;
+  width: 120px;
+  height: 50px;
+  background-color: white;
+  padding: 5px;
+  font-size: 8pt;
+}
+
 #buttons {text-align: center; padding-bottom: 20px;}
 #ped {text-align: center;}
 #list {text-align: center;}
