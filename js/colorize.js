@@ -34,19 +34,19 @@ const colorize = (function () {
     // each unique trait (A/a) is assigned a single color (light or dark depending
     // on dominant or recessive), and the cell is shaded the color of all its
     // alleles
-    color_uniques: (cell, colorspace) => {
+    color_codominance: (cell, colorspace) => {
       let is_dom = g => g === g.toUpperCase();
       colors = [];
       for (let i = 0; i < cell.length; i += 2) {
         let c_i = Math.round(i / 2);
         if (is_dom(cell[i])) colors.push(colorspace.main[c_i]);
-        else colors.push(colorspace.secondary[c_i]);
+        else colors.push("#fff");
 
         // append second color only if different
         if (is_dom(cell[i+1]) && !colors.includes(colorspace.main[c_i]))
           colors.push(colorspace.main[c_i]);
-        else if (!is_dom(cell[i+1]) && !colors.includes(colorspace.secondary[c_i]))
-          colors.push(colorspace.secondary[c_i]);
+        else if (!is_dom(cell[i+1]) && !colors.includes("#fff"))
+          colors.push("#fff");
       }
       return colors.reverse();
     },
@@ -54,7 +54,7 @@ const colorize = (function () {
     // each pair (Aa) if assigned a color, and is represented by either a dark or
     // light color based on whether the it is dominant (AA, Aa, aA) or recessive
     // (aa): essentially a simple dominant/recessive coloring
-    color_pairwise: (cell, colorspace) => {
+    color_autosomal: (cell, colorspace) => {
       let is_dom = g => g === g.toUpperCase();
       let colors = [];
       for (let i = 0; i < cell.length; i += 2) {
@@ -62,7 +62,22 @@ const colorize = (function () {
         if (is_dom(cell[i]) || is_dom(cell[i+1]))
           colors.push(colorspace.main[c_i]);
         else
+          colors.push("#fff");
+      }
+      return colors.reverse();
+    },
+
+    color_incomplete: (cell, colorspace) => {
+      let is_dom = g => g === g.toUpperCase();
+      let colors = [];
+      for (let i = 0; i < cell.length; i += 2) {
+        let c_i = Math.round(i / 2);
+        if (is_dom(cell[i]) && is_dom(cell[i+1]))
+          colors.push(colorspace.main[c_i]);
+        else if (is_dom(cell[i]) || is_dom(cell[i+1]))
           colors.push(colorspace.secondary[c_i]);
+        else
+          colors.push("#fff");
       }
       return colors.reverse();
     },
