@@ -228,31 +228,160 @@ Web interface for solving punnett squares
 
   <script>
   function show(size) {
-    var x = document.getElementbyId(size);
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
+    var list = ['two','four','eight','sixteen'];
+    for (let i of list) {
+      var x = document.getElementById(i)
+      if (i != size) {
+        x.style.display="none";
+      } else {
+        x.style.display="block";
+      }
     }
   }
   </script>
 
   <div id="entry">
-    <!-- placeholders are substituted by JS on page load -->
-    Father's genotype:
-    <div id="father-placeholder"></div><br>
-    Mother's genotype:
-    <div id="mother-placeholder"></div><br>
-    Title:
-    <div id="title-placeholder"></div><br>
-    Inheritance Mode:
-    <select id="colorization" name="colorization">
-      <option value="autosomal">Autosomal</option>
-      <option value="codominance">Codominance</option>
-      <option value="incomplete">Incomplete</option>
-      <option value="xlinked">X-linked</option>
-    </select>
+    <div id="two" style="display:none">
+      Father's Genotype:<br><br>
+        <button class="button" onclick="showF('AA', 'fdisplay2');"> AA </button>
+        <button class="button" onclick="showF('Aa', 'fdisplay2');"> Aa </button>
+        <button class="button" onclick="showF('aa', 'fdisplay2');"> aa </button>
+      <br><br> <input type="text" id="fdisplay2" value=""   readonly="readonly" />
+      <br><br>Mother's Genotype:<br><br>
+        <button class="button"> AA </button>
+        <button class="button"> Aa </button>
+        <button class="button"> aa </button>
+      <br><br> <input type="text" id="mdisplay" value=""   readonly="readonly" />
+      <br><br>Inheritance Mode:
+        <select id="colorization" name="colorization">
+          <option value="autosomal">Autosomal</option>
+          <option value="codominance">Codominance</option>
+          <option value="incomplete">Incomplete</option>
+          <option value="xlinked">X-linked</option>
+        </select>
+    </div>
+
+    <div id="four" style="display:none">
+      Father's Genotype:<br><br>
+        Trait 1: 
+          <button class="button"> AA </button>
+          <button class="button"> Aa </button>
+          <button class="button"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button"> BB </button>
+          <button class="button"> Bb </button>
+          <button class="button"> bb </button>
+        <br><br> <input type="text" id="fdisplay" value=""   readonly="readonly" />
+      <br><br>Mother's Genotype:<br><br>
+        Trait 1:
+          <button class="button"> AA </button>
+          <button class="button"> Aa </button>
+          <button class="button"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button"> BB </button>
+          <button class="button"> Bb </button>
+          <button class="button"> bb </button>
+        <br><br> <input type="text" id="mdisplay" value=""   readonly="readonly" />
+      <br><br>Inheritance Mode:
+        <select id="colorization" name="colorization">
+          <option value="autosomal">Autosomal</option>
+        </select>
+    </div>
+
+    <div id="eight" style="display:none">
+      Father's Genotype:<br><br>
+        Trait 1: 
+          <button class="button"> AA </button>
+          <button class="button"> Aa </button>
+          <button class="button"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button"> BB </button>
+          <button class="button"> Bb </button>
+          <button class="button"> bb </button>
+        &emsp; Trait 3: 
+          <button class="button"> CC </button>
+          <button class="button"> Cc </button>
+          <button class="button"> cc </button>
+        <br><br> <input type="text" id="fdisplay" value=""   readonly="readonly" />
+      <br><br>Mother's Genotype:<br><br>
+        Trait 1:
+          <button class="button"> AA </button>
+          <button class="button"> Aa </button>
+          <button class="button"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button"> BB </button>
+          <button class="button"> Bb </button>
+          <button class="button"> bb </button>
+        &emsp; Trait 3: 
+          <button class="button"> CC </button>
+          <button class="button"> Cc </button>
+          <button class="button"> cc </button>
+        <br><br> <input type="text" id="mdisplay" value=""   readonly="readonly" />
+      <br><br>Inheritance Mode:
+        <select id="colorization" name="colorization">
+          <option value="autosomal">Autosomal</option>
+        </select>
+    </div>
+
+    <div id="sixteen" style="display:none">
+      Father's Genotype:<br><br>
+        Trait 1: 
+          <button class="button"> AA </button>
+          <button class="button"> Aa </button>
+          <button class="button"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button"> BB </button>
+          <button class="button"> Bb </button>
+          <button class="button"> bb </button>
+        &emsp; Trait 3: 
+          <button class="button"> CC </button>
+          <button class="button"> Cc </button>
+          <button class="button"> cc </button>
+        &emsp; Trait 4: 
+          <button class="button"> DD </button>
+          <button class="button"> Dd </button>
+          <button class="button"> dd </button>
+        <br><br> <input type="text" id="fdisplay" value=""   readonly="readonly" />
+      <br><br>Mother's Genotype:<br><br>
+        Trait 1:
+          <button class="button"> AA </button>
+          <button class="button"> Aa </button>
+          <button class="button"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button"> BB </button>
+          <button class="button"> Bb </button>
+          <button class="button"> bb </button>
+        &emsp; Trait 3: 
+          <button class="button"> CC </button>
+          <button class="button"> Cc </button>
+          <button class="button"> cc </button>
+        &emsp; Trait 4: 
+          <button class="button"> DD </button>
+          <button class="button"> Dd </button>
+          <button class="button"> dd </button>
+        <br><br> <input type="text" id="mdisplay" value=""   readonly="readonly" />
+      <br><br>Inheritance Mode:
+        <select id="colorization" name="colorization">
+          <option value="autosomal">Autosomal</option>
+        </select>
+    </div>
   </div>
+
+  <script>
+  function showF(addition, id) {
+    var x = document.getElementById(id).value;
+    if (x < id.slice(-1)) {
+      x += addition;
+      var sorted = function(x) {
+        return text.split('').sort().join('');
+      }
+    } else {
+
+    }
+    document.getElementById(id).value = x;
+  }
+  </script>
+
   <div style="text-align: center; margin-top: 10px;">
     <button class="button" onclick="load_pun();">
       Solve Punnett Square
