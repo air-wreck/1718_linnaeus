@@ -120,10 +120,20 @@ Web interface for solving punnett squares
         "xlinked":colorize.color_xlinked
       }[document.getElementById("colorization").value];
 
+      function check_align(mother, father) {
+        for (i = 0; i < mother.length-1; i = i+2) { 
+             if (father.substring(i, i+2).toLowerCase() != mother.substring(i, i+2).toLowerCase() || father.substring(i, i+1).toLowerCase() != father.substring(i+1, i+2).toLowerCase())
+             {
+              pretty.warn_user("weqe.");
+              return false;
+             } 
+        }
+        return true;
+      }
       /* validate data */
       test = RegExp("^[a-zA-Z]{2,}$");
       if (father.length === mother.length && father.length % 2 === 0 &&
-          test.test(father) && test.test(mother)) {
+          test.test(father) && test.test(mother) && check_align(mother,father)) {
         data = solve(father, mother);
         let colors = [[]];
         // set first row of colors to blank
@@ -139,33 +149,12 @@ Web interface for solving punnett squares
         }
         let tbl = document.getElementById("pun-tbl");
         tbl.innerHTML = "<h3>"+title+"</h3>"+colortbl(data, colors);
-      } else {
-        pretty.warn_user(`Invalid genotypes. Make sure that genotypes
-          are the same length and at most eight characters. They must be of
-          even length and contain only letters.`);
+        } else {
+          pretty.warn_user(`Invalid genotypes. Make sure that genotypes
+            are the same length and at most eight characters. They must be of
+            even length and contain only letters, which should be in pairs of two.`);
       }
     }
-  
-  /*
-    if (father.length == mother.length && father.length % 2 == 0 &&
-          test.test(father) && test.test(mother)) && check_align(mother,father) == true {
-              { pun.src = 'cgi-bin/punnett-square?father='+father+'&mother='+mother+
-                  '&title='+title;}
-      } else {
-        window.alert('Error: invalid genotypes. Make sure that genotypes are'+
-                     ' the same length and at most eight characters.' +
-                     ' They must be of even length and contain only letters.');
-      }
-    }
-    function check_align(mother, father) {
-      for (i = 0; i < mother.length-2; i+2) { 
-           if (father.substring(i, i+2).toLowerCase() != mother.substring(i, i+2).toLowerCase() && father.substring(i, i+1).toLowerCase() != father.substring(i+1, i+2).toLowerCase())
-           {
-            return false;
-           } 
-      }
-      return true;
-      */
   </script>
 
   <!-- usage information -->

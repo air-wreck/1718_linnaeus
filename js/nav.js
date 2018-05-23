@@ -15,6 +15,7 @@ window.addEventListener("load", event => {
         <li><a href="pedigree.html">Pedigree</a></li>
         <li><a href="punnett.html">Punnett Square</a></li>
         <li><a href="contact.html">Contact</a></li>
+        <li><a href="faq.html">FAQs</a></li>
       </div>
       <div style="float: right;" class="narrow-menu">
         <!-- this is such a sketchy way to make a menu button -->
@@ -30,7 +31,7 @@ window.addEventListener("load", event => {
             <a href="about.html">About</a>
             <a href="pedigree.html">Pedigree</a>
             <a href="punnett.html">Punnett Square</a>
-            <a href="contact.html">Contact</a>
+            <a href="faq.html">FAQs</a>
           </div>
       </div>
     </ul>
