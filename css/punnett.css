@@ -90,19 +90,19 @@ th {
 }
 
 #blanket {
-  background-color:#efefef;
+  background-color:#fff;
   opacity: 0.95;
-  position: fixed;
+  position: absolute;
   z-index: 9001;
+  top:0px;
+  left:0px;
   width:100%;
-  top:0;
 }
 
 #popUpDiv {
   position: absolute;
-  margin-left: 30%;
-  width: 40%;
-  margin-top: -5%;
+  width: 25%;
+  height: 50%;
   border-style: hidden;
   z-index: 9002;
 }
