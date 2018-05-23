@@ -221,6 +221,33 @@ Web interface for solving punnett squares
     Patience is a virtue.
   </div>
   <!-- basic entry fields -->
+
+ <div style="text-align: center; margin-top: 10px;">
+    <button class="button" onclick="show('two');" style="margin-left: 20px;">
+      2x2
+    </button>
+    <button class="button" onclick="show('four');" style="margin-left: 20px;">
+      4x4
+    </button>
+    <button class="button" onclick="show('eight');" style="margin-left: 20px;">
+      8x8
+    </button>
+    <button class="button" onclick="show('sixteen');" style="margin-left: 20px;">
+      16x16
+    </button>
+  </div>
+
+  <script>
+  function show(size) {
+    var x = document.getElementbyId(size);
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+  </script>
+
   <div id="entry">
     <!-- placeholders are substituted by JS on page load -->
     Father's genotype:
@@ -229,7 +256,7 @@ Web interface for solving punnett squares
     <div id="mother-placeholder"></div><br>
     Title:
     <div id="title-placeholder"></div><br>
-    Colorization:
+    Inheritance Mode:
     <select id="colorization" name="colorization">
       <option value="autosomal">Autosomal</option>
       <option value="codominance">Codominance</option>
