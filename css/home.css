@@ -4,14 +4,14 @@
 }
 
 .front-page h1 {
-  font-family: "Rubik";
+  font-family: "Merriweather";
   color: #78bc12;
   font-size: 500%;
   margin: 0px;
 }
 
 .front-page h2 {
-  font-family: 'Courgette', cursive;
+  font-family: 'Merriweather', cursive;
   color: #a5e544;
   margin: 5px;
 }
@@ -62,7 +62,11 @@
 
 .content-2 li a {
   color: inherit;
+  transition: all 0.2s ease-in;
 }
+
+.content-2 li a:hover {
+  color: #a5e544;
 
 .content-3-container {
   display: grid;
@@ -89,7 +93,7 @@
   .title-img {
     right: 10px;
     bottom: 30px;
-    max-width: 100%;
+    max-width: calc(100% - 10px);
   }
 }
 
