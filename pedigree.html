@@ -123,7 +123,7 @@ Very plain page for web-based pedigree stuff
       }
 
       // go through each person in pedigree and ensure that he is valid
-      return pedigree.map(person => {
+      if(pedigree.map(person => {
         const count = name =>
           pedigree.reduce((acc, x) => name === x.name ? acc+1 : acc, 0);
 
@@ -172,7 +172,38 @@ Very plain page for web-based pedigree stuff
           pretty.warn_user("Father must be male and mother must be female");
           return -1;
         }
-      }).includes(-1) ? -1 : 1;
+      }).includes(-1)) return -1;
+
+
+      // perform a stronger check to make sure graph is acyclic
+      // this is based on the following algorithm:
+      //    1. if the graph is empty, it is acyclic
+      //    2. if the graph has no leaf nodes, it is cyclic
+      //    3. if there is a leaf, remove the leaf node and all pointers to it
+      //    4. repeat
+
+      // instead of making a deep copy of the pedigree, we keep a list of names
+      //    of people who are still "in the running"
+      let people = pedigree.map(indiv => indiv.name);
+
+      while (people.length > 0) {
+        // look for a leaf nodes, where there is no individual in the pedigree
+        //    pointing to that person
+        let leaves = people.filter(indiv => 
+          !pedigree.some(p =>
+               !!p.father && p.father.name === indiv 
+            || !!p.mother && p.mother.name === indiv));
+
+        if (leaves.length == 0) {
+          // no leaf nodes, so graph is cyclic
+          pretty.warn_user("Redundant node (offspring and ancestor coincide)");
+          return -1;
+        }
+
+        // remove all leaves from the graph
+        people = people.filter(name => !leaves.includes(name))
+      }
+      return 1; // "people" is now empty, so the graph is acyclic
     }
 
     let viz = new Viz();
@@ -376,13 +407,13 @@ Very plain page for web-based pedigree stuff
    && window.location.href.split("?")[1].split("=")[1] === "testing") {
     window.addEventListener("load", _ => {
       console.log("you are in ?mode=testing. test entries have been added.");
-      let name = ["John", "Jane", "Joe"];
-      let sex = ["m", "f", "m"];
-      let prob = [1, 1, -1];
-      let dad = ["", "", "John"];
-      let mom = ["", "", "Jane"];
+      let name = ["John", "Jane", "Joe", "Joan"];
+      let sex = ["m", "f", "m", "f"];
+      let prob = [1, 1, -1, -1];
+      let dad = ["", "", "John", "Joe"];
+      let mom = ["", "", "Joan", "Jane"];
 
-      pretty.range(1, 4).forEach(n => {
+      pretty.range(1, 5).forEach(n => {
         add_row();
         document.getElementById("name"+n).value = name[n-1];
         document.getElementById("sex"+n).value = sex[n-1];
