@@ -1,86 +1,146 @@
 <!DOCTYPE html>
 <html>
+
+<!-- punnett.html
+
+Web interface for solving punnett squares
+-->
+
 <head>
   <title>Linnaeus</title>
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/punnett.css">
 
-  <!-- Google fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
-
-  <!-- menu bar for small screens -->
-  <script type="text/javascript">
-  window.onclick = function(event) {
-    menu = document.getElementById("dropdown");
-    if (event.target.matches("#dropbtn") || event.target.matches(".menu")) {
-      if (menu.style.display == "none" || menu.style.display == "") {
-        menu.style.display = "block";
-      } else {
-        menu.style.display = "none";
-      }
-    } else {
-      menu.style.display = "none";
-    }
-  };
-  </script>
+  <!-- menu bar -->
+  <script type="text/javascript" src="js/nav.js"></script>
+  <!-- custom JS styles -->
+  <script type="text/javascript" src="js/pretty.js"></script>
+  <!-- table colorization scheme code -->
+  <script type="text/javascript" src="js/colorize.js"></script>
 </head>
 <body>
-  <div class="nav-bar">
-    <ul>
-      <div style="float: left;">
-        <li><span><b>Linnaeus</b></span></li>
-      </div>
-      <div style="float: right;">
-        <li><a href="home.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="pedigree.html">Pedigree</a></li>
-        <li><a href="punnett.html">Punnett Square</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="faq.html">FAQs</a></li>
-      </div>
-      <div style="float: right;" class="narrow-menu">
-        <!-- this is such a sketchy way to make a menu button -->
-          <button id="dropbtn">
-            <div class="menu"></div>
-            <div class="menu"></div>
-            <div class="menu"></div>
-          </button>
-
-          <!-- the actual dropdown menu -->
-          <div id="dropdown">
-            <a href="Home.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="pedigree.html">Pedigree</a>
-            <a href="punnett.html">Punnett Square</a>
-            <a href="contact.html">Contact</a>
-            <a href="faq.html">FAQs</a>
-          </div>
-      </div>
-    </ul>
-  </div>
   <div class="punnett-page">
     <div class="subtitle-text">
       <h1>Punnett Squares</h1>
+      <br>
     </div>
   </div>
 
-  <!-- use python cgi to generate and retrieve punnett square image -->
+  <!-- create table with html -->
   <script type="text/javascript">
-    function load_pun() {
-      var pun = document.getElementById('pun-img');
-      var father = document.getElementById('father').value;
-      var mother = document.getElementById('mother').value;
-      var title = document.getElementById('title').value;
-      /* let's not crash the server again... */
-      test = RegExp('^[a-zA-Z]{2,8}$');
-      if (father.length == mother.length && father.length % 2 == 0 &&
-          test.test(father) && test.test(mother)) {
-        pun.src = 'cgi-bin/punnett-square?father='+father+'&mother='+mother+
-                  '&title='+title;
+    /* returns an HTML string with a table based on given data
+       caller must supply a matching array of [R,G,B] colors to apply to the
+       data */
+    const colortbl = (data, colors) => {
+      var html_str = "<table>";
+      for (var r = 0; r < data.length; r++) {
+        html_str += "<tr>";
+        for (var c = 0; c < data.length; c++) {
+          if (r === 0 || c === 0) {
+            html_str += "<th>"+data[r][c].toString()+"</th>";
+          } else {
+            /* for data cells, pick background based on parallel color array */
+            style = "";  // style defaults to nothing
+            let percent = 100.0 / colors[r][c].length;
+            style = "background: linear-gradient(-45deg";
+            for (let i = 0; i < colors[r][c].length; i++) {
+              style += ","+colors[r][c][i].toString()
+                +" "+(percent*i).toString()+"%,"
+                +colors[r][c][i].toString()+" "
+                +(percent*(i+1)).toString()+"%";
+            }
+            style += ");";
+            html_str += "<td style='"+style+"'>"+data[r][c].toString()+"</td>";
+          }
+        }
+        html_str += "</tr>"
+      }
+      html_str += "</table>"
+      return html_str;
+    }
+
+    /* transforms a genotype string description into a 2D array, e.g.
+       "AaBbCc" -> [["A", "a"], ["B", "b"], ["C", "c"]] */
+    const str2geno = string =>
+      string.split("")
+            .map((el, i) => [el, string[i+1]])
+            .filter((el, i) => i % 2 === 0);
+
+    /* recursively determines the possible offspring for 2D genotype array */
+    const combine = (arr, depth) => {
+      if (depth === arr.length) {
+        return [""];
       } else {
-        window.alert('Error: invalid genotypes. Make sure that genotypes are'+
-                     ' the same length and at most eight characters.' +
-                     ' They must be of even length and contain only letters.');
+        var res = [];
+        for (var i in arr[depth]) {
+          var tmp = combine(arr, depth+1);
+          for (var j in tmp) {
+            res.push(arr[depth][i]+tmp[j]);
+          }
+        }
+        return res;
+      }
+    }
+
+    /* weaves two gentotype strings together, e.g.
+       add("ABC", "abc") -> "AaBbCc" */
+    const add = (f, m) =>
+      f.split("").map((el, i) => [el, m[i]].sort().join("")).join("")
+
+    const solve = (f, m) => {
+      var f_arr = combine(str2geno(f), 0);
+      var m_arr = combine(str2geno(m), 0);
+      var sol_arr = [];
+      for (var i in f_arr) {
+        sol_arr.push([]);
+        for (var j in m_arr) {
+          sol_arr[i].push(add(f_arr[i], m_arr[j]));
+        }
+      }
+      square = [[""].concat(m_arr)];
+      for (var i in m_arr) {
+        square.push([f_arr[i]].concat(sol_arr[i]));
+      }
+      return square;
+    }
+
+    var data = []; // expose data for easy CSV downloading later on
+    const load_pun = () => {
+      /* loads the punnett square */
+      var father = document.getElementById("father").value;
+      var mother = document.getElementById("mother").value;
+      var title = document.getElementById("title").value;
+
+      /* consider the right color mapping function (from colorize.js) to use */
+      let cmap = {
+        "none": colorize.color_blank,
+        "uniques": colorize.color_uniques,
+        "pairwise": colorize.color_pairwise
+      }[document.getElementById("colorization").value];
+
+      /* validate data */
+      test = RegExp("^[a-zA-Z]{2,}$");
+      if (father.length === mother.length && father.length % 2 === 0 &&
+          test.test(father) && test.test(mother)) {
+        data = solve(father, mother);
+        let colors = [[]];
+        // set first row of colors to blank
+        for (let i = 0; i < data[0].length; i++)
+          colors[0].push(colorize.color_blank());
+        // set subsequent rows to a combined header and data
+        let colorspace = colorize.sample_colors(
+          Math.round(data[1][1].length / 2));
+        for (let r = 1; r < data.length; r++) {
+          colors.push([colorize.color_blank()]
+                      .concat(data[r].slice(1)
+                      .map(c => cmap(c, colorspace))));
+        }
+        let tbl = document.getElementById("pun-tbl");
+        tbl.innerHTML = "<h3>"+title+"</h3>"+colortbl(data, colors);
+      } else {
+        pretty.warn_user(`Invalid genotypes. Make sure that genotypes
+          are the same length and at most eight characters. They must be of
+          even length and contain only letters.`);
       }
     }
   
@@ -105,18 +165,121 @@
       return true;
       */
   </script>
-  <div>
+
+  <!-- usage information -->
+  <div id="instructions">
+
+    <div id="blanket" style="display:none"></div>
+    <div class="content-21" id="popUpDiv" style="display:none">
+      <p><h2>How To Read a Punnett Square</h2>
+      <ul>
+        <li>The potential gamete genotypes of the father are displayed along the top of the square.</li><br>
+        <li>The potential gamete genotypes of the mother are displayed along the left side.
+        </li><br>
+        <li>A capital letter indicates a dominant allele.</li><br>
+        <li>A lowercase letter indicates a recessive allele.</li><br>
+        <li>The cells in the square represent potential offspring genotypes generated by fusion of a father and a mother gamete.</li><br>
+        <li>Coloring of the cells reflects the offspring phenotype; cells with the same color share the same phenotype.</li><br>
+      </ul>
+      </p>
+      <a href="#" onclick="popup('popUpDiv')" ><center class="button">Close</center></a>
+    </div>
+    <a href="#" onclick="popup('popUpDiv')"><center class="usage"><strong><u>Help! I can't interpret my Punnett Square!</u></strong></center><br></a>
+
+    <script>
+    function toggle(div_id) {
+      var el = document.getElementById(div_id);
+      if ( el.style.display == 'none' ) { el.style.display = 'block';}
+      else {el.style.display = 'none';}
+    }
+    function blanket_size(popUpDivVar) {
+      blanket_height = document.body.parentNode.scrollHeight;  
+      var blanket = document.getElementById('blanket');
+      blanket.style.height = blanket_height + 'px';
+      var popUpDiv = document.getElementById(popUpDivVar);
+      popUpDiv_height=blanket_height/2-(blanket_height*.2);
+      popUpDiv.style.top = popUpDiv_height + 'px';
+    }
+
+    function window_pos(popUpDivVar) {
+      window_width = document.body.parentNode.scrollWidth;
+      var popUpDiv = document.getElementById(popUpDivVar);
+      window_width=window_width/2-(window_width*.1);
+      popUpDiv.style.left = window_width + 'px';
+    }
+    
+    function popup(windowname) {
+      blanket_size(windowname);
+      window_pos(windowname);
+      toggle('blanket');
+      toggle(windowname);
+    }
+  </script>
+
+  <div class="usage">
+    <strong><i>Nota Bene!</i></strong> May take a long time for larger
+    genotypes. Coloring is just for show and doesn't mean anything for now.
+    Patience is a virtue.
+  </div>
+  <!-- basic entry fields -->
+  <div id="entry">
+    <!-- placeholders are substituted by JS on page load -->
     Father's genotype:
-    <input id="father" type="text" name="father" value="Aa"><br>
+    <div id="father-placeholder"></div><br>
     Mother's genotype:
-    <input id="mother" type="text" name="mother" value="Aa"><br>
+    <div id="mother-placeholder"></div><br>
     Title:
-    <input id="title" type="text" name="title" value="example"><br>
-    <button onclick="load_pun();">Solve Punnett Square</button>
+    <div id="title-placeholder"></div><br>
+    Colorization:
+    <select id="colorization" name="colorization">
+      <option value="none">None</option>
+      <option value="uniques">Uniques</option>
+      <option value="pairwise">Pairwise</option>
+    </select>
   </div>
-  <div>
-    <img id="pun-img" src="cgi-bin/punnett-square?father=Aa&mother=Aa&title=example">
-    <p>N.B. May take a long time for larger genotypes. Coloring is just for show and doesn't mean anything for now. Patience is a virtue.</p>
+  <div style="text-align: center; margin-top: 10px;">
+    <button class="button" onclick="load_pun();">
+      Solve Punnett Square
+    </button>
+    <button class="button" onclick="download_csv();" style="margin-left: 20px;">
+      Download CSV
+    </button>
   </div>
+  <div id="warn-container">
+    <div id="alert" class="alert">
+      <strong style="color: #b73000;"><b>Error: </b></strong>
+      <span id="alert-text"></span>
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">
+        &times;
+      </span>
+    </div>
+  </div>
+  <div id="pun-tbl" style="margin-top: 10px; text-align: center;"></div>
+
+  <!-- just here for now -->
+  <script type="text/javascript">
+    const download_csv = () => {
+      let table_as_str = data.map(row => row.join(",")).join("\n");
+      let link = document.createElement("a");
+      link.setAttribute("download", "linnaeus_punnett.csv");
+      link.setAttribute("href",
+        `data:application/octet-stream,${table_as_str}`);
+      link.click();
+    }
+
+    window.addEventListener("load", _ => {
+      let entry = document.getElementById("entry");
+      entry.replaceChild(
+        pretty.input("id='father' type='text' name='father' value='Aa'"),
+        document.getElementById("father-placeholder"));
+      entry.replaceChild(
+        pretty.input("id='mother' type='text' name='mother' value='Aa'"),
+        document.getElementById("mother-placeholder"));
+      entry.replaceChild(
+        pretty.input("id='title' type='text' name='title' value='example'"),
+        document.getElementById("title-placeholder"));
+    });
+  </script>
+
 </body>
 </html>

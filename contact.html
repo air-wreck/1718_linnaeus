@@ -1,77 +1,63 @@
 <!DOCTYPE html>
 <html>
+
+<!-- contact.html
+
+Contact form (HTTP GET request to Google Spreadsheet/Google App Script)
+-->
+
 <head>
   <title>Linnaeus</title>
   <link rel="stylesheet" type="text/css" href="css/main.css">
-  <link rel="stylesheet" type="text/css" href="css/punnett.css">
+  <link rel="stylesheet" type="text/css" href="css/contact.css">
+  <script type="text/javascript" src="js/pretty.js"></script>
 
-  <!-- Google fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
-  <!-- Font Awesome icons -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- additional icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-mfizz/2.4.1/font-mfizz.min.css">
-
-  <!-- menu bar for small screens -->
-  <script type="text/javascript">
-  window.onclick = function(event) {
-    menu = document.getElementById("dropdown");
-    if (event.target.matches("#dropbtn") || event.target.matches(".menu")) {
-      if (menu.style.display == "none" || menu.style.display == "") {
-        menu.style.display = "block";
-      } else {
-        menu.style.display = "none";
-      }
-    } else {
-      menu.style.display = "none";
-    }
-  };
+  <!-- menu bar -->
+  <script type="text/javascript" src="js/nav.js"></script>
   </script>
 </head>
 <body>
-  <div class="nav-bar">
-    <ul>
-      <div style="float: left;">
-        <li><span><b>Linnaeus</b></span></li>
-      </div>
-      <div style="float: right;">
-        <li><a href="home.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="pedigree.html">Pedigree</a></li>
-        <li><a href="punnett.html">Punnett Square</a></li>
-        <li><a href="contact.html">Contact</a></li>
-         <li><a href="faq.html">FAQs</a></li>
-      </div>
-      <div style="float: right;" class="narrow-menu">
-        <!-- this is such a sketchy way to make a menu button -->
-          <button id="dropbtn">
-            <div class="menu"></div>
-            <div class="menu"></div>
-            <div class="menu"></div>
-          </button>
+<div style="text-align: center;">
 
-          <!-- the actual dropdown menu -->
-          <div id="dropdown">
-            <a href="Home.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="pedigree.html">Pedigree</a>
-            <a href="punnett.html">Punnett Square</a>
-            <a href="contact.html">Contact</a>
-            <a href="faq.html">FAQs</a>
-          </div>
-      </div>
-    </ul>
-  </div>
-  <div class="punnett-page">
-    <div class="content-1">
-      <h1>Contact Us</h1>
-    </div>
-    <div>
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe_ExmgaDWKORhAQvCkifGuqBSnXgbG9rLwclEmaq4DPXMxwQ/viewform?embedded=true" width=100% height=1000 frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
-    </div>
-  </div>
-  <div class="footer">
-    <i class="fa fa-code" aria-hidden="true"></i> with <i class="fa fa-heart" aria-hidden="true"></i> by Eric, Nelson, and Karena
-  </div>  
+  <!-- we'll use an error message to show success, just to reuse styling -->
+  <div id="alert" class="alert" style="display: none; background-color: #ccf2a2; margin-top: 50px;"><strong style="color: #147219;"><b>Thanks! </b></strong><span id="alert-text"></span><span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span></div><br>
+
+  <h1>Tell Us How We're Doing</h1>
+  Name: <br>
+  <div id="placeholder-1"></div><br><br><br>
+  Email: <br>
+  <div id="placeholder-2"></div><br><br><br>
+  Feedback: <br>
+  <div id="placeholder-3"></div><br><br><br>
+  <button class="button" onclick="submit()">Submit</button>
+</div>
+
+<script type="text/javascript">
+  window.addEventListener("load", _ => {
+    let fields = [
+      "id='name' type='text' name='name' pattern='\\w+\\s*\\w*' value='Bob'",
+      "id='email' type='text' name='email' pattern='\\w+@\\w+\\.\\w+' value='bob@example.com'",
+      "id='feedback' type='text' name='feedback' value='Very good!'"
+    ];
+    pretty.range(1, 4).forEach(n => {
+      let div = document.getElementById(`placeholder-${n}`);
+      div.parentNode.replaceChild(pretty.input(fields[n-1]), div);
+    });
+  });
+
+  const submit = () => {
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let feedback = document.getElementById("feedback").value;
+
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+      console.log("we have received the feedback...IGNORE the error, probably");
+      pretty.warn_user("We have received your feedback.");
+    }
+    xhr.open("GET", `https://script.google.com/a/macros/ctemc.org/s/AKfycbzDanEtxbzo9Vqq6Jb6sUJbqr64EcIUmiwKk0tn9XgazBmRAZk/exec?name=${name}&email=${email}&feedback=${feedback}`, true);
+    xhr.send(null);
+  }
+</script>
 </body>
 </html>

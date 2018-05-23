@@ -1,67 +1,28 @@
 <!DOCTYPE html>
 <html>
+
+<!-- home.html
+
+Main landing page for website
+Contains an overview of what we do and customer testimonials
+-->
+
 <head>
   <title>Linnaeus</title>
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/home.css">
 
-  <!-- Google fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Raleway|Rubik">
   <!-- Font Awesome icons -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- additional icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-mfizz/2.4.1/font-mfizz.min.css">
 
   <!-- menu bar for small screens -->
-  <script type="text/javascript">
-  window.onclick = function(event) {
-    menu = document.getElementById("dropdown");
-    if (event.target.matches("#dropbtn") || event.target.matches(".menu")) {
-      if (menu.style.display == "none" || menu.style.display == "") {
-        menu.style.display = "block";
-      } else {
-        menu.style.display = "none";
-      }
-    } else {
-      menu.style.display = "none";
-    }
-  };
+  <script type="text/javascript" src="js/nav.js"></script>
   </script>
 </head>
 <body>
-  <div class="nav-bar">
-    <ul>
-      <div style="float: left;">
-        <li><span><b>Linnaeus</b></span></li>
-      </div>
-      <div style="float: right;">
-        <li><a href="home.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="pedigree.html">Pedigree</a></li>
-        <li><a href="punnett.html">Punnett Square</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="faq.html">FAQs</a></li>
-      </div>
-      <div style="float: right;" class="narrow-menu">
-        <!-- this is such a sketchy way to make a menu button -->
-          <button id="dropbtn">
-            <div class="menu"></div>
-            <div class="menu"></div>
-            <div class="menu"></div>
-          </button>
-
-          <!-- the actual dropdown menu -->
-          <div id="dropdown">
-            <a href="Home.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="pedigree.html">Pedigree</a>
-            <a href="punnett.html">Punnett Square</a>
-            <a href="contact.html">Contact</a>
-            <a href="faq.html">FAQs</a>
-          </div>
-      </div>
-    </ul>
-  </div>
+  <!-- top content, with our website name and a fancy background -->
   <div class="front-page">
     <div class="title-text">
       <h1>Linnaeus</h1>
@@ -69,6 +30,7 @@
     </div>
     <img src="img/png/background.png" class="title-img">
   </div>
+  <!-- first content area, with examples of what we do and custom graphics -->
   <div class="content-1">
     <h2>Powerful, modern tools based on real biology</h2>
     <h5>SEAMLESS TOOLS FOR THE WORLD AROUND US</h5>
@@ -109,6 +71,7 @@
       </div>
     </div>
   </div>
+  <!-- second content area with technologies and stuff -->
   <div class="content-2">
     <h3>Built on the technologies you know and trust...</h3>
     <h1><ul>
@@ -117,10 +80,13 @@
       <li><a href="https://www.w3.org/TR/CSS22/"><i class="fa fa-css3" aria-hidden="true"></i></a></li>
       <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><i class="icon-javascript"></i></a></li>
       <li><a href="https://www.python.org/"><i class="icon-python"></i></a></li>
+      <li><a href="https://httpd.apache.org/"><i class="icon-apache"></i></a></li>
+      <li><a href="https://aws.amazon.com/"><i class="icon-aws"></i></a></li>
+      <li><a href="https://www.ubuntu.com/"><i class="icon-ubuntu"></i></a></li>
     </ul></h1>
   </div>
-  <div class="footer">
-    <i class="fa fa-code" aria-hidden="true"></i> with <i class="fa fa-heart" aria-hidden="true"></i> by Eric, Nelson, and Karena
-  </div> 
+  <footer class="footer">
+    website synthesized by Eric, Nelson, and Karena
+  </footer>
 </body>
 </html>
