@@ -83,6 +83,27 @@
                      ' They must be of even length and contain only letters.');
       }
     }
+  
+  /*
+    if (father.length == mother.length && father.length % 2 == 0 &&
+          test.test(father) && test.test(mother)) && check_align(mother,father) == true {
+              { pun.src = 'cgi-bin/punnett-square?father='+father+'&mother='+mother+
+                  '&title='+title;}
+      } else {
+        window.alert('Error: invalid genotypes. Make sure that genotypes are'+
+                     ' the same length and at most eight characters.' +
+                     ' They must be of even length and contain only letters.');
+      }
+    }
+    function check_align(mother, father) {
+      for (i = 0; i < mother.length-2; i+2) { 
+           if (father.substring(i, i+2).toLowerCase() != mother.substring(i, i+2).toLowerCase() && father.substring(i, i+1).toLowerCase() != father.substring(i+1, i+2).toLowerCase())
+           {
+            return false;
+           } 
+      }
+      return true;
+      */
   </script>
   <div>
     Father's genotype:
