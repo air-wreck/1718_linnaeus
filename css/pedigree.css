@@ -50,19 +50,19 @@
 }
 
 #blanket {
-  background-color:#fff;
+  background-color:#efefef;
   opacity: 0.95;
-  position: absolute;
+  position: fixed;
   z-index: 9001;
-  top:0px;
-  left:0px;
   width:100%;
+  top:0;
 }
 
 #popUpDiv {
   position: absolute;
-  width: 25%;
-  height: 50%;
+  margin-left: 30%;
+  width: 40%;
+  margin-top: -5%;
   border-style: hidden;
   z-index: 9002;
 }
