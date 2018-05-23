@@ -114,8 +114,10 @@ Web interface for solving punnett squares
       /* consider the right color mapping function (from colorize.js) to use */
       let cmap = {
         "none": colorize.color_blank,
-        "uniques": colorize.color_uniques,
-        "pairwise": colorize.color_pairwise
+        "autosomal":colorize.color_autosomal,
+        "codominance":colorize.color_codominance,
+        "incomplete":colorize.color_incomplete,
+        "xlinked":colorize.color_xlinked
       }[document.getElementById("colorization").value];
 
       /* validate data */
@@ -229,9 +231,10 @@ Web interface for solving punnett squares
     <div id="title-placeholder"></div><br>
     Colorization:
     <select id="colorization" name="colorization">
-      <option value="none">None</option>
-      <option value="uniques">Uniques</option>
-      <option value="pairwise">Pairwise</option>
+      <option value="autosomal">Autosomal</option>
+      <option value="codominance">Codominance</option>
+      <option value="incomplete">Incomplete</option>
+      <option value="xlinked">X-linked</option>
     </select>
   </div>
   <div style="text-align: center; margin-top: 10px;">
