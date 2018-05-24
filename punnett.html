@@ -107,9 +107,20 @@ Web interface for solving punnett squares
     var data = []; // expose data for easy CSV downloading later on
     const load_pun = () => {
       /* loads the punnett square */
-      var father = document.getElementById("father").value;
-      var mother = document.getElementById("mother").value;
-      var title = document.getElementById("title").value;
+      var father = '';
+      var mother = '';
+      for (let i of ['fdisplay2', 'fdisplay4', 'fdisplay8', 'fdisplay16']){
+        x = document.getElementById(i).value;
+        if (x!=''){
+          father = x;
+        }
+      }
+      for (let i of ['mdisplay2', 'mdisplay4', 'mdisplay8', 'mdisplay16']){
+        x = document.getElementById(i).value;
+        if (x!=''){
+          mother = x;
+        }
+      }
 
       /* consider the right color mapping function (from colorize.js) to use */
       let cmap = {
@@ -130,10 +141,7 @@ Web interface for solving punnett squares
         }
         return true;
       }
-      /* validate data */
-      test = RegExp("^[a-zA-Z]{2,}$");
-      if (father.length === mother.length && father.length % 2 === 0 &&
-          test.test(father) && test.test(mother) && check_align(mother,father)) {
+
         data = solve(father, mother);
         let colors = [[]];
         // set first row of colors to blank
@@ -148,12 +156,8 @@ Web interface for solving punnett squares
                       .map(c => cmap(c, colorspace))));
         }
         let tbl = document.getElementById("pun-tbl");
-        tbl.innerHTML = "<h3>"+title+"</h3>"+colortbl(data, colors);
-        } else {
-          pretty.warn_user(`Invalid genotypes. Make sure that genotypes
-            are the same length and at most eight characters. They must be of
-            even length and contain only letters, which should be in pairs of two.`);
-      }
+        tbl.innerHTML = "<h3>"+"</h3>"+colortbl(data, colors);
+      
     }
   </script>
 
@@ -205,9 +209,7 @@ Web interface for solving punnett squares
   </script>
 
   <div class="usage">
-    <strong><i>Nota Bene!</i></strong> May take a long time for larger
-    genotypes. Coloring is just for show and doesn't mean anything for now.
-    Patience is a virtue.
+    <center>Select what size you would like your Punnett square to be:<center>
   </div>
   <!-- basic entry fields -->
 
@@ -237,6 +239,11 @@ Web interface for solving punnett squares
         x.style.display="block";
       }
     }
+    var inputs = ['fdisplay2', 'fdisplay4', 'fdisplay8', 'fdisplay16','mdisplay2', 'mdisplay4', 'mdisplay8', 'mdisplay16'];
+    for (let j of inputs) {
+      document.getElementById(j).value = '';
+    }
+    document.getElementById('inherit').style.display="block";
   }
   </script>
 
@@ -248,139 +255,159 @@ Web interface for solving punnett squares
         <button class="button" onclick="showF('aa', 'fdisplay2');"> aa </button>
       <br><br> <input type="text" id="fdisplay2" value=""   readonly="readonly" />
       <br><br>Mother's Genotype:<br><br>
-        <button class="button"> AA </button>
-        <button class="button"> Aa </button>
-        <button class="button"> aa </button>
-      <br><br> <input type="text" id="mdisplay" value=""   readonly="readonly" />
-      <br><br>Inheritance Mode:
+        <button class="button" onclick="showF('AA', 'mdisplay2');"> AA </button>
+        <button class="button" onclick="showF('Aa', 'mdisplay2');"> Aa </button>
+        <button class="button" onclick="showF('aa', 'mdisplay2');"> aa </button>
+      <br><br> <input type="text" id="mdisplay2" value=""   readonly="readonly" />
+
+    </div>
+
+    <div id="four" style="display:none">
+      Father's Genotype:<br><br>
+        Trait 1: 
+          <button class="button" onclick="showF('AA', 'fdisplay4');"> AA </button>
+          <button class="button" onclick="showF('Aa', 'fdisplay4');"> Aa </button>
+          <button class="button" onclick="showF('aa', 'fdisplay4');"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button" onclick="showF('BB', 'fdisplay4');"> BB </button>
+          <button class="button" onclick="showF('Bb', 'fdisplay4');"> Bb </button>
+          <button class="button" onclick="showF('bb', 'fdisplay4');"> bb </button>
+        <br><br> <input type="text" id="fdisplay4" value=""   readonly="readonly" />
+      <br><br>Mother's Genotype:<br><br>
+        Trait 1:
+          <button class="button" onclick="showF('AA', 'mdisplay4');"> AA </button>
+          <button class="button" onclick="showF('Aa', 'mdisplay4');"> Aa </button>
+          <button class="button" onclick="showF('aa', 'mdisplay4');"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button" onclick="showF('BB', 'mdisplay4');"> BB </button>
+          <button class="button" onclick="showF('Bb', 'mdisplay4');"> Bb </button>
+          <button class="button" onclick="showF('bb', 'mdisplay4');"> bb </button>
+        <br><br> <input type="text" id="mdisplay4" value=""   readonly="readonly" />
+
+    </div>
+
+    <div id="eight" style="display:none">
+      Father's Genotype:<br><br>
+        Trait 1: 
+          <button class="button" onclick="showF('AA', 'fdisplay8');"> AA </button>
+          <button class="button" onclick="showF('Aa', 'fdisplay8');"> Aa </button>
+          <button class="button" onclick="showF('aa', 'fdisplay8');"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button" onclick="showF('BB', 'fdisplay8');"> BB </button>
+          <button class="button" onclick="showF('Bb', 'fdisplay8');"> Bb </button>
+          <button class="button" onclick="showF('bb', 'fdisplay8');"> bb </button>
+        &emsp; Trait 3: 
+          <button class="button" onclick="showF('CC', 'fdisplay8');"> CC </button>
+          <button class="button" onclick="showF('Cc', 'fdisplay8');"> Cc </button>
+          <button class="button" onclick="showF('cc', 'fdisplay8');"> cc </button>
+        <br><br> <input type="text" id="fdisplay8" value=""   readonly="readonly" />
+      <br><br>Mother's Genotype:<br><br>
+        Trait 1:
+          <button class="button" onclick="showF('AA', 'mdisplay8');"> AA </button>
+          <button class="button" onclick="showF('Aa', 'mdisplay8');"> Aa </button>
+          <button class="button" onclick="showF('aa', 'mdisplay8');"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button" onclick="showF('BB', 'mdisplay8');"> BB </button>
+          <button class="button" onclick="showF('Bb', 'mdisplay8');"> Bb </button>
+          <button class="button" onclick="showF('bb', 'mdisplay8');"> bb </button>
+        &emsp; Trait 3: 
+          <button class="button" onclick="showF('CC', 'mdisplay8');"> CC </button>
+          <button class="button" onclick="showF('Cc', 'mdisplay8');"> Cc </button>
+          <button class="button" onclick="showF('cc', 'mdisplay8');"> cc </button>
+        <br><br> <input type="text" id="mdisplay8" value=""   readonly="readonly" />
+
+    </div>
+
+    <div id="sixteen" style="display:none">
+      Father's Genotype:<br><br>
+        Trait 1: 
+          <button class="button" onclick="showF('AA', 'fdisplay16');"> AA </button>
+          <button class="button "onclick="showF('Aa', 'fdisplay16');"> Aa </button>
+          <button class="button" onclick="showF('aa', 'fdisplay16');"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button" onclick="showF('BB', 'fdisplay16');"> BB </button>
+          <button class="button" onclick="showF('Bb', 'fdisplay16');"> Bb </button>
+          <button class="button" onclick="showF('bb', 'fdisplay16');"> bb </button>
+        &emsp; Trait 3: 
+          <button class="button" onclick="showF('CC', 'fdisplay16');"> CC </button>
+          <button class="button" onclick="showF('Cc', 'fdisplay16');"> Cc </button>
+          <button class="button" onclick="showF('cc', 'fdisplay16');"> cc </button>
+        &emsp; Trait 4: 
+          <button class="button" onclick="showF('DD', 'fdisplay16');"> DD </button>
+          <button class="button" onclick="showF('Dd', 'fdisplay16');"> Dd </button>
+          <button class="button" onclick="showF('dd', 'fdisplay16');"> dd </button>
+        <br><br> <input type="text" id="fdisplay16" value=""   readonly="readonly" />
+      <br><br>Mother's Genotype:<br><br>
+        Trait 1:
+          <button class="button" onclick="showF('AA', 'mdisplay16');"> AA </button>
+          <button class="button" onclick="showF('Aa', 'mdisplay16');"> Aa </button>
+          <button class="button" onclick="showF('aa', 'mdisplay16');"> aa </button>
+        &emsp; Trait 2: 
+          <button class="button" onclick="showF('BB', 'mdisplay16');"> BB </button>
+          <button class="button" onclick="showF('Bb', 'mdisplay16');"> Bb </button>
+          <button class="button" onclick="showF('bb', 'mdisplay16');"> bb </button>
+        &emsp; Trait 3: 
+          <button class="button" onclick="showF('CC', 'mdisplay16');"> CC </button>
+          <button class="button" onclick="showF('Cc', 'mdisplay16');"> Cc </button>
+          <button class="button" onclick="showF('cc', 'mdisplay16');"> cc </button>
+        &emsp; Trait 4: 
+          <button class="button" onclick="showF('DD', 'mdisplay16');"> DD </button>
+          <button class="button" onclick="showF('Dd', 'mdisplay16');"> Dd </button>
+          <button class="button" onclick="showF('dd', 'mdisplay16');"> dd </button>
+        <br><br> <input type="text" id="mdisplay16" value=""   readonly="readonly" />
+
+    </div>
+
+    <div id='inherit' style = "display:none">
+      <br>Inheritance Mode:
         <select id="colorization" name="colorization">
           <option value="autosomal">Autosomal</option>
           <option value="codominance">Codominance</option>
           <option value="incomplete">Incomplete</option>
           <option value="xlinked">X-linked</option>
         </select>
+      <br>
     </div>
 
-    <div id="four" style="display:none">
-      Father's Genotype:<br><br>
-        Trait 1: 
-          <button class="button"> AA </button>
-          <button class="button"> Aa </button>
-          <button class="button"> aa </button>
-        &emsp; Trait 2: 
-          <button class="button"> BB </button>
-          <button class="button"> Bb </button>
-          <button class="button"> bb </button>
-        <br><br> <input type="text" id="fdisplay" value=""   readonly="readonly" />
-      <br><br>Mother's Genotype:<br><br>
-        Trait 1:
-          <button class="button"> AA </button>
-          <button class="button"> Aa </button>
-          <button class="button"> aa </button>
-        &emsp; Trait 2: 
-          <button class="button"> BB </button>
-          <button class="button"> Bb </button>
-          <button class="button"> bb </button>
-        <br><br> <input type="text" id="mdisplay" value=""   readonly="readonly" />
-      <br><br>Inheritance Mode:
-        <select id="colorization" name="colorization">
-          <option value="autosomal">Autosomal</option>
-        </select>
-    </div>
-
-    <div id="eight" style="display:none">
-      Father's Genotype:<br><br>
-        Trait 1: 
-          <button class="button"> AA </button>
-          <button class="button"> Aa </button>
-          <button class="button"> aa </button>
-        &emsp; Trait 2: 
-          <button class="button"> BB </button>
-          <button class="button"> Bb </button>
-          <button class="button"> bb </button>
-        &emsp; Trait 3: 
-          <button class="button"> CC </button>
-          <button class="button"> Cc </button>
-          <button class="button"> cc </button>
-        <br><br> <input type="text" id="fdisplay" value=""   readonly="readonly" />
-      <br><br>Mother's Genotype:<br><br>
-        Trait 1:
-          <button class="button"> AA </button>
-          <button class="button"> Aa </button>
-          <button class="button"> aa </button>
-        &emsp; Trait 2: 
-          <button class="button"> BB </button>
-          <button class="button"> Bb </button>
-          <button class="button"> bb </button>
-        &emsp; Trait 3: 
-          <button class="button"> CC </button>
-          <button class="button"> Cc </button>
-          <button class="button"> cc </button>
-        <br><br> <input type="text" id="mdisplay" value=""   readonly="readonly" />
-      <br><br>Inheritance Mode:
-        <select id="colorization" name="colorization">
-          <option value="autosomal">Autosomal</option>
-        </select>
-    </div>
-
-    <div id="sixteen" style="display:none">
-      Father's Genotype:<br><br>
-        Trait 1: 
-          <button class="button"> AA </button>
-          <button class="button"> Aa </button>
-          <button class="button"> aa </button>
-        &emsp; Trait 2: 
-          <button class="button"> BB </button>
-          <button class="button"> Bb </button>
-          <button class="button"> bb </button>
-        &emsp; Trait 3: 
-          <button class="button"> CC </button>
-          <button class="button"> Cc </button>
-          <button class="button"> cc </button>
-        &emsp; Trait 4: 
-          <button class="button"> DD </button>
-          <button class="button"> Dd </button>
-          <button class="button"> dd </button>
-        <br><br> <input type="text" id="fdisplay" value=""   readonly="readonly" />
-      <br><br>Mother's Genotype:<br><br>
-        Trait 1:
-          <button class="button"> AA </button>
-          <button class="button"> Aa </button>
-          <button class="button"> aa </button>
-        &emsp; Trait 2: 
-          <button class="button"> BB </button>
-          <button class="button"> Bb </button>
-          <button class="button"> bb </button>
-        &emsp; Trait 3: 
-          <button class="button"> CC </button>
-          <button class="button"> Cc </button>
-          <button class="button"> cc </button>
-        &emsp; Trait 4: 
-          <button class="button"> DD </button>
-          <button class="button"> Dd </button>
-          <button class="button"> dd </button>
-        <br><br> <input type="text" id="mdisplay" value=""   readonly="readonly" />
-      <br><br>Inheritance Mode:
-        <select id="colorization" name="colorization">
-          <option value="autosomal">Autosomal</option>
-        </select>
-    </div>
   </div>
 
   <script>
   function showF(addition, id) {
     var x = document.getElementById(id).value;
-    if (x < id.slice(-1)) {
-      x += addition;
-      var sorted = function(x) {
-        return text.split('').sort().join('');
+      for (let i of x) {
+        if (addition.toUpperCase().indexOf(i.toUpperCase())>-1){
+          x=x.replace(i, "")
+        }
       }
-    } else {
-
-    }
-    document.getElementById(id).value = x;
+    x += addition;
+      var sort = function(string) {
+        var genes = [];
+        for (i=0; i<string.length-1; i+=2) {
+          genes.push(string.substring(i,i+2))
+        }
+        var sorted = ['','','',''];
+        for (let i of genes) {
+          switch(i[0].toUpperCase()){
+            case 'A': 
+              sorted[0]=i;
+              break;
+            case 'B': 
+              sorted[1]=i;
+              break;
+            case 'C': 
+              sorted[2]=i;
+              break;
+            case 'D': 
+              sorted[3]=i;
+              break;  
+          }
+        }
+        return sorted.join('');
+      };
+    document.getElementById(id).value = sort(x);
   }
   </script>
+
 
   <div style="text-align: center; margin-top: 10px;">
     <button class="button" onclick="load_pun();">
@@ -399,6 +426,7 @@ Web interface for solving punnett squares
       </span>
     </div>
   </div>
+  
   <div id="pun-tbl" style="margin-top: 10px; text-align: center;"></div>
 
   <!-- just here for now -->
@@ -411,8 +439,8 @@ Web interface for solving punnett squares
         `data:application/octet-stream,${table_as_str}`);
       link.click();
     }
-
-    window.addEventListener("load", _ => {
+    
+    /*window.addEventListener("load", _ => {
       let entry = document.getElementById("entry");
       entry.replaceChild(
         pretty.input("id='father' type='text' name='father' value='Aa'"),
@@ -423,7 +451,8 @@ Web interface for solving punnett squares
       entry.replaceChild(
         pretty.input("id='title' type='text' name='title' value='example'"),
         document.getElementById("title-placeholder"));
-    });
+    });*/
+    
   </script>
 
 </body>
