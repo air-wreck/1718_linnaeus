@@ -8,25 +8,49 @@ const ped_solve = (function () {
   /* infect_* functions determine the probability that an individual is
      infected based on the necessary information */
 
-  // use average of parent probabilities, just for testing
-  const infect_avg = (f, m) => 0.5 * (f + m);
-
-  // autosomal dominant: only parent probabilities matter, since no carriers
-  const infect_auto_dom = (f, m) => {
-    // consider the probability that a child is NOT infected: both parents must
-    //   pass on recessive (a) alleles
-    // if a parent is not infected (aa), there is a 2/2 chance of this
-    // if a parent is infected (AA, Aa, aA), there is a 2/6 chance of this
-    // then the probability of each parent passing on a harmless (a) is:
-    //   1/3 * (prob. parent infected) + (prob. parent clean)
-    // where
-    //   (prob. parent clean) = 1 - (prob. parent infected)
-    // we multiply the father and mother probabilities to get prob. child clean
-    let f_pass_clean = f/3 + (1 - f);
-    let m_pass_clean = m/3 + (1 - m);
-    return 1 - (f_pass_clean * m_pass_clean);
+ //REPLACE INDIV WITH ARRAY INDEXES
+  function bottomUp(marriage) {
+    var infected = false;
+    // if kid infected parents are carriers unless infected already
+    marriage[2].forEach(indiv => {
+      if (indiv.infected === true && indiv.father.infected === false) {
+        indiv.father.carrier = 1;
+        infected = true;
+      }
+      if (indiv.infected === true && indiv.mother.infected === false) {
+        indiv.mother.carrier = 1;
+        infected = true;
+      }
+    })
+    if (infected === false) {
+      // if child is carrier but parents are unknown and aren't infected
+      marriage[2].forEach(indiv => {
+        if (indiv.carrier === 1 && indiv.mother.carrier != 1 && indiv.mother.infected != true) {
+          test.mother.carrier = 2/3
+        }
+        if (indiv.carrier === 1 && indiv.father.carrier != 1 && indiv.father.infected != true) {
+          test.father.carrier = 2/3
+        }   
+    }
+    //if kid is unknown... go to parents top-down
   }
 
+  function topDown(marriage) {
+    if (marriage[0].carrier === 1 && marriage[1] === 1){
+      //do the 2/3 thingies
+    }
+    if 
+  } 
+
+  function parentToChild(marriage) {
+    marriage[2].forEach(indiv => {
+      if (indiv.mother.carrier === 1 && indiv.mother.carrier != 1) {
+        test.mother.carrier = 2/3
+      }
+      if (indiv.carrier === 1 && indiv.father.carrier != 1) {
+        test.father.carrier = 2/3
+      }   
+  }
   return {
     /* enumerated type for sex */
     Sex: {m: "male", f: "female"},
@@ -39,6 +63,8 @@ const ped_solve = (function () {
       this.name = name;    // object is identified by unique String
       this.sex = sex;      // see Sex enum type
       this.infected = infected;  // disease probability
+      this.carrier = -1;
+      this.final = false;
 
       // set parent Person nodes
       this.add_parents = (father, mother) => {
