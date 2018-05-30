@@ -187,12 +187,12 @@ Very plain page for web-based pedigree stuff
       let people = pedigree.map(indiv => indiv.name);
 
       while (people.length > 0) {
-        // look for a leaf nodes, where there is no individual in the pedigree
+        // look for leaf nodes, where there is no individual in the pedigree
         //    pointing to that person
-        let leaves = people.filter(indiv => 
+        let leaves = people.filter(indiv =>
           !pedigree.some(p =>
-               !!p.father && p.father.name === indiv 
-            || !!p.mother && p.mother.name === indiv));
+           !!p.father && p.father.name === indiv && people.includes(p.name)
+        || !!p.mother && p.mother.name === indiv && people.includes(p.name)));
 
         if (leaves.length == 0) {
           // no leaf nodes, so graph is cyclic
@@ -201,7 +201,7 @@ Very plain page for web-based pedigree stuff
         }
 
         // remove all leaves from the graph
-        people = people.filter(name => !leaves.includes(name))
+        people = people.filter(name => !leaves.includes(name));
       }
       return 1; // "people" is now empty, so the graph is acyclic
     }
@@ -377,9 +377,13 @@ Very plain page for web-based pedigree stuff
     let canvas = document.createElement("canvas");
     let link = document.createElement("a");
     const download_ped = () => {
-      // possibly check if the pedigree has been rendered yet?
-      let svgURL = new XMLSerializer().serializeToString(
-        document.getElementById("ped-img"));
+      let ped_img = document.getElementById("ped-img");
+      if (ped_img.innerHTML === "") {
+        pretty.warn_user("No pedigree found");
+        return;
+      }
+
+      let svgURL = new XMLSerializer().serializeToString(ped_img);
       let img = new Image();
       img.src = "data:image/svg+xml; charset=utf8, "
         + encodeURIComponent(svgURL);

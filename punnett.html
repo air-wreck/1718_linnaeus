@@ -17,6 +17,9 @@ Web interface for solving punnett squares
   <script type="text/javascript" src="js/pretty.js"></script>
   <!-- table colorization scheme code -->
   <script type="text/javascript" src="js/colorize.js"></script>
+
+  <!-- html2canvas to convert the HTML table to a downloadable PNG -->
+  <script type="text/javascript" src="js/other/html2canvas.min.js"></script>
 </head>
 <body>
   <div class="punnett-page">
@@ -32,7 +35,7 @@ Web interface for solving punnett squares
        caller must supply a matching array of [R,G,B] colors to apply to the
        data */
     const colortbl = (data, colors) => {
-      var html_str = "<table>";
+      var html_str = "<table id='punnett-table'>";
       for (var r = 0; r < data.length; r++) {
         html_str += "<tr>";
         for (var c = 0; c < data.length; c++) {
@@ -64,41 +67,40 @@ Web interface for solving punnett squares
     const str2geno = string =>
       string.split("")
             .map((el, i) => [el, string[i+1]])
-            .filter((el, i) => i % 2 === 0);
+            .filter((_, i) => i % 2 === 0);
 
     /* recursively determines the possible offspring for 2D genotype array */
     const combine = (arr, depth) => {
       if (depth === arr.length) {
         return [""];
-      } else {
-        var res = [];
-        for (var i in arr[depth]) {
-          var tmp = combine(arr, depth+1);
-          for (var j in tmp) {
-            res.push(arr[depth][i]+tmp[j]);
-          }
-        }
-        return res;
       }
+      var res = [];
+      for (let i in arr[depth]) {
+        let tmp = combine(arr, depth+1);
+        for (let j in tmp) {
+          res.push(arr[depth][i]+tmp[j]);
+        }
+      }
+      return res;
     }
 
     /* weaves two gentotype strings together, e.g.
        add("ABC", "abc") -> "AaBbCc" */
     const add = (f, m) =>
-      f.split("").map((el, i) => [el, m[i]].sort().join("")).join("")
+      f.split("").map((el, i) => [el, m[i]].sort().join("")).join("");
 
     const solve = (f, m) => {
       var f_arr = combine(str2geno(f), 0);
       var m_arr = combine(str2geno(m), 0);
       var sol_arr = [];
-      for (var i in f_arr) {
+      for (let i in f_arr) {
         sol_arr.push([]);
-        for (var j in m_arr) {
+        for (let j in m_arr) {
           sol_arr[i].push(add(f_arr[i], m_arr[j]));
         }
       }
       square = [[""].concat(m_arr)];
-      for (var i in m_arr) {
+      for (let i in m_arr) {
         square.push([f_arr[i]].concat(sol_arr[i]));
       }
       return square;
@@ -124,40 +126,37 @@ Web interface for solving punnett squares
 
       /* consider the right color mapping function (from colorize.js) to use */
       let cmap = {
-        "none": colorize.color_blank,
-        "autosomal":colorize.color_autosomal,
-        "codominance":colorize.color_codominance,
-        "incomplete":colorize.color_incomplete,
-        "xlinked":colorize.color_xlinked
+        "none":        colorize.color_blank,
+        "autosomal":   colorize.color_autosomal,
+        "codominance": colorize.color_codominance,
+        "incomplete":  colorize.color_incomplete,
+        "xlinked":     colorize.color_xlinked
       }[document.getElementById("colorization").value];
 
       function check_align(mother, father) {
-        for (i = 0; i < mother.length-1; i = i+2) { 
+        for (i = 0; i < mother.length-1; i = i+2) {
              if (father.substring(i, i+2).toLowerCase() != mother.substring(i, i+2).toLowerCase() || father.substring(i, i+1).toLowerCase() != father.substring(i+1, i+2).toLowerCase())
              {
               pretty.warn_user("weqe.");
               return false;
-             } 
+             }
         }
         return true;
       }
 
-        data = solve(father, mother);
-        let colors = [[]];
-        // set first row of colors to blank
-        for (let i = 0; i < data[0].length; i++)
-          colors[0].push(colorize.color_blank());
-        // set subsequent rows to a combined header and data
-        let colorspace = colorize.sample_colors(
-          Math.round(data[1][1].length / 2));
-        for (let r = 1; r < data.length; r++) {
-          colors.push([colorize.color_blank()]
-                      .concat(data[r].slice(1)
-                      .map(c => cmap(c, colorspace))));
-        }
-        let tbl = document.getElementById("pun-tbl");
-        tbl.innerHTML = "<h3>"+"</h3>"+colortbl(data, colors);
-      
+      data = solve(father, mother);
+      let colors = [[]];
+      // set first row of colors to blank
+      colors[0] = data[0].map(_ => colorize.color_blank());
+      // set subsequent rows to a combined header and data
+      let colorspace = colorize.sample_colors(
+        Math.round(data[1][1].length / 2));
+      data.filter((_, i) => i > 0).forEach(datum =>
+        colors.push([colorize.color_blank()]
+                    .concat(datum.slice(1)
+                    .map(c => cmap(c, colorspace)))));
+      let tbl = document.getElementById("pun-tbl");
+      tbl.innerHTML = "<h3>" + "</h3>" + colortbl(data, colors);
     }
   </script>
 
@@ -188,7 +187,7 @@ Web interface for solving punnett squares
       else {el.style.display = 'none';}
     }
     function blanket_size(popUpDivVar) {
-      blanket_height = document.body.parentNode.scrollHeight;  
+      blanket_height = document.body.parentNode.scrollHeight;
       var blanket = document.getElementById('blanket');
       blanket.style.height = blanket_height + 'px';
       var popUpDiv = document.getElementById(popUpDivVar);
@@ -199,7 +198,7 @@ Web interface for solving punnett squares
     function window_pos(popUpDivVar) {
       var popUpDiv = document.getElementById(popUpDivVar);
     }
-    
+
     function popup(windowname) {
       blanket_size(windowname);
       window_pos(windowname);
@@ -264,11 +263,11 @@ Web interface for solving punnett squares
 
     <div id="four" style="display:none">
       Father's Genotype:<br><br>
-        Trait 1: 
+        Trait 1:
           <button class="button" onclick="showF('AA', 'fdisplay4');"> AA </button>
           <button class="button" onclick="showF('Aa', 'fdisplay4');"> Aa </button>
           <button class="button" onclick="showF('aa', 'fdisplay4');"> aa </button>
-        &emsp; Trait 2: 
+        &emsp; Trait 2:
           <button class="button" onclick="showF('BB', 'fdisplay4');"> BB </button>
           <button class="button" onclick="showF('Bb', 'fdisplay4');"> Bb </button>
           <button class="button" onclick="showF('bb', 'fdisplay4');"> bb </button>
@@ -278,7 +277,7 @@ Web interface for solving punnett squares
           <button class="button" onclick="showF('AA', 'mdisplay4');"> AA </button>
           <button class="button" onclick="showF('Aa', 'mdisplay4');"> Aa </button>
           <button class="button" onclick="showF('aa', 'mdisplay4');"> aa </button>
-        &emsp; Trait 2: 
+        &emsp; Trait 2:
           <button class="button" onclick="showF('BB', 'mdisplay4');"> BB </button>
           <button class="button" onclick="showF('Bb', 'mdisplay4');"> Bb </button>
           <button class="button" onclick="showF('bb', 'mdisplay4');"> bb </button>
@@ -288,15 +287,15 @@ Web interface for solving punnett squares
 
     <div id="eight" style="display:none">
       Father's Genotype:<br><br>
-        Trait 1: 
+        Trait 1:
           <button class="button" onclick="showF('AA', 'fdisplay8');"> AA </button>
           <button class="button" onclick="showF('Aa', 'fdisplay8');"> Aa </button>
           <button class="button" onclick="showF('aa', 'fdisplay8');"> aa </button>
-        &emsp; Trait 2: 
+        &emsp; Trait 2:
           <button class="button" onclick="showF('BB', 'fdisplay8');"> BB </button>
           <button class="button" onclick="showF('Bb', 'fdisplay8');"> Bb </button>
           <button class="button" onclick="showF('bb', 'fdisplay8');"> bb </button>
-        &emsp; Trait 3: 
+        &emsp; Trait 3:
           <button class="button" onclick="showF('CC', 'fdisplay8');"> CC </button>
           <button class="button" onclick="showF('Cc', 'fdisplay8');"> Cc </button>
           <button class="button" onclick="showF('cc', 'fdisplay8');"> cc </button>
@@ -306,11 +305,11 @@ Web interface for solving punnett squares
           <button class="button" onclick="showF('AA', 'mdisplay8');"> AA </button>
           <button class="button" onclick="showF('Aa', 'mdisplay8');"> Aa </button>
           <button class="button" onclick="showF('aa', 'mdisplay8');"> aa </button>
-        &emsp; Trait 2: 
+        &emsp; Trait 2:
           <button class="button" onclick="showF('BB', 'mdisplay8');"> BB </button>
           <button class="button" onclick="showF('Bb', 'mdisplay8');"> Bb </button>
           <button class="button" onclick="showF('bb', 'mdisplay8');"> bb </button>
-        &emsp; Trait 3: 
+        &emsp; Trait 3:
           <button class="button" onclick="showF('CC', 'mdisplay8');"> CC </button>
           <button class="button" onclick="showF('Cc', 'mdisplay8');"> Cc </button>
           <button class="button" onclick="showF('cc', 'mdisplay8');"> cc </button>
@@ -320,19 +319,19 @@ Web interface for solving punnett squares
 
     <div id="sixteen" style="display:none">
       Father's Genotype:<br><br>
-        Trait 1: 
+        Trait 1:
           <button class="button" onclick="showF('AA', 'fdisplay16');"> AA </button>
           <button class="button "onclick="showF('Aa', 'fdisplay16');"> Aa </button>
           <button class="button" onclick="showF('aa', 'fdisplay16');"> aa </button>
-        &emsp; Trait 2: 
+        &emsp; Trait 2:
           <button class="button" onclick="showF('BB', 'fdisplay16');"> BB </button>
           <button class="button" onclick="showF('Bb', 'fdisplay16');"> Bb </button>
           <button class="button" onclick="showF('bb', 'fdisplay16');"> bb </button>
-        &emsp; Trait 3: 
+        &emsp; Trait 3:
           <button class="button" onclick="showF('CC', 'fdisplay16');"> CC </button>
           <button class="button" onclick="showF('Cc', 'fdisplay16');"> Cc </button>
           <button class="button" onclick="showF('cc', 'fdisplay16');"> cc </button>
-        &emsp; Trait 4: 
+        &emsp; Trait 4:
           <button class="button" onclick="showF('DD', 'fdisplay16');"> DD </button>
           <button class="button" onclick="showF('Dd', 'fdisplay16');"> Dd </button>
           <button class="button" onclick="showF('dd', 'fdisplay16');"> dd </button>
@@ -342,15 +341,15 @@ Web interface for solving punnett squares
           <button class="button" onclick="showF('AA', 'mdisplay16');"> AA </button>
           <button class="button" onclick="showF('Aa', 'mdisplay16');"> Aa </button>
           <button class="button" onclick="showF('aa', 'mdisplay16');"> aa </button>
-        &emsp; Trait 2: 
+        &emsp; Trait 2:
           <button class="button" onclick="showF('BB', 'mdisplay16');"> BB </button>
           <button class="button" onclick="showF('Bb', 'mdisplay16');"> Bb </button>
           <button class="button" onclick="showF('bb', 'mdisplay16');"> bb </button>
-        &emsp; Trait 3: 
+        &emsp; Trait 3:
           <button class="button" onclick="showF('CC', 'mdisplay16');"> CC </button>
           <button class="button" onclick="showF('Cc', 'mdisplay16');"> Cc </button>
           <button class="button" onclick="showF('cc', 'mdisplay16');"> cc </button>
-        &emsp; Trait 4: 
+        &emsp; Trait 4:
           <button class="button" onclick="showF('DD', 'mdisplay16');"> DD </button>
           <button class="button" onclick="showF('Dd', 'mdisplay16');"> Dd </button>
           <button class="button" onclick="showF('dd', 'mdisplay16');"> dd </button>
@@ -388,18 +387,18 @@ Web interface for solving punnett squares
         var sorted = ['','','',''];
         for (let i of genes) {
           switch(i[0].toUpperCase()){
-            case 'A': 
+            case 'A':
               sorted[0]=i;
               break;
-            case 'B': 
+            case 'B':
               sorted[1]=i;
               break;
-            case 'C': 
+            case 'C':
               sorted[2]=i;
               break;
-            case 'D': 
+            case 'D':
               sorted[3]=i;
-              break;  
+              break;
           }
         }
         return sorted.join('');
@@ -410,27 +409,46 @@ Web interface for solving punnett squares
 
 
   <div style="text-align: center; margin-top: 10px;">
-    <button class="button" onclick="load_pun();">
+    <button class="button"
+            onclick="load_pun();">
       Solve Punnett Square
     </button>
-    <button class="button" onclick="download_csv();" style="margin-left: 20px;">
+    <button class="button"
+            onclick="table_exists() && download_csv();"
+            style="margin-left: 20px;">
       Download CSV
+    </button>
+    <button class="button"
+            onclick="table_exists() && download_png();"
+            style="margin-left: 20px;">
+      Download PNG
     </button>
   </div>
   <div id="warn-container">
     <div id="alert" class="alert">
       <strong style="color: #b73000;"><b>Error: </b></strong>
       <span id="alert-text"></span>
-      <span class="closebtn" onclick="this.parentElement.style.display='none';">
+      <span class="closebtn"
+            onclick="this.parentElement.style.display='none';">
         &times;
       </span>
     </div>
   </div>
-  
+
   <div id="pun-tbl" style="margin-top: 10px; text-align: center;"></div>
 
   <!-- just here for now -->
   <script type="text/javascript">
+    // check to see if there exists a rendered table before any downloads
+    const table_exists = () => {
+      if (document.getElementById("pun-tbl").innerHTML === "") {
+        pretty.warn_user("No Punnett Square found");
+        return false;
+      }
+      return true;
+    }
+
+    // download the punnett square as a CSV file for editing & re-upload
     const download_csv = () => {
       let table_as_str = data.map(row => row.join(",")).join("\n");
       let link = document.createElement("a");
@@ -439,21 +457,17 @@ Web interface for solving punnett squares
         `data:application/octet-stream,${table_as_str}`);
       link.click();
     }
-    
-    /*window.addEventListener("load", _ => {
-      let entry = document.getElementById("entry");
-      entry.replaceChild(
-        pretty.input("id='father' type='text' name='father' value='Aa'"),
-        document.getElementById("father-placeholder"));
-      entry.replaceChild(
-        pretty.input("id='mother' type='text' name='mother' value='Aa'"),
-        document.getElementById("mother-placeholder"));
-      entry.replaceChild(
-        pretty.input("id='title' type='text' name='title' value='example'"),
-        document.getElementById("title-placeholder"));
-    });*/
-    
-  </script>
 
+    // download the punnett square as a PNG file for offline viewing
+    const download_png = () => {
+      let link = document.createElement("a");
+      html2canvas(document.getElementById("punnett-table")).then(canvas => {
+        link.setAttribute("download", "linnaeus_punnett.png");
+        link.setAttribute("href",
+          canvas.toDataURL().replace("image/png", "image/octet-stream"));
+        link.click();
+      });
+    }
+  </script>
 </body>
 </html>

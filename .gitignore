@@ -17,4 +17,3 @@ punnett/ct_config
 
 # ignore local files (mostly unused font files) on Eric's laptop
 eric_local/*
-punnett.html

@@ -30,27 +30,24 @@ html, body {
   height: 100%;
 }
 
+/* styling for the menu included with js/nav.js */
 .narrow-menu {
   display: none;
 }
-
 .menu {
   background-color: #707070;
   width: 30px;
   height: 3px;
   margin: 6px 0px;
 }
-
 #dropbtn {
   background-color: rgba(0, 0, 0, 0);
   border: rgba(0, 0, 0, 0);
   padding: 8px;
 }
-
 #dropbtn:focus {
   outline: 0px;
 }
-
 #dropdown {
   display: none;
   z-index: 1;
@@ -58,7 +55,6 @@ html, body {
   background-color: #f9f9f9;
   right: 0;
 }
-
 #dropdown a {
   text-align: left;
   color: black;
@@ -67,12 +63,10 @@ html, body {
   display: block;
   font-family: "Open Sans";
 }
-
 #dropdown a:hover {
   background-color: #525252;
   color: white;
 }
-
 .nav-bar ul {
   list-style-type: none;
   padding: 0px;
@@ -80,11 +74,9 @@ html, body {
   overflow: hidden;
   margin: 0px;
 }
-
 .nav-bar li {
   float: left;
 }
-
 .nav-bar li span {
   display: block;
   color: #424242;
@@ -93,7 +85,6 @@ html, body {
   padding: 14px 16px;
   text-decoration: none;
 }
-
 .nav-bar li a {
   display: block;
   color: #707070;
@@ -103,12 +94,12 @@ html, body {
   text-decoration: none;
   transition: all .2s ease-in;
 }
-
 .nav-bar li a:hover {
   background-color: #78bc12;
   color: white;
 }
 
+/* standard (green) button; color can be overridden with element-level style */
 .button {
   padding: 8px;
   font-family: "Open Sans";
@@ -118,40 +109,34 @@ html, body {
   border-radius: 6px;
   transition: all .2s ease-in;
 }
-
 .button:hover {
   background-color: white;
 }
 
+/* content area styling */
 .content-1 {
   background-color: #e5e5e5;
   text-align: center;
   padding: 40px;
   float: left;
   width: 100%;
-  /* maybe this doesn't work on IE7, but if you're using IE7, you deserve to have our site break */
   box-sizing: border-box;
 }
-
 .content-1 h2 {
   font-family: "Raleway";
   color: #78bc12;
 }
-
 .content-1 h5 {
   font-family: sans-serif;
   color: #bbbbbb;
 }
-
 .content-1 h3 {
   font-family: "Raleway";
   color: #78bc12;
 }
-
 .content-1 p {
   font-family: "Open Sans";
 }
-
 .content-2 {
   text-align: center;
   padding: 20px;
@@ -159,35 +144,33 @@ html, body {
   width: 100%;
   box-sizing: border-box;
 }
-
 .content-2 h3 {
   color: #bbbbbb;
   font-family: "Raleway";
 }
-
 .content-2 h1 {
   color: #bbbbbb;
 }
 
+/* alert box for custom pretty.warn_user() function */
 .alert {
-    text-align: left;
-    padding: 10px;
-    padding-left: 15px;
-    background-color: #ff9696;
-    margin: 0 auto;
-    margin-bottom: 10px;
-    width: 500px;
-    border-radius: 10px;
+  text-align: left;
+  padding: 10px;
+  padding-left: 15px;
+  background-color: #ff9696;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  width: 500px;
+  border-radius: 10px;
 }
-
 .closebtn {
-    margin-left: 15px;
-    font-weight: bold;
-    float: right;
-    font-size: 22px;
-    line-height: 20px;
-    cursor: pointer;
-    transition: all .2s ease-in;
+  margin-left: 15px;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: all .2s ease-in;
 }
 .closebtn:hover {color: white;}
 
@@ -238,6 +221,7 @@ html, body {
   z-index: 1;
 }
 
+/* the page footer is optional and does not stick to the very bottom */
 .footer {
   background-color: #a5e544;
   text-align: center;

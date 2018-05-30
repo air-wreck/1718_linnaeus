@@ -17,6 +17,8 @@ for each function, the following API is specified:
   colorize.color_random only */
 
 const colorize = (function () {
+  let is_dom = g => g === g.toUpperCase();
+
   return {
     // no colorization
     color_blank: (cell, colorspace) => [],
@@ -31,11 +33,10 @@ const colorize = (function () {
       return ["#f26e46", "#ffbca8", "#4286f4", "#a8c9ff"];
     },
 
-    // each unique trait (A/a) is assigned a single color (light or dark depending
-    // on dominant or recessive), and the cell is shaded the color of all its
-    // alleles
+    // each unique trait (A/a) is assigned a single color (light or dark
+    // depending on dominant or recessive), and the cell is shaded the color of
+    // all its alleles
     color_codominance: (cell, colorspace) => {
-      let is_dom = g => g === g.toUpperCase();
       colors = [];
       for (let i = 0; i < cell.length; i += 2) {
         let c_i = Math.round(i / 2);
@@ -51,11 +52,10 @@ const colorize = (function () {
       return colors.reverse();
     },
 
-    // each pair (Aa) if assigned a color, and is represented by either a dark or
-    // light color based on whether the it is dominant (AA, Aa, aA) or recessive
-    // (aa): essentially a simple dominant/recessive coloring
+    // each pair (Aa) if assigned a color, and is represented by either a dark
+    // or light color based on whether the it is dominant (AA, Aa, aA) or
+    // recessive (aa): essentially a simple dominant/recessive coloring
     color_autosomal: (cell, colorspace) => {
-      let is_dom = g => g === g.toUpperCase();
       let colors = [];
       for (let i = 0; i < cell.length; i += 2) {
         let c_i = Math.round(i / 2);
@@ -68,7 +68,6 @@ const colorize = (function () {
     },
 
     color_incomplete: (cell, colorspace) => {
-      let is_dom = g => g === g.toUpperCase();
       let colors = [];
       for (let i = 0; i < cell.length; i += 2) {
         let c_i = Math.round(i / 2);
@@ -80,6 +79,11 @@ const colorize = (function () {
           colors.push("#fff");
       }
       return colors.reverse();
+    },
+
+    color_xlinked: (cell, colorspace) => {
+      pretty.warn_user("x-linked has not yet been implemented");
+      return [];
     },
 
     /* returns an array of colors from a rainbow gradient with

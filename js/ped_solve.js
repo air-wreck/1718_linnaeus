@@ -74,6 +74,34 @@ const ped_solve = (function () {
       m = find_prob(person.mother, method);
       person.infected = infect_func(f, m);
       return person.infected;
+    },
+
+    /* description:
+       solve pedigree combinatorically by building candidate solutions top-down
+       essentially, we go through the top generation, see what genotypes are
+       possible, then go down to the next generation and determine possible
+       genotypes based on the previous generation and this generation's known
+       characteristics. then, we go back up the tree, removing candidates that
+       are now invalid. when we have done this for each generation, we have a
+       tree with all possible genotype combinations. then we solve individual
+       punnett squares to determine the probability of each genotype
+
+       interface:
+         parameters:
+           pedigree :: [Person], a list of linked nodes of Person objects
+                                 no error checking is performed here
+         returns:
+           solution :: [Person], this function mutates the state of the passed
+                                 pedigree list, but it also returns it for more
+                                 convenient chaining
+       */
+    solve_tree: pedigree => {
+      // determine possible genotypes for a Person object
+      const geno = person => {
+        if (person.infected === 1) return ["aa"];
+        return ["AA", "Aa", "aA"];
+      }
+      return [new Person()];
     }
   };
 }());
