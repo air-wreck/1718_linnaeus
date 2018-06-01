@@ -24,38 +24,41 @@ Very plain page for web-based pedigree stuff
 </head>
 <body>
   <script type="text/javascript">
-    let row_id = 1;  // the next available row_id
+    // generator to produce subsequent row_id numbers
+    let row_gen = (function* (n) {
+      while (true) yield n++;
+    }(1));
+
     let pedigree = [];  // a list of individuals present with all their data
 
     /* functions for generating, validating, and rendering pedigree */
-    const add_row = () => {
-      // append a row
+    const add_row = row_id_no => {
+      // append a row described by row id number "row_id_no"
       let list = document.getElementById("list");
-      let text = `<div id="row${row_id.toString()}" class="indiv">
-        Name: ${pretty.input("id='name"+row_id.toString()
+      let text = `<div id="row${row_id_no.toString()}" class="indiv">
+        Name: ${pretty.input("id='name"+row_id_no.toString()
           +"' type='text' name='name' value='Bob'").outerHTML}
-        Sex: <select id="sex${row_id.toString()}" name="sex">
+        Sex: <select id="sex${row_id_no.toString()}" name="sex">
           <option value="m">male</option>
           <option value="f">female</option>
         </select>
-        Probability: ${pretty.input("id='prob"+row_id.toString()
+        Probability: ${pretty.input("id='prob"+row_id_no.toString()
           +"' type='number' name='prob' style='width: 50px;' step='any' "
           +"min='-1' max='1'").outerHTML}
-        Father: ${pretty.input("id='father"+row_id.toString()
+        Father: ${pretty.input("id='father"+row_id_no.toString()
           +"' type='text' name='father' value=''").outerHTML}
-        Mother: ${pretty.input("id='mother"+row_id.toString()
+        Mother: ${pretty.input("id='mother"+row_id_no.toString()
           +"' type='text' name='mother' value=''").outerHTML}
         <button class="button delete-button"
-          onclick="delete_row('row${row_id.toString()}');">
+          onclick="delete_row('row${row_id_no.toString()}');">
           Delete Individual
         </button>`
       list.insertAdjacentHTML("beforeend", text);
-      row_id++;
     }
 
-    const delete_row = rowid => {
+    const delete_row = row_id => {
       // delete a row
-      let row = document.getElementById(rowid);
+      let row = document.getElementById(row_id);
       row.parentNode.removeChild(row);
     }
 
@@ -262,7 +265,7 @@ Very plain page for web-based pedigree stuff
               document.body.appendChild(info);
 
               // remove info box when mouse leaves
-              let rm = () => {
+              let rm = _ => {
                 info.parentNode.removeChild(info);
                 node.removeEventListener("mouseout", rm);
               }
@@ -364,7 +367,8 @@ Very plain page for web-based pedigree stuff
         <option value="auto_dom">Autosomal Dominant</option>
       </select>
     </div>
-    <button class="button" onclick="add_row();">Add Individual</button>
+    <button class="button"
+            onclick="add_row(row_gen.next().value);">Add Individual</button>
     <button class="button" onclick="make_ped();">Build Pedigree</button>
     <button class="button" onclick="download_ped();">Download as Image</button>
   </div>
@@ -415,7 +419,7 @@ Very plain page for web-based pedigree stuff
       let mom = ["", "", "Joan", "Jane"];
 
       pretty.range(1, 5).forEach(n => {
-        add_row();
+        add_row(row_gen.next().value);
         document.getElementById("name"+n).value = name[n-1];
         document.getElementById("sex"+n).value = sex[n-1];
         document.getElementById("prob"+n).value = prob[n-1];

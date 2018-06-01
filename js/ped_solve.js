@@ -95,13 +95,31 @@ const ped_solve = (function () {
                                  pedigree list, but it also returns it for more
                                  convenient chaining
        */
-    solve_tree: pedigree => {
-      // determine possible genotypes for a Person object
-      const geno = person => {
-        if (person.infected === 1) return ["aa"];
-        return ["AA", "Aa", "aA"];
+
+    /* actually, new description of algorithm:
+      0. if no infected individuals, reject the tree as invalid
+      1. label all infected individuals as carrier: +1
+      2. if there are no more negative carrier values, the tree is solved
+      3. otherwise, each infected individual spreads their probability to one
+         generation up and down
+         if two contradictory things clash, we reject the tree as invalid
+
+      e.g.
+      [ ] --- ( )
+           |
+          (+)
+    */
+    solve_auto_rec: pedigree => {
+      if (!pedigree.some(person => person.infected)) return -1; // no infected!
+
+      pedigree.forEach(person => {
+        if (person.infected) person.carrier = +1;
+      });
+
+      while (pedigree.some(person => person.carrier < 0)) {
+        // do something
       }
-      return [new Person()];
+      return 1; // all individuals have defined carrier values, return success
     }
   };
 }());
