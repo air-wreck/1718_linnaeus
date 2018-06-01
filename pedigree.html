@@ -211,9 +211,14 @@ Very plain page for web-based pedigree stuff
 
     let viz = new Viz();
     const render = () => {
-      // solve pedigree based on infection model specified by user
-      let model = document.getElementById("select-infect").value;
-      pedigree.forEach(person => ped_solve.find_prob(person, model));
+      //chinese the parents if child is infected
+      pedigree.forEach( => ped_solve.infectedChild(person));
+
+      //given: infected people
+      //step 1: make carriers' parents 2/3 chinese
+      //step 2: infected peoples' parents all carriers no matter what
+      //step 2.5: make 
+      //step 3: recurse this until finish pedigree (do math with 2/3)
 
       // identify all marriages
       // we assume that all relationships are monogamous and generational
@@ -231,6 +236,11 @@ Very plain page for web-based pedigree stuff
             return false;
           })) marriages.push([indiv.father, indiv.mother, [indiv]]);
         });
+
+      marriages.forEach(marriage => {
+        ped_solve.bottomUp(marriage);
+        ped_solve.topDown(marriage);
+      });
 
       // generate DOT string description
       let draw = new ped_draw.Draw("example");

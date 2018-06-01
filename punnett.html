@@ -225,6 +225,9 @@ Web interface for solving punnett squares
     <button class="button" onclick="show('sixteen');" style="margin-left: 20px;">
       16x16
     </button>
+     <button class="button" onclick="china();" style="margin-left: 20px;">
+      Test
+    </button>
   </div>
 
   <script>
@@ -244,6 +247,22 @@ Web interface for solving punnett squares
     }
     document.getElementById('inherit').style.display="block";
   }
+  
+  function ree (number){
+    let the_chinese = document.getElementsByClassName("chinaman");
+    Array.from(the_chinese).forEach(china => {
+      china.onclick = showF('')
+    });
+  }
+
+  function china(){
+        var person = prompt("Please enter your name", "Harry Potter");
+    if (person != null) {
+        document.getElementById("demo").innerHTML =
+        "Hello " + person + "! How are you today?";
+    }
+  }
+
   </script>
 
   <div id="entry">
