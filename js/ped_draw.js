@@ -34,8 +34,8 @@ const ped_draw = (function () {
 
         // shade the node based on infection probability
         let RGB = [255,
-                   Math.round(119 + 136 * (1 - person.infected)),
-                   Math.round(86 + 169 * (1 - person.infected))];
+                   Math.round(119 + 136 * (1 - person.carrier)),
+                   Math.round(86 + 169 * (1 - person.carrier))];
         let color_as_hex = "#"+RGB.map(d =>
           ("0"+d.toString(16)).slice(-2)).join("");
 
@@ -68,7 +68,7 @@ const ped_draw = (function () {
         // we'll just assume that the pedigree is valid (error check later?)
 
         // if unknown, find the probability of disease
-        [father, mother, ...children].forEach(ped_solve.find_prob);
+        //[father, mother, ...children].forEach(ped_solve.find_prob);
 
         // append the new people to our list of nodes
         [father, mother]

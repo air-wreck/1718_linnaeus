@@ -8,6 +8,7 @@ const ped_solve = (function () {
   /* infect_* functions determine the probability that an individual is
      infected based on the necessary information */
 
+     /*
  //REPLACE INDIV WITH ARRAY INDEXES
   function bottomUp(marriage) {
     var infected = false;
@@ -30,8 +31,8 @@ const ped_solve = (function () {
         }
         if (indiv.carrier === 1 && indiv.father.carrier != 1 && indiv.father.infected != true) {
           test.father.carrier = 2/3
-        }   
-    }
+        }
+    });
     //if kid is unknown... go to parents top-down
   }
 
@@ -39,8 +40,8 @@ const ped_solve = (function () {
     if (marriage[0].carrier === 1 && marriage[1] === 1){
       //do the 2/3 thingies
     }
-    if 
-  } 
+    if
+  }
 
   function parentToChild(marriage) {
     marriage[2].forEach(indiv => {
@@ -49,20 +50,21 @@ const ped_solve = (function () {
       }
       if (indiv.carrier === 1 && indiv.father.carrier != 1) {
         test.father.carrier = 2/3
-      }   
+      }
   }
+  */
   return {
     /* enumerated type for sex */
     Sex: {m: "male", f: "female"},
 
     /* the Person object represents an individual
        it forms the node in our linked directed acyclic graph */
-    Person: function (name, sex, infected=-1.0) {
+    Person: function (name, sex, infected=false) {
       this.father = null;  // link to parent Person objects
       this.mother = null;
       this.name = name;    // object is identified by unique String
       this.sex = sex;      // see Sex enum type
-      this.infected = infected;  // disease probability
+      this.infected = infected;  // has disease?
       this.carrier = -1;
       this.final = false;
 

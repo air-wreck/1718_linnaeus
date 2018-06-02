@@ -9,27 +9,15 @@ strong {
 }
 
 .about-container {
-  background: url('../img/png/dna.png') no-repeat center center;
-  padding: 100px;
-  width: 100%;
-  background-color: #a5e544;
-  border-top-style: solid;
-  border-bottom-style: solid;
-  border-top-width: 5px;
-  border-bottom-width: 5px;
-  border-top-color: black
-  border-bottom-color: black;
   text-align: center;
   box-sizing: border-box;
-  font-size: 200%;
 }
 
 .content-21 {
   text-align: center;
   padding: 20px;
-  float: left;
-  width: 100%;
-  font-size: 150%;
+  width: 600px;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 
@@ -37,9 +25,7 @@ strong {
   display: grid;
   grid-column-gap: 20px;
   grid-template-columns: 100px 1fr 1fr 100px;
-  grid-template-rows: 130px 1fr 130px 1fr;
   grid-template-areas: "mgl ped-txt pun-txt mgr";
-  font-size:150%;
 }
 
 /* remove margins on moderately small screens */
@@ -59,16 +45,8 @@ strong {
   .content-1-container {
     grid-template-columns: 0px 1fr 0px;
     grid-template-rows: 130px 1fr
-                        130px 1fr
-                        130px 1fr
                         130px 1fr;
     grid-template-areas: "mgl ped-img mgr"
-                         "mgl ped-txt mgr"
-                         "mgl pun-img mgr"
-                         "mgl pun-txt mgr"
-                         "mgl vir-img mgr"
-                         "mgl vir-txt mgr"
-                         "mgl dna-img mgr"
-                         "mgl dna-txt mgr";
+                         "mgl ped-txt mgr";
   }
 }

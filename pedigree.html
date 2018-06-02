@@ -42,9 +42,10 @@ Very plain page for web-based pedigree stuff
           <option value="m">male</option>
           <option value="f">female</option>
         </select>
-        Probability: ${pretty.input("id='prob"+row_id_no.toString()
-          +"' type='number' name='prob' style='width: 50px;' step='any' "
-          +"min='-1' max='1'").outerHTML}
+        Affected: <select id="prob${row_id_no.toString()}" name="prob">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
         Father: ${pretty.input("id='father"+row_id_no.toString()
           +"' type='text' name='father' value=''").outerHTML}
         Mother: ${pretty.input("id='mother"+row_id_no.toString()
@@ -82,12 +83,9 @@ Very plain page for web-based pedigree stuff
         if (document.getElementById("sex" + n).value === "f")
           sex = ped_solve.Sex.f;
 
-        let prob = parseFloat(document.getElementById("prob" + n).value);
-        if (document.getElementById("prob" + n).value === "") {
-          // all probabilities must be non-empty
-          pretty.warn_user("Undefined probability (use -1 if unknown)");
-          return -1;
-        }
+        let prob = true;
+        if (document.getElementById("prob" + n).value === "false")
+          prob = false;
 
         // we're all good, now push to pedigree
         pedigree.push(new ped_solve.Person(name, sex, infected=prob));
@@ -212,12 +210,12 @@ Very plain page for web-based pedigree stuff
     let viz = new Viz();
     const render = () => {
       //chinese the parents if child is infected
-      pedigree.forEach( => ped_solve.infectedChild(person));
+      pedigree.forEach(person => person.carrier = 1);
 
       //given: infected people
       //step 1: make carriers' parents 2/3 chinese
       //step 2: infected peoples' parents all carriers no matter what
-      //step 2.5: make 
+      //step 2.5: make
       //step 3: recurse this until finish pedigree (do math with 2/3)
 
       // identify all marriages
@@ -237,10 +235,10 @@ Very plain page for web-based pedigree stuff
           })) marriages.push([indiv.father, indiv.mother, [indiv]]);
         });
 
-      marriages.forEach(marriage => {
-        ped_solve.bottomUp(marriage);
-        ped_solve.topDown(marriage);
-      });
+      //marriages.forEach(marriage => {
+      //  ped_solve.bottomUp(marriage);
+      //  ped_solve.topDown(marriage);
+      //});
 
       // generate DOT string description
       let draw = new ped_draw.Draw("example");
@@ -271,7 +269,7 @@ Very plain page for web-based pedigree stuff
                 ${person.father !== null
                   ? `Parents: ${person.father.name}, ${person.mother.name}`
                   : ""}
-                Infection Chance: ${Math.round(person.infected * 100)}%`;
+                Carrier Chance: ${Math.round(person.carrier * 100)}%`;
               document.body.appendChild(info);
 
               // remove info box when mouse leaves
@@ -424,9 +422,9 @@ Very plain page for web-based pedigree stuff
       console.log("you are in ?mode=testing. test entries have been added.");
       let name = ["John", "Jane", "Joe", "Joan"];
       let sex = ["m", "f", "m", "f"];
-      let prob = [1, 1, -1, -1];
-      let dad = ["", "", "John", "Joe"];
-      let mom = ["", "", "Joan", "Jane"];
+      let prob = pretty.range(1, 5).map(_ => "false");
+      let dad = ["", "", "John", "John"];
+      let mom = ["", "", "Jane", "Jane"];
 
       pretty.range(1, 5).forEach(n => {
         add_row(row_gen.next().value);

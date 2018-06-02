@@ -68,15 +68,6 @@
 .content-2 li a:hover {
   color: #a5e544;
 }
-.content-3-container {
-  display: grid;
-  grid-column-gap: 50px;
-  grid-template-columns: 100px 150px 1fr 100px;
-  grid-template-rows: 1fr;
-  grid-template-areas: "mnl dadu-img dadu-txt mnr"
-                       "mnl colu-img colu-txt mnr"
-                       "mnl thum-img thum-txt mnr";
-}
 
 .quote {
   text-align: left;
@@ -101,9 +92,6 @@
 @media (max-width: 900px) {
   .content-1-container {
     grid-template-columns: 0px 1fr 1fr 0px;
-  }
-  .content-3-container {
-    grid-template-columns: 0px 150px 1fr 0px;
   }
 }
 
@@ -136,78 +124,10 @@
                          "mgl dna-img mgr"
                          "mgl dna-txt mgr";
   }
-  .content-3-container {
-    grid-template-columns: 0px 1fr 0px;
-    grid-template-areas: "mnl dadu-img mnr"
-                         "mnl dadu-txt mnr"
-                         "mnl colu-img mnr"
-                         "mnl colu-txt mnr"
-                         "mnl thum-img mnr"
-                         "mnl thum-txt mnr";
-  }
   .quote {
     padding-bottom: 50px;
     padding-right: 0px;
   }
-}
-
-/* FAQ page*/
-dl.faq button {
-    margin: 0;
-    padding: 0;
-    margin-top: 1em;
-    font-weight: bold;
-    font-size: 110%;
-    border: thin solid transparent;
-    background-color: transparent;
-    padding-left: 0.125em;
-    padding-right: 0.125em;
-    font-family: "Open Sans";
-}
-
-dl dd {
-  margin: 0;
-  padding: 0;
-  margin-left: 1.5em;
-  margin-right: 1.5em;
-}
-
-dl.faq .desc {
-    margin: 0;
-    padding: 0.5em;
-    font-size: 110%;
-    display: none;
-    background-color: #ffec82;
-    font-family: "Open Sans";
-    border-radius: 10px
-}
-
-dl.faq button:hover,
-dl.faq button:focus {
-  background-color: #eee;
-}
-
-dl.faq button:focus {
-  border-color: #ffec82;
-}
-
-dl.faq button:hover {
-  text-decoration: underline;
-}
-
-dl.faq button:active {
-  background-color: #bbb;
-}
-
-dl.faq button[aria-expanded="false"]:before {
-  content: url('../images/right-arrow-brown.png');
-  padding-right: 0.35em;
-
-}
-
-dl.faq button[aria-expanded="true"]:before {
-  content: url('../images/down-arrow-brown.png');
-  padding-right: 0.35em;
 }
 
 /* TODO: add media query for super-wide screens and landscape phones */
