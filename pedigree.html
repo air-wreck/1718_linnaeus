@@ -234,11 +234,14 @@ Very plain page for web-based pedigree stuff
             return false;
           })) marriages.push([indiv.father, indiv.mother, [indiv]]);
         });
-
-      //marriages.forEach(marriage => {
-      //  ped_solve.bottomUp(marriage);
-      //  ped_solve.topDown(marriage);
-      //});
+      var solved_ped = false;
+      while (solved === false){
+        marriages.forEach(marriage => {
+          ped_solve.bottomUp(marriage);
+          ped_solve.topDown(marriage);
+          solved_ped = solved(marriages);
+        });
+      }
 
       // generate DOT string description
       let draw = new ped_draw.Draw("example");
