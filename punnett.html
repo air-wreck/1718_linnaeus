@@ -21,7 +21,7 @@ Web interface for solving punnett squares
   <!-- html2canvas to convert the HTML table to a downloadable PNG -->
   <script type="text/javascript" src="js/other/html2canvas.min.js"></script>
 </head>
-<body>
+<body onload="makeButtons()">
   <div class="punnett-page">
     <div class="subtitle-text">
       <h1>Welcome to Linnaeus: the online Punnett Square maker!</h1>
@@ -213,59 +213,146 @@ Web interface for solving punnett squares
   <!-- basic entry fields -->
 
  <div style="text-align: center; margin-top: 10px;">
-    <button class="button" onclick="show('two');" style="margin-left: 20px;">
+    <button class="button" onclick="show('2');" style="margin-left: 20px;">
       2x2
     </button>
-    <button class="button" onclick="show('four');" style="margin-left: 20px;">
+    <button class="button" onclick="show('4');" style="margin-left: 20px;">
       4x4
     </button>
-    <button class="button" onclick="show('eight');" style="margin-left: 20px;">
+    <button class="button" onclick="show('8');" style="margin-left: 20px;">
       8x8
     </button>
-    <button class="button" onclick="show('sixteen');" style="margin-left: 20px;">
+    <button class="button" onclick="show('16');" style="margin-left: 20px;">
       16x16
-    </button>
-     <button class="button" onclick="china();" style="margin-left: 20px;">
-      Test
     </button>
   </div>
 
   <script>
-  function show(size) {
-    var list = ['two','four','eight','sixteen'];
-    for (let i of list) {
-      var x = document.getElementById(i)
-      if (i != size) {
-        x.style.display="none";
-      } else {
-        x.style.display="block";
+  function makeButtons() {
+    var ref = ['A', 'B', 'C', 'D'];
+    for (size=1; size<5; size++){
+      var str1 = document.createTextNode("Father's Genotype: ");
+      var str2 = document.createTextNode("Mother's Genotype: ");
+
+      document.getElementById(String(Math.pow(2,size))).appendChild(str1);
+      document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
+      document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
+
+      for (j=0; j<2;j++){
+        for (i=0; i<size; i++){
+          var letter = ref[i];
+          var t = document.createTextNode("   Trait " + String(i+1) + ": ");
+          document.getElementById(String(Math.pow(2,size))).appendChild(t);
+
+          var btn1 = document.createElement("button");
+          var l1 = letter + letter;
+          btn1.setAttribute("class","button");
+          var n1 = document.createTextNode(l1);
+          btn1.appendChild(n1);
+          document.getElementById(String(Math.pow(2,size))).appendChild(btn1);
+
+          var btn2 = document.createElement("button");
+          var l2 = letter + letter.toLowerCase();
+          btn2.setAttribute("class","button");
+          var n2 = document.createTextNode(l2);
+          btn2.appendChild(n2);
+          document.getElementById(String(Math.pow(2,size))).appendChild(btn2);
+
+          var btn3 = document.createElement("button");
+          var l3 = letter.toLowerCase() + letter.toLowerCase();
+          btn3.setAttribute("class","button");
+          var n3 = document.createTextNode(l3);
+          btn3.appendChild(n3);
+          document.getElementById(String(Math.pow(2,size))).appendChild(btn3);
+        }
+        if (j===0){
+          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
+          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br")); 
+
+          var input1 = document.createElement("input");
+          input1.setAttribute("readonly", "readonly");
+          input1.setAttribute("id","mdisplay");
+          input1.setAttribute("value","");
+          document.getElementById(String(Math.pow(2,size))).appendChild(input1);
+
+          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
+          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
+          document.getElementById(String(Math.pow(2,size))).appendChild(str2);
+          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
+          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
+        }
       }
+      document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
+      document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
+      var input2 = document.createElement("input");
+      input2.setAttribute("readonly", "readonly");
+      input2.setAttribute("id","fdisplay");
+      input2.setAttribute("value","");
+      document.getElementById(String(Math.pow(2,size))).appendChild(input2);
     }
-    var inputs = ['fdisplay2', 'fdisplay4', 'fdisplay8', 'fdisplay16','mdisplay2', 'mdisplay4', 'mdisplay8', 'mdisplay16'];
-    for (let j of inputs) {
-      document.getElementById(j).value = '';
-    }
-    document.getElementById('inherit').style.display="block";
   }
 
-  function ree (number){
-    let the_chinese = document.getElementsByClassName("chinaman");
-    Array.from(the_chinese).forEach(china => {
-      china.onclick = showF('')
-    });
+  function show(size) {
+    var list = ['2','4','8','16'];
+      for (let i of list) {
+        var x = document.getElementById(i);
+        if (i != size) {
+          x.style.display="none";
+        } else {
+          x.style.display="block";
+        }
+    }
   }
 
-  function china(){
-        var person = prompt("Please enter your name", "Harry Potter");
-    if (person != null) {
-        document.getElementById("demo").innerHTML =
-        "Hello " + person + "! How are you today?";
-    }
+  function showF(addition, id) {
+    var x = document.getElementById(id).value;
+      for (let i of x) {
+        if (addition.toUpperCase().indexOf(i.toUpperCase())>-1){
+          x=x.replace(i, "")
+        }
+      }
+    x += addition;
+      var sort = function(string) {
+        var genes = [];
+        for (i=0; i<string.length-1; i+=2) {
+          genes.push(string.substring(i,i+2))
+        }
+        var sorted = ['','','',''];
+        for (let i of genes) {
+          switch(i[0].toUpperCase()){
+            case 'A':
+              sorted[0]=i;
+              break;
+            case 'B':
+              sorted[1]=i;
+              break;
+            case 'C':
+              sorted[2]=i;
+              break;
+            case 'D':
+              sorted[3]=i;
+              break;
+          }
+        }
+        return sorted.join('');
+      };
+    document.getElementById(id).value = sort(x);
   }
 
   </script>
 
-  <div id="entry">
+  <div id = "entry">
+    <div id = "2" style="display:none;">
+    </div>
+    <div id = "4" style="display:none;">
+    </div>
+    <div id = "8" style="display:none;">
+    </div>
+    <div id = "16" style="display:none;">
+    </div>
+  </div>
+
+  <!--<div id="entry">
     <div id="two" style="display:none">
       Father's Genotype:<br><br>
         <button class="button" onclick="showF('AA', 'fdisplay2');"> AA </button>
@@ -374,7 +461,7 @@ Web interface for solving punnett squares
           <button class="button" onclick="showF('dd', 'mdisplay16');"> dd </button>
         <br><br> <input type="text" id="mdisplay16" value=""   readonly="readonly" />
 
-    </div>
+    </div> -->
 
     <div id='inherit' style = "display:none">
       <br>Inheritance Mode:
@@ -388,44 +475,6 @@ Web interface for solving punnett squares
     </div>
 
   </div>
-
-  <script>
-  function showF(addition, id) {
-    var x = document.getElementById(id).value;
-      for (let i of x) {
-        if (addition.toUpperCase().indexOf(i.toUpperCase())>-1){
-          x=x.replace(i, "")
-        }
-      }
-    x += addition;
-      var sort = function(string) {
-        var genes = [];
-        for (i=0; i<string.length-1; i+=2) {
-          genes.push(string.substring(i,i+2))
-        }
-        var sorted = ['','','',''];
-        for (let i of genes) {
-          switch(i[0].toUpperCase()){
-            case 'A':
-              sorted[0]=i;
-              break;
-            case 'B':
-              sorted[1]=i;
-              break;
-            case 'C':
-              sorted[2]=i;
-              break;
-            case 'D':
-              sorted[3]=i;
-              break;
-          }
-        }
-        return sorted.join('');
-      };
-    document.getElementById(id).value = sort(x);
-  }
-  </script>
-
 
   <div style="text-align: center; margin-top: 10px;">
     <button class="button"
