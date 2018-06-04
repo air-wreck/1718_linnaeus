@@ -220,28 +220,45 @@ Very plain page for web-based pedigree stuff
 
       // identify all marriages
       // we assume that all relationships are monogamous and generational
-      let marriages = [];
-      pedigree
-        .filter(indiv => indiv.father !== null)
-        .forEach(indiv => {
-          // has this marriage already been found?
-          // i.e. is this a sibling of an already found child?
-          if (!marriages.some(union => {
-            if (union[0] === indiv.father && union[1] === indiv.mother) {
-              union[2].push(indiv);
-              return true;
-            }
-            return false;
-          })) marriages.push([indiv.father, indiv.mother, [indiv]]);
-        });
-      var solved_ped = false;
-      while (solved === false){
-        marriages.forEach(marriage => {
-          ped_solve.bottomUp(marriage);
-          ped_solve.topDown(marriage);
+      
+        let marriages = [];
+        pedigree
+          .filter(indiv => indiv.father !== null)
+          .forEach(indiv => {
+            // has this marriage already been found?
+            // i.e. is this a sibling of an already found child?
+            if (!marriages.some(union => {
+              if (union[0] === indiv.father && union[1] === indiv.mother) {
+                union[2].push(indiv);
+                return true;
+              }
+              return false;
+            })) marriages.push([indiv.father, indiv.mother, [indiv]]);
+          });
+        
+        var solved_ped = false;
+        while (solved === false){
+          marriages.forEach(marriage => {
+            ped_solve.bottomUp(marriage);
+            ped_solve.topDown(marriage);
+          });
           solved_ped = solved(marriages);
-        });
-      }
+        }
+        
+        marriages = [];
+        pedigree
+          .filter(indiv => indiv.father !== null)
+          .forEach(indiv => {
+            // has this marriage already been found?
+            // i.e. is this a sibling of an already found child?
+            if (!marriages.some(union => {
+              if (union[0] === indiv.father && union[1] === indiv.mother) {
+                union[2].push(indiv);
+                return true;
+              }
+              return false;
+            })) marriages.push([indiv.father, indiv.mother, [indiv]]);
+          });
 
       // generate DOT string description
       let draw = new ped_draw.Draw("example");
