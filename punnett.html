@@ -247,6 +247,7 @@ Web interface for solving punnett squares
           var btn1 = document.createElement("button");
           var l1 = letter + letter;
           btn1.setAttribute("class","button");
+          btn1.onclick = function() {showF(l1, "fdisplay")};
           var n1 = document.createTextNode(l1);
           btn1.appendChild(n1);
           document.getElementById(String(Math.pow(2,size))).appendChild(btn1);
