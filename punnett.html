@@ -156,7 +156,7 @@ Web interface for solving punnett squares
                     .concat(datum.slice(1)
                     .map(c => cmap(c, colorspace)))));
       let tbl = document.getElementById("pun-tbl");
-      tbl.innerHTML = "<h3>" + "</h3>" + colortbl(data, colors);
+      tbl.innerHTML = colortbl(data, colors);
     }
   </script>
 
@@ -213,16 +213,16 @@ Web interface for solving punnett squares
   <!-- basic entry fields -->
 
  <div style="text-align: center; margin-top: 10px;">
-    <button class="button" onclick="show('2');" style="margin-left: 20px;">
+    <button class="button" id="click-2" onclick="show('2');" style="margin-left: 20px;">
       2x2
     </button>
-    <button class="button" onclick="show('4');" style="margin-left: 20px;">
+    <button class="button" id="click-4" onclick="show('4');" style="margin-left: 20px;">
       4x4
     </button>
-    <button class="button" onclick="show('8');" style="margin-left: 20px;">
+    <button class="button" id="click-8" onclick="show('8');" style="margin-left: 20px;">
       8x8
     </button>
-    <button class="button" onclick="show('16');" style="margin-left: 20px;">
+    <button class="button" id="click-16" onclick="show('16');" style="margin-left: 20px;">
       16x16
     </button>
   </div>
@@ -268,7 +268,7 @@ Web interface for solving punnett squares
         }
         if (j===0){
           document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br")); 
+          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
 
           var input1 = document.createElement("input");
           input1.setAttribute("readonly", "readonly");
@@ -492,6 +492,14 @@ Web interface for solving punnett squares
             style="margin-left: 20px;">
       Download PNG
     </button>
+    <label id="upload-file-wrapper" style="margin-left: 20px;">
+      <input type="file" id="csv-file"
+             style="display: none;"
+             oninput="upload_csv(event);">
+      <span class="button" style="font-size: 13px;">
+        Upload CSV
+      </span>
+    </label>
   </div>
   <div id="warn-container">
     <div id="alert" class="alert">
@@ -504,7 +512,7 @@ Web interface for solving punnett squares
     </div>
   </div>
 
-  <div id="pun-tbl" style="margin-top: 10px; text-align: center;"></div>
+  <div id="pun-tbl" style="margin-top: 10px; margin-bottom: 10px; text-align: center;"></div>
 
   <!-- just here for now -->
   <script type="text/javascript">
@@ -520,8 +528,10 @@ Web interface for solving punnett squares
     // download the punnett square as a CSV file for editing & re-upload
     const download_csv = () => {
       let table_as_str = data.map(row => row.join(",")).join("\n");
+      let in_mode = document.getElementById("colorization").value;
       let link = document.createElement("a");
-      link.setAttribute("download", "linnaeus_punnett.csv");
+      link.setAttribute("download", `linnaeus_punnett_${in_mode}_data.csv`);
+      console.log(link);
       link.setAttribute("href",
         `data:application/octet-stream,${table_as_str}`);
       link.click();
@@ -531,11 +541,59 @@ Web interface for solving punnett squares
     const download_png = () => {
       let link = document.createElement("a");
       html2canvas(document.getElementById("punnett-table")).then(canvas => {
-        link.setAttribute("download", "linnaeus_punnett.png");
+        link.setAttribute("download", "linnaeus_punnett_render.png");
         link.setAttribute("href",
           canvas.toDataURL().replace("image/png", "image/octet-stream"));
         link.click();
       });
+    }
+
+    // upload a CSV file (same format as download_csv)
+    const upload_csv = event => {
+      let file = event.target.files[0];
+      let reader = new FileReader();
+      reader.onload = e => {
+        let csv = e.target.result;
+
+        // check if valid
+        let arr = csv.split("\n").map(row => row.split(","));
+        if ((arr.length-1) % 2 !== 0) {
+          pretty.warn_user("Invalid CSV file: bad column number");
+          return -1;
+        }
+        let rowlen = arr.map(row => row.length);
+        if (!rowlen.every(rl => rl === rowlen[0])) {
+          pretty.warn_user("Invalid CSV file: bad row lengths");
+          return -1;
+        }
+
+        // check number of rows for appropriate display method
+        let num_rows = arr.length - 1;
+        document.getElementById(`click-${num_rows}`).click();
+
+        // figure out parent genotypes by looking at array
+        let mother = "";
+        for (let i = 2; i <= num_rows; i*=2) {
+          let ind = Math.round(Math.log2(i)-1);
+          let n = Math.round(num_rows/i + 1);
+          mother += arr[0][1][ind] + arr[0][n][ind];
+        }
+        document.getElementById(`mdisplay${num_rows}`).value = mother;
+        let father = "";
+        for (let i = 2; i <= num_rows; i*=2) {
+          let ind = Math.round(Math.log2(i)-1);
+          let n = Math.round(num_rows/i + 1);
+          father += arr[1][0][ind] + arr[n][0][ind];
+        }
+        document.getElementById(`fdisplay${num_rows}`).value = father;
+
+        // re-solve the punnett square
+        // this relies on the filename to identify inheritance mode
+        let c_scheme = file.name.split("_")[2];
+        document.getElementById("colorization").value = c_scheme;
+        load_pun();
+      }
+      reader.readAsText(file);
     }
   </script>
 </body>

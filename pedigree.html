@@ -398,7 +398,16 @@ Very plain page for web-based pedigree stuff
     <button class="button"
             onclick="add_row(row_gen.next().value);">Add Individual</button>
     <button class="button" onclick="make_ped();">Build Pedigree</button>
+    <button class="button" onclick="download_dat();">Download Data</button>
     <button class="button" onclick="download_ped();">Download as Image</button>
+    <label id="upload-file-wrapper">
+      <input type="file" id="dat-file"
+             style="display: none;"
+             oninput="upload_dat(event);">
+      <span class="button" style="font-size: 13px;">
+        Upload CSV
+      </span>
+    </label>
   </div>
 
   <!-- div storing the list of individuals -->
@@ -407,7 +416,6 @@ Very plain page for web-based pedigree stuff
   <!-- download rendered pedigree SVG as a PNG image -->
   <script type="text/javascript">
     let canvas = document.createElement("canvas");
-    let link = document.createElement("a");
     const download_ped = () => {
       let ped_img = document.getElementById("ped-img");
       if (ped_img.innerHTML === "") {
@@ -423,11 +431,37 @@ Very plain page for web-based pedigree stuff
         canvas.width = event.target.width;
         canvas.height = event.target.height;
         canvas.getContext("2d").drawImage(event.target, 0, 0);
-        link.setAttribute("download", "linnaeus_pedigree.png");
+        let link = document.createElement("a");
+        link.setAttribute("download", "linnaeus_pedigree_render.png");
         link.setAttribute("href",
           canvas.toDataURL().replace("image/png", "image/octet-stream"));
         link.click();
       }
+    }
+
+    const download_dat = () => {
+      // straight up just download the innerHTML of the pedigree list div
+      // since we can reconstruct the entire pedigree from that using already
+      // existing functions
+      let data_str = document.getElementById("list").innerHTML;
+      let link = document.createElement("a");
+      link.setAttribute("download", "linnaeus_pedigree_data.dat");
+      link.setAttribute("href",
+        `data:application/octet-stream,${encodeURIComponent(data_str)}`);
+      link.click();
+    }
+
+    const upload_dat = event => {
+      // upload pedigree data in same format as download_dat
+      // TODO: fix bug where everything resets to default
+      let file = event.target.files[0];
+      let reader = new FileReader();
+      reader.onload = e => {
+        let data_str = e.target.result;
+        document.getElementById("list").innerHTML = `${data_str}`;
+        make_ped();
+      }
+      reader.readAsText(file);
     }
   </script>
 
