@@ -82,13 +82,19 @@ Web interface for solving punnett squares
   </div>
 
   <div style="text-align: center; margin-top: 10px;">
-    <div style="display: inline-block; font-size: 10pt;">
+    <div id = "inherit2" style="display: none; font-size: 10pt;">
       Inheritance Mode:<br>
       <select id="colorization" name="colorization">
         <option value="autosomal">Autosomal</option>
         <option value="codominance">Codominance</option>
         <option value="incomplete">Incomplete</option>
         <option value="xlinked">X-linked</option>
+      </select>
+    </div>
+    <div id = "inherit" style="display: none; font-size: 10pt;">
+      Inheritance Mode:<br>
+      <select id="colorization" name="colorization">
+        <option value="autosomal">Autosomal</option>
       </select>
     </div>
     <button class="button"
@@ -154,6 +160,14 @@ Web interface for solving punnett squares
     // set the entry fields to allow this many traits
     const show = size => {
       current_display = size;
+      if (size == 1) {
+        document.getElementById("inherit2").style.display = "inline-block";
+        document.getElementById("inherit").style.display = "none";
+      }
+      else {
+        document.getElementById("inherit2").style.display = "none";
+        document.getElementById("inherit").style.display = "inline-block";
+      }
       for (let i = 1; i < 5; i++) {
         if (i <= size) {
           ["father", "mother"].forEach(parent => {
