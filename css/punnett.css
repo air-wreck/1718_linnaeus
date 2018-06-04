@@ -4,11 +4,6 @@
 
 .punnett-page {
   width: 100%;
-}
-
-.subtitle-text {
-  left: 5%;
-  top: 10%;
   text-align: center;
 }
 
@@ -22,24 +17,18 @@
 }
 .usage strong {color: #b79b00;}
 
-#entry{
-  background-color: #eaeaea;
-  text-align: center;
-  margin-top: 10px;
-}
-
-#entry select {
-  background-color: #a5e544;
+#colorization {
+  background-color: var(--color1);
   font-family: "Open Sans";
   font-size: 10pt;
-  border: 1px solid  #a5e544;
+  border: 1px solid  var(--color1);
   outline: 0;
   height: 30px;
   margin-right: 10px;
   transition: all .2s ease-in;
 }
-#entry select:hover {background-color: white;}
-#entry select:focus {background-color: white;}
+#colorization:hover {background-color: white;}
+#colorization:focus {background-color: white;}
 
 .caption1 {
   left: 5%;
@@ -99,4 +88,34 @@ th {
   margin-top: -5%;
   border-style: hidden;
   z-index: 9002;
+}
+
+/* data entry divs */
+.data-entry {
+  float: left;
+  width: 50%;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.data-title {
+  display: inline-block;
+  color: #c4c4c4;
+  font-weight: 100;
+  width: 50px;
+}
+.geno-entry {
+  font-size: 600%;
+  font-weight: 100;
+  line-height: 15%;
+}
+.button-entry {
+  display: inline-block;
+  background-color: white;
+  border: 1px solid white;
+  transition: .1s ease-in all;
+  width: 30px;
+}
+.button-entry:hover {
+  border: 1px solid var(--color1);
+  color: var(--color1);
 }

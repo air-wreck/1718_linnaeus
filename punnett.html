@@ -17,486 +17,100 @@ Web interface for solving punnett squares
   <script type="text/javascript" src="js/pretty.js"></script>
   <!-- table colorization scheme code -->
   <script type="text/javascript" src="js/colorize.js"></script>
+  <!-- punnett square solving scripts -->
+  <script type="text/javascript" src="js/pun_solve.js"></script>
 
   <!-- html2canvas to convert the HTML table to a downloadable PNG -->
   <script type="text/javascript" src="js/other/html2canvas.min.js"></script>
 </head>
-<body onload="makeButtons()">
+<body>
   <div class="punnett-page">
-    <div class="subtitle-text">
-      <h1>Welcome to Linnaeus: the online Punnett Square maker!</h1>
-      <br>
-    </div>
+    <h1 style="font-weight: 100;">
+      Welcome to Linnaeus: the online Punnett Square maker!
+    </h1>
   </div>
 
-  <!-- create table with html -->
-  <script type="text/javascript">
-    /* returns an HTML string with a table based on given data
-       caller must supply a matching array of [R,G,B] colors to apply to the
-       data */
-    const colortbl = (data, colors) => {
-      var html_str = "<table id='punnett-table'>";
-      for (var r = 0; r < data.length; r++) {
-        html_str += "<tr>";
-        for (var c = 0; c < data.length; c++) {
-          if (r === 0 || c === 0) {
-            html_str += "<th>"+data[r][c].toString()+"</th>";
-          } else {
-            /* for data cells, pick background based on parallel color array */
-            style = "";  // style defaults to nothing
-            let percent = 100.0 / colors[r][c].length;
-            style = "background: linear-gradient(-45deg";
-            for (let i = 0; i < colors[r][c].length; i++) {
-              style += ","+colors[r][c][i].toString()
-                +" "+(percent*i).toString()+"%,"
-                +colors[r][c][i].toString()+" "
-                +(percent*(i+1)).toString()+"%";
-            }
-            style += ");";
-            html_str += "<td style='"+style+"'>"+data[r][c].toString()+"</td>";
-          }
-        }
-        html_str += "</tr>"
-      }
-      html_str += "</table>"
-      return html_str;
-    }
-
-    /* transforms a genotype string description into a 2D array, e.g.
-       "AaBbCc" -> [["A", "a"], ["B", "b"], ["C", "c"]] */
-    const str2geno = string =>
-      string.split("")
-            .map((el, i) => [el, string[i+1]])
-            .filter((_, i) => i % 2 === 0);
-
-    /* recursively determines the possible offspring for 2D genotype array */
-    const combine = (arr, depth) => {
-      if (depth === arr.length) {
-        return [""];
-      }
-      var res = [];
-      for (let i in arr[depth]) {
-        let tmp = combine(arr, depth+1);
-        for (let j in tmp) {
-          res.push(arr[depth][i]+tmp[j]);
-        }
-      }
-      return res;
-    }
-
-    /* weaves two gentotype strings together, e.g.
-       add("ABC", "abc") -> "AaBbCc" */
-    const add = (f, m) =>
-      f.split("").map((el, i) => [el, m[i]].sort().join("")).join("");
-
-    const solve = (f, m) => {
-      var f_arr = combine(str2geno(f), 0);
-      var m_arr = combine(str2geno(m), 0);
-      var sol_arr = [];
-      for (let i in f_arr) {
-        sol_arr.push([]);
-        for (let j in m_arr) {
-          sol_arr[i].push(add(f_arr[i], m_arr[j]));
-        }
-      }
-      square = [[""].concat(m_arr)];
-      for (let i in m_arr) {
-        square.push([f_arr[i]].concat(sol_arr[i]));
-      }
-      return square;
-    }
-
-    var data = []; // expose data for easy CSV downloading later on
-    const load_pun = () => {
-      /* loads the punnett square */
-      var father = '';
-      var mother = '';
-      for (let i of ['fdisplay2', 'fdisplay4', 'fdisplay8', 'fdisplay16']){
-        x = document.getElementById(i).value;
-        if (x!=''){
-          father = x;
-        }
-      }
-      for (let i of ['mdisplay2', 'mdisplay4', 'mdisplay8', 'mdisplay16']){
-        x = document.getElementById(i).value;
-        if (x!=''){
-          mother = x;
-        }
-      }
-
-      /* consider the right color mapping function (from colorize.js) to use */
-      let cmap = {
-        "none":        colorize.color_blank,
-        "autosomal":   colorize.color_autosomal,
-        "codominance": colorize.color_codominance,
-        "incomplete":  colorize.color_incomplete,
-        "xlinked":     colorize.color_xlinked
-      }[document.getElementById("colorization").value];
-
-      function check_align(mother, father) {
-        for (i = 0; i < mother.length-1; i = i+2) {
-             if (father.substring(i, i+2).toLowerCase() != mother.substring(i, i+2).toLowerCase() || father.substring(i, i+1).toLowerCase() != father.substring(i+1, i+2).toLowerCase())
-             {
-              pretty.warn_user("weqe.");
-              return false;
-             }
-        }
-        return true;
-      }
-
-      data = solve(father, mother);
-      let colors = [[]];
-      // set first row of colors to blank
-      colors[0] = data[0].map(_ => colorize.color_blank());
-      // set subsequent rows to a combined header and data
-      let colorspace = colorize.sample_colors(
-        Math.round(data[1][1].length / 2));
-      data.filter((_, i) => i > 0).forEach(datum =>
-        colors.push([colorize.color_blank()]
-                    .concat(datum.slice(1)
-                    .map(c => cmap(c, colorspace)))));
-      let tbl = document.getElementById("pun-tbl");
-      tbl.innerHTML = colortbl(data, colors);
-    }
-  </script>
-
-  <!-- usage information -->
-  <div id="instructions">
-
-    <div id="blanket" style="display:none"></div>
-    <div class="content-21" id="popUpDiv" style="display:none">
-      <p><h2>How To Read a Punnett Square</h2>
-      <ul>
-        <li>The potential gamete genotypes of the father are displayed along the top of the square.</li><br>
-        <li>The potential gamete genotypes of the mother are displayed along the left side.
-        </li><br>
-        <li>A capital letter indicates a dominant allele.</li><br>
-        <li>A lowercase letter indicates a recessive allele.</li><br>
-        <li>The cells in the square represent potential offspring genotypes generated by fusion of a father and a mother gamete.</li><br>
-        <li>Coloring of the cells reflects the offspring phenotype; cells with the same color share the same phenotype.</li><br>
-      </ul>
-      </p>
-      <a href="#" onclick="popup('popUpDiv')" ><center class="button">Close</center></a>
-    </div>
-    <a href="#" onclick="popup('popUpDiv')"><center class="usage"><strong><u>Help! I can't interpret my Punnett Square!</u></strong></center><br></a>
-
-    <script>
-    function toggle(div_id) {
-      var el = document.getElementById(div_id);
-      if ( el.style.display == 'none' ) { el.style.display = 'block';}
-      else {el.style.display = 'none';}
-    }
-    function blanket_size(popUpDivVar) {
-      blanket_height = document.body.parentNode.scrollHeight;
-      var blanket = document.getElementById('blanket');
-      blanket.style.height = blanket_height + 'px';
-      var popUpDiv = document.getElementById(popUpDivVar);
-      popUpDiv_height=blanket_height/2-(blanket_height*.2);
-      popUpDiv.style.top = popUpDiv_height + 'px';
-    }
-
-    function window_pos(popUpDivVar) {
-      var popUpDiv = document.getElementById(popUpDivVar);
-    }
-
-    function popup(windowname) {
-      blanket_size(windowname);
-      window_pos(windowname);
-      toggle('blanket');
-      toggle(windowname);
-    }
-  </script>
-
-  <div class="usage">
-    <center>Select what size you would like your Punnett square to be:<center>
+  <div id="blanket" style="display:none"></div>
+  <div class="content-21" id="popUpDiv" style="display:none">
+    <p><h2>How To Read a Punnett Square</h2>
+    <ul>
+      <li>The potential gamete genotypes of the father are displayed along the top of the square.</li><br>
+      <li>The potential gamete genotypes of the mother are displayed along the left side.
+      </li><br>
+      <li>A capital letter indicates a dominant allele.</li><br>
+      <li>A lowercase letter indicates a recessive allele.</li><br>
+      <li>The cells in the square represent potential offspring genotypes generated by fusion of a father and a mother gamete.</li><br>
+      <li>Coloring of the cells reflects the offspring phenotype; cells with the same color share the same phenotype.</li><br>
+    </ul>
+    </p>
+    <a href="#" onclick="popup('popUpDiv')" ><center class="button">Close</center></a>
   </div>
-  <!-- basic entry fields -->
+  <a href="#" onclick="popup('popUpDiv')"><center class="usage"><strong><u>Help! I can't interpret my Punnett Square!</u></strong></center><br></a>
 
- <div style="text-align: center; margin-top: 10px;">
-    <button class="button" id="click-2" onclick="show('2');" style="margin-left: 20px;">
+  <div style="text-align: center; font-weight: 100;">
+    Punnett Square Size:
+  </div>
+
+  <div style="text-align: center; margin-top: 10px;">
+    <button class="button" id="click-2"
+            onclick="show(1);" style="margin-left: 20px;">
       2x2
     </button>
-    <button class="button" id="click-4" onclick="show('4');" style="margin-left: 20px;">
+    <button class="button" id="click-4"
+            onclick="show(2);" style="margin-left: 20px;">
       4x4
     </button>
-    <button class="button" id="click-8" onclick="show('8');" style="margin-left: 20px;">
+    <button class="button" id="click-8"
+            onclick="show(3);" style="margin-left: 20px;">
       8x8
     </button>
-    <button class="button" id="click-16" onclick="show('16');" style="margin-left: 20px;">
+    <button class="button" id="click-16"
+            onclick="show(4);" style="margin-left: 20px;">
       16x16
     </button>
   </div>
 
-  <script>
-  function makeButtons() {
-    var ref = ['A', 'B', 'C', 'D'];
-    for (size=1; size<5; size++){
-      var str1 = document.createTextNode("Father's Genotype: ");
-      var str2 = document.createTextNode("Mother's Genotype: ");
-
-      document.getElementById(String(Math.pow(2,size))).appendChild(str1);
-      document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-      document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-
-      for (j=0; j<2;j++){
-        for (i=0; i<size; i++){
-          var letter = ref[i];
-          var t = document.createTextNode("   Trait " + String(i+1) + ": ");
-          document.getElementById(String(Math.pow(2,size))).appendChild(t);
-
-          var btn1 = document.createElement("button");
-          var l1 = letter + letter;
-          btn1.setAttribute("class","button");
-          btn1.onclick = function() {showF(l1, "fdisplay")};
-          var n1 = document.createTextNode(l1);
-          btn1.appendChild(n1);
-          document.getElementById(String(Math.pow(2,size))).appendChild(btn1);
-
-          var btn2 = document.createElement("button");
-          var l2 = letter + letter.toLowerCase();
-          btn2.setAttribute("class","button");
-          var n2 = document.createTextNode(l2);
-          btn2.appendChild(n2);
-          document.getElementById(String(Math.pow(2,size))).appendChild(btn2);
-
-          var btn3 = document.createElement("button");
-          var l3 = letter.toLowerCase() + letter.toLowerCase();
-          btn3.setAttribute("class","button");
-          var n3 = document.createTextNode(l3);
-          btn3.appendChild(n3);
-          document.getElementById(String(Math.pow(2,size))).appendChild(btn3);
-        }
-        if (j===0){
-          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-
-          var input1 = document.createElement("input");
-          input1.setAttribute("readonly", "readonly");
-          input1.setAttribute("id","mdisplay");
-          input1.setAttribute("value","");
-          document.getElementById(String(Math.pow(2,size))).appendChild(input1);
-
-          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-          document.getElementById(String(Math.pow(2,size))).appendChild(str2);
-          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-          document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-        }
-      }
-      document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-      document.getElementById(String(Math.pow(2,size))).appendChild(document.createElement("br"));
-      var input2 = document.createElement("input");
-      input2.setAttribute("readonly", "readonly");
-      input2.setAttribute("id","fdisplay");
-      input2.setAttribute("value","");
-      document.getElementById(String(Math.pow(2,size))).appendChild(input2);
-    }
-  }
-
-  function show(size) {
-    var list = ['2','4','8','16'];
-      for (let i of list) {
-        var x = document.getElementById(i);
-        if (i != size) {
-          x.style.display="none";
-        } else {
-          x.style.display="block";
-        }
-    }
-  }
-
-  function showF(addition, id) {
-    var x = document.getElementById(id).value;
-      for (let i of x) {
-        if (addition.toUpperCase().indexOf(i.toUpperCase())>-1){
-          x=x.replace(i, "")
-        }
-      }
-    x += addition;
-      var sort = function(string) {
-        var genes = [];
-        for (i=0; i<string.length-1; i+=2) {
-          genes.push(string.substring(i,i+2))
-        }
-        var sorted = ['','','',''];
-        for (let i of genes) {
-          switch(i[0].toUpperCase()){
-            case 'A':
-              sorted[0]=i;
-              break;
-            case 'B':
-              sorted[1]=i;
-              break;
-            case 'C':
-              sorted[2]=i;
-              break;
-            case 'D':
-              sorted[3]=i;
-              break;
-          }
-        }
-        return sorted.join('');
-      };
-    document.getElementById(id).value = sort(x);
-  }
-
-  </script>
-
-  <div id = "entry">
-    <div id = "2" style="display:none;">
+  <div>
+    <div id="data-father" class="data-entry">
+      <span class="data-title">Father</span>
+      <h1 id="father-entry" class="geno-entry">Aa</h1>
     </div>
-    <div id = "4" style="display:none;">
+    <div id="data-mother" class="data-entry">
+      <span class="data-title">Mother</span>
+      <h1 id="mother-entry" class="geno-entry">Aa</h1>
     </div>
-    <div id = "8" style="display:none;">
-    </div>
-    <div id = "16" style="display:none;">
-    </div>
-  </div>
-
-  <!--<div id="entry">
-    <div id="two" style="display:none">
-      Father's Genotype:<br><br>
-        <button class="button" onclick="showF('AA', 'fdisplay2');"> AA </button>
-        <button class="button" onclick="showF('Aa', 'fdisplay2');"> Aa </button>
-        <button class="button" onclick="showF('aa', 'fdisplay2');"> aa </button>
-      <br><br> <input type="text" id="fdisplay2" value=""   readonly="readonly" />
-      <br><br>Mother's Genotype:<br><br>
-        <button class="button" onclick="showF('AA', 'mdisplay2');"> AA </button>
-        <button class="button" onclick="showF('Aa', 'mdisplay2');"> Aa </button>
-        <button class="button" onclick="showF('aa', 'mdisplay2');"> aa </button>
-      <br><br> <input type="text" id="mdisplay2" value=""   readonly="readonly" />
-
-    </div>
-
-    <div id="four" style="display:none">
-      Father's Genotype:<br><br>
-        Trait 1:
-          <button class="button" onclick="showF('AA', 'fdisplay4');"> AA </button>
-          <button class="button" onclick="showF('Aa', 'fdisplay4');"> Aa </button>
-          <button class="button" onclick="showF('aa', 'fdisplay4');"> aa </button>
-        &emsp; Trait 2:
-          <button class="button" onclick="showF('BB', 'fdisplay4');"> BB </button>
-          <button class="button" onclick="showF('Bb', 'fdisplay4');"> Bb </button>
-          <button class="button" onclick="showF('bb', 'fdisplay4');"> bb </button>
-        <br><br> <input type="text" id="fdisplay4" value=""   readonly="readonly" />
-      <br><br>Mother's Genotype:<br><br>
-        Trait 1:
-          <button class="button" onclick="showF('AA', 'mdisplay4');"> AA </button>
-          <button class="button" onclick="showF('Aa', 'mdisplay4');"> Aa </button>
-          <button class="button" onclick="showF('aa', 'mdisplay4');"> aa </button>
-        &emsp; Trait 2:
-          <button class="button" onclick="showF('BB', 'mdisplay4');"> BB </button>
-          <button class="button" onclick="showF('Bb', 'mdisplay4');"> Bb </button>
-          <button class="button" onclick="showF('bb', 'mdisplay4');"> bb </button>
-        <br><br> <input type="text" id="mdisplay4" value=""   readonly="readonly" />
-
-    </div>
-
-    <div id="eight" style="display:none">
-      Father's Genotype:<br><br>
-        Trait 1:
-          <button class="button" onclick="showF('AA', 'fdisplay8');"> AA </button>
-          <button class="button" onclick="showF('Aa', 'fdisplay8');"> Aa </button>
-          <button class="button" onclick="showF('aa', 'fdisplay8');"> aa </button>
-        &emsp; Trait 2:
-          <button class="button" onclick="showF('BB', 'fdisplay8');"> BB </button>
-          <button class="button" onclick="showF('Bb', 'fdisplay8');"> Bb </button>
-          <button class="button" onclick="showF('bb', 'fdisplay8');"> bb </button>
-        &emsp; Trait 3:
-          <button class="button" onclick="showF('CC', 'fdisplay8');"> CC </button>
-          <button class="button" onclick="showF('Cc', 'fdisplay8');"> Cc </button>
-          <button class="button" onclick="showF('cc', 'fdisplay8');"> cc </button>
-        <br><br> <input type="text" id="fdisplay8" value=""   readonly="readonly" />
-      <br><br>Mother's Genotype:<br><br>
-        Trait 1:
-          <button class="button" onclick="showF('AA', 'mdisplay8');"> AA </button>
-          <button class="button" onclick="showF('Aa', 'mdisplay8');"> Aa </button>
-          <button class="button" onclick="showF('aa', 'mdisplay8');"> aa </button>
-        &emsp; Trait 2:
-          <button class="button" onclick="showF('BB', 'mdisplay8');"> BB </button>
-          <button class="button" onclick="showF('Bb', 'mdisplay8');"> Bb </button>
-          <button class="button" onclick="showF('bb', 'mdisplay8');"> bb </button>
-        &emsp; Trait 3:
-          <button class="button" onclick="showF('CC', 'mdisplay8');"> CC </button>
-          <button class="button" onclick="showF('Cc', 'mdisplay8');"> Cc </button>
-          <button class="button" onclick="showF('cc', 'mdisplay8');"> cc </button>
-        <br><br> <input type="text" id="mdisplay8" value=""   readonly="readonly" />
-
-    </div>
-
-    <div id="sixteen" style="display:none">
-      Father's Genotype:<br><br>
-        Trait 1:
-          <button class="button" onclick="showF('AA', 'fdisplay16');"> AA </button>
-          <button class="button "onclick="showF('Aa', 'fdisplay16');"> Aa </button>
-          <button class="button" onclick="showF('aa', 'fdisplay16');"> aa </button>
-        &emsp; Trait 2:
-          <button class="button" onclick="showF('BB', 'fdisplay16');"> BB </button>
-          <button class="button" onclick="showF('Bb', 'fdisplay16');"> Bb </button>
-          <button class="button" onclick="showF('bb', 'fdisplay16');"> bb </button>
-        &emsp; Trait 3:
-          <button class="button" onclick="showF('CC', 'fdisplay16');"> CC </button>
-          <button class="button" onclick="showF('Cc', 'fdisplay16');"> Cc </button>
-          <button class="button" onclick="showF('cc', 'fdisplay16');"> cc </button>
-        &emsp; Trait 4:
-          <button class="button" onclick="showF('DD', 'fdisplay16');"> DD </button>
-          <button class="button" onclick="showF('Dd', 'fdisplay16');"> Dd </button>
-          <button class="button" onclick="showF('dd', 'fdisplay16');"> dd </button>
-        <br><br> <input type="text" id="fdisplay16" value=""   readonly="readonly" />
-      <br><br>Mother's Genotype:<br><br>
-        Trait 1:
-          <button class="button" onclick="showF('AA', 'mdisplay16');"> AA </button>
-          <button class="button" onclick="showF('Aa', 'mdisplay16');"> Aa </button>
-          <button class="button" onclick="showF('aa', 'mdisplay16');"> aa </button>
-        &emsp; Trait 2:
-          <button class="button" onclick="showF('BB', 'mdisplay16');"> BB </button>
-          <button class="button" onclick="showF('Bb', 'mdisplay16');"> Bb </button>
-          <button class="button" onclick="showF('bb', 'mdisplay16');"> bb </button>
-        &emsp; Trait 3:
-          <button class="button" onclick="showF('CC', 'mdisplay16');"> CC </button>
-          <button class="button" onclick="showF('Cc', 'mdisplay16');"> Cc </button>
-          <button class="button" onclick="showF('cc', 'mdisplay16');"> cc </button>
-        &emsp; Trait 4:
-          <button class="button" onclick="showF('DD', 'mdisplay16');"> DD </button>
-          <button class="button" onclick="showF('Dd', 'mdisplay16');"> Dd </button>
-          <button class="button" onclick="showF('dd', 'mdisplay16');"> dd </button>
-        <br><br> <input type="text" id="mdisplay16" value=""   readonly="readonly" />
-
-    </div> -->
-
-    <div id='inherit' style = "display:none">
-      <br>Inheritance Mode:
-        <select id="colorization" name="colorization">
-          <option value="autosomal">Autosomal</option>
-          <option value="codominance">Codominance</option>
-          <option value="incomplete">Incomplete</option>
-          <option value="xlinked">X-linked</option>
-        </select>
-      <br>
-    </div>
-
   </div>
 
   <div style="text-align: center; margin-top: 10px;">
+    <div style="display: inline-block; font-size: 10pt;">
+      Inheritance Mode:<br>
+      <select id="colorization" name="colorization">
+        <option value="autosomal">Autosomal</option>
+        <option value="codominance">Codominance</option>
+        <option value="incomplete">Incomplete</option>
+        <option value="xlinked">X-linked</option>
+      </select>
+    </div>
     <button class="button"
-            onclick="load_pun();">
+            onclick="load_pun();"
+            style="font-size: 10pt;">
       Solve Punnett Square
     </button>
     <button class="button"
             onclick="table_exists() && download_csv();"
-            style="margin-left: 20px;">
+            style="margin-left: 20px; font-size: 10pt;">
       Download CSV
     </button>
     <button class="button"
             onclick="table_exists() && download_png();"
-            style="margin-left: 20px;">
+            style="margin-left: 20px; font-size: 10pt;">
       Download PNG
     </button>
     <label id="upload-file-wrapper" style="margin-left: 20px;">
       <input type="file" id="csv-file"
              style="display: none;"
              oninput="upload_csv(event);">
-      <span class="button" style="font-size: 13px;">
+      <span class="button" style="font-size: 10pt;">
         Upload CSV
       </span>
     </label>
@@ -512,10 +126,122 @@ Web interface for solving punnett squares
     </div>
   </div>
 
-  <div id="pun-tbl" style="margin-top: 10px; margin-bottom: 10px; text-align: center;"></div>
+  <div id="pun-tbl"
+       style="margin-top: 10px; margin-bottom: 10px; text-align: center;">
+  </div>
 
   <!-- just here for now -->
   <script type="text/javascript">
+
+    /* DISPLAY & DATA ENTRY FUNCTIONS */
+
+    var current_display = 1; // curent number of traits being shown
+    var texts = { // current father and mother genotypes
+      "father": ["Aa", "Bb", "Cc", "Dd"],
+      "mother": ["Aa", "Bb", "Cc", "Dd"]
+    };
+
+    // respond to a data entry
+    const register_entry = (parent, geno) => {
+      for (let i = 0; i < texts[parent].length; i++) {
+        if (texts[parent][i].toUpperCase() === geno.toUpperCase())
+          texts[parent][i] = geno;
+      }
+      let display = document.getElementById(`${parent}-entry`);
+      display.textContent = texts[parent].slice(0, current_display).join("");
+    }
+
+    // set the entry fields to allow this many traits
+    const show = size => {
+      current_display = size;
+      for (let i = 1; i < 5; i++) {
+        if (i <= size) {
+          ["father", "mother"].forEach(parent => {
+            console.log("here");
+            document.getElementById(`${parent}-wrap-${i}`).style.display =
+              "block";
+          });
+        } else {
+          ["father", "mother"].forEach(parent => {
+            console.log("there");
+            document.getElementById(`${parent}-wrap-${i}`).style.display =
+              "none";
+          });
+        }
+      }
+      ["father", "mother"].forEach(parent => {
+        let display = document.getElementById(`${parent}-entry`);
+        display.textContent = texts[parent].slice(0, current_display).join("");
+      });
+    }
+
+    // on page load, setup entry buttons
+    window.addEventListener("load", _ => {
+      ["father", "mother"].forEach(parent => {
+        let entry = document.getElementById(`data-${parent}`);
+        pretty.range(1, 5).forEach(n => {
+          // make labels and buttons for traits 1-4
+          let wrapper = document.createElement("div");
+          wrapper.id = `${parent}-wrap-${n}`;
+          wrapper.style.paddingTop = "10px";
+          let label = document.createElement("span");
+          label.textContent = `Trait ${n}:`;
+          label.className = "data-title";
+          wrapper.appendChild(label);
+          ["XX", "Xx", "xx"].forEach(xx => {
+            let geno = xx.split("")
+              .map(x => x.toUpperCase() === x ? "upper" : "lower")
+              .map(cap => pretty.alpha[cap][n-1]).join("");
+            let button = document.createElement("button");
+            button.className = "button button-entry";
+            button.textContent = geno;
+            button.addEventListener("click", event => {
+              register_entry(parent, geno);
+            });
+            wrapper.appendChild(button);
+          });
+          entry.appendChild(wrapper);
+        });
+      });
+      show(current_display);
+    });
+
+
+    /* SOLVING & TABLE MAKING FUNCTIONS */
+
+    var data = []; // expose data for easy CSV downloading later on
+    const load_pun = () => {
+      /* loads the punnett square */
+      let father = document.getElementById("father-entry").textContent;
+      let mother = document.getElementById("mother-entry").textContent;
+
+      /* consider the right color mapping function (from colorize.js) to use */
+      let cmap = {
+        "none":        colorize.color_blank,
+        "autosomal":   colorize.color_autosomal,
+        "codominance": colorize.color_codominance,
+        "incomplete":  colorize.color_incomplete,
+        "xlinked":     colorize.color_xlinked
+      }[document.getElementById("colorization").value];
+
+      data = pun_solve.solve(father, mother);
+      let colors = [[]];
+      // set first row of colors to blank
+      colors[0] = data[0].map(_ => colorize.color_blank());
+      // set subsequent rows to a combined header and data
+      let colorspace = colorize.sample_colors(
+        Math.round(data[1][1].length / 2));
+      data.filter((_, i) => i > 0).forEach(datum =>
+        colors.push([colorize.color_blank()]
+                    .concat(datum.slice(1)
+                    .map(c => cmap(c, colorspace)))));
+      let tbl = document.getElementById("pun-tbl");
+      tbl.innerHTML = colorize.colortbl(data, colors);
+    }
+
+
+    /* DOWNLOAD & UPLOAD FUNCTIONS */
+
     // check to see if there exists a rendered table before any downloads
     const table_exists = () => {
       if (document.getElementById("pun-tbl").innerHTML === "") {
@@ -572,20 +298,23 @@ Web interface for solving punnett squares
         document.getElementById(`click-${num_rows}`).click();
 
         // figure out parent genotypes by looking at array
-        let mother = "";
+        let mother = ["Aa", "Bb", "Cc", "Dd"];
         for (let i = 2; i <= num_rows; i*=2) {
           let ind = Math.round(Math.log2(i)-1);
           let n = Math.round(num_rows/i + 1);
-          mother += arr[0][1][ind] + arr[0][n][ind];
+          mother[i/2-1] = arr[0][1][ind] + arr[0][n][ind];
         }
-        document.getElementById(`mdisplay${num_rows}`).value = mother;
-        let father = "";
+        texts["mother"] = mother;
+
+        let father = ["Aa", "Bb", "Cc", "Dd"];
         for (let i = 2; i <= num_rows; i*=2) {
           let ind = Math.round(Math.log2(i)-1);
           let n = Math.round(num_rows/i + 1);
-          father += arr[1][0][ind] + arr[n][0][ind];
+          father[i/2-1] = arr[1][0][ind] + arr[n][0][ind];
         }
-        document.getElementById(`fdisplay${num_rows}`).value = father;
+        texts["father"] = father;
+
+        show(Math.round(Math.log2(num_rows)));
 
         // re-solve the punnett square
         // this relies on the filename to identify inheritance mode
@@ -594,6 +323,34 @@ Web interface for solving punnett squares
         load_pun();
       }
       reader.readAsText(file);
+    }
+
+
+    /* HELP DISPLAY FUNCTIONS */
+
+    function toggle(div_id) {
+      var el = document.getElementById(div_id);
+      if ( el.style.display == 'none' ) { el.style.display = 'block';}
+      else {el.style.display = 'none';}
+    }
+    function blanket_size(popUpDivVar) {
+      blanket_height = document.body.parentNode.scrollHeight;
+      var blanket = document.getElementById('blanket');
+      blanket.style.height = blanket_height + 'px';
+      var popUpDiv = document.getElementById(popUpDivVar);
+      popUpDiv_height=blanket_height/2-(blanket_height*.2);
+      popUpDiv.style.top = popUpDiv_height + 'px';
+    }
+
+    function window_pos(popUpDivVar) {
+      var popUpDiv = document.getElementById(popUpDivVar);
+    }
+
+    function popup(windowname) {
+      blanket_size(windowname);
+      window_pos(windowname);
+      toggle('blanket');
+      toggle(windowname);
     }
   </script>
 </body>

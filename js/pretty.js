@@ -28,6 +28,12 @@ const pretty = (function () {
     // convenience function for a range from [start, end)
     range: (start, end) => {
       return [...Array(end - start).keys()].map(n => n + start);
-    }
+    },
+
+    // convenience strings for the alphabet
+    alpha: {
+        "lower": "abcdefghijklmnopqrstuvwxyz",
+        "upper": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      }
   };
 }());

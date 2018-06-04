@@ -11,6 +11,12 @@
   src: url("../fonts/Open_Sans/OpenSans-Regular.ttf") format("truetype");
 }
 @font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 100;
+  src: url("../fonts/Open_Sans/OpenSans-Light.ttf") format("truetype");
+}
+@font-face {
   font-family: "Raleway";
   font-style: normal;
   font-weight: 400;
@@ -21,6 +27,11 @@
   font-style: normal;
   font-weight: 400;
   src: url("../fonts/Merriweather/Merriweather-Regular.ttf") format("truetype");
+}
+
+/* set color variables */
+:root {
+  --color1: #a5e544;
 }
 
 html, body {
@@ -70,7 +81,7 @@ html, body {
 .nav-bar ul {
   list-style-type: none;
   padding: 0px;
-  background-color: #a5e544;
+  background-color: var(--color1);
   overflow: hidden;
   margin: 0px;
 }
@@ -103,8 +114,8 @@ html, body {
 .button {
   padding: 8px;
   font-family: "Open Sans";
-  background-color: #a5e544;
-  border: 2px solid #a5e544;
+  background-color: var(--color1);
+  border: 2px solid var(--color1);
   outline: 0;
   border-radius: 6px;
   transition: all .2s ease-in;
@@ -214,7 +225,7 @@ html, body {
   z-index: 2;
 }
 .underbar {
-  border-bottom: 2px solid #a5e544;
+  border-bottom: 2px solid var(--color1);
   position: relative;
   bottom: 2px;
   width: 100%;
@@ -223,7 +234,7 @@ html, body {
 
 /* the page footer is optional and does not stick to the very bottom */
 .footer {
-  background-color: #a5e544;
+  background-color: var(--color1);
   text-align: center;
   font-family: "Open Sans";
   padding: 15px;

@@ -133,6 +133,37 @@ const colorize = (function () {
         samples.secondary.push(rgb_to_hex(chroma.secondary[i]));
       }
       return samples;
+    },
+
+    /* returns an HTML string with a table based on given data
+       caller must supply a matching array of [R,G,B] colors to apply to the
+       data */
+    colortbl: (data, colors) => {
+      var html_str = "<table id='punnett-table'>";
+      for (var r = 0; r < data.length; r++) {
+        html_str += "<tr>";
+        for (var c = 0; c < data.length; c++) {
+          if (r === 0 || c === 0) {
+            html_str += "<th>"+data[r][c].toString()+"</th>";
+          } else {
+            /* for data cells, pick background based on parallel color array */
+            style = "";  // style defaults to nothing
+            let percent = 100.0 / colors[r][c].length;
+            style = "background: linear-gradient(-45deg";
+            for (let i = 0; i < colors[r][c].length; i++) {
+              style += ","+colors[r][c][i].toString()
+                +" "+(percent*i).toString()+"%,"
+                +colors[r][c][i].toString()+" "
+                +(percent*(i+1)).toString()+"%";
+            }
+            style += ");";
+            html_str += "<td style='"+style+"'>"+data[r][c].toString()+"</td>";
+          }
+        }
+        html_str += "</tr>"
+      }
+      html_str += "</table>"
+      return html_str;
     }
   }
 }());
