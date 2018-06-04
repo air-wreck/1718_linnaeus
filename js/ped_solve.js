@@ -12,6 +12,17 @@ const ped_solve = (function () {
  //REPLACE INDIV WITH ARRAY INDEXES
   function bottomUp(marriage) {
     var infected = false;
+    if (marriage[0].infected === true) {
+      marriage[0].final = true;
+    }
+    if (marriage[1].infected === true) {
+      marriage[1].final = true;
+    }
+    marriage[2].forEach(indiv => {
+      if (indiv.infected === true){
+        indiv.final = true;
+      }
+    })
     // if kid infected parents are carriers unless infected already
     marriage[2].forEach(indiv => {
       if (indiv.infected === true && indiv.father.infected === false) {
@@ -25,23 +36,27 @@ const ped_solve = (function () {
         indiv.mother.final = true;
       }
     })
-    if (infected === false) {
-      // if child is carrier but parents are unknown and aren't infected then, parents have 2/3 chance
-      marriage[2].forEach(indiv => {
-        if (indiv.carrier === 1 && indiv.mother.carrier != 1 && indiv.mother.infected != true && indiv.father.infected != true && indiv.mother.final === false && indiv.father.final === false) {
-          test.mother.carrier = 2/3;
-          test.father.carrier = 2/3;
-        }
-    });
+    
     //if kid is unknown... go to parents top-down
   }
  
   function topDown(marriage) {
+    if (infected === false) {
+      // if child is carrier but parents are unknown and aren't infected then, parents have 2/3 chance
+      marriage[2].forEach(indiv => {
+        if (indiv.carrier === 1 && indiv.mother.carrier != 1 && indiv.mother.infected != true && indiv.father.infected != true && indiv.mother.final === false && indiv.father.final === false) {
+          indiv.mother.carrier = 2/3;
+          indiv.father.carrier = 2/3;
+          indiv.mother.final = true;
+          indiv.father.final = true;
+        }
+    });
      //if mom and dad are both carriers but not infected then child is has 2/3 chance of being carrier if not infected
     if (marriage[0].carrier === 1 && marriage[1].carrier === 1 && marriage[1].infected === false && marriage[0].infected === false){
       marriage[2].forEach(indiv => {
         if (indiv.infected != 1){
           indiv.carrier = 2/3;
+          indiv.final = true;
         }
       }
     })
@@ -50,6 +65,7 @@ const ped_solve = (function () {
       marriage[2].forEach(indiv => {
         indiv.infected = false;
         indiv.carrier = 0;
+        indiv.final = true;
       })
     }
     //one of the parents is a carrier the other is AA, thus child has 50% chance of being Aa
@@ -57,6 +73,7 @@ const ped_solve = (function () {
       marriage[2].forEach(indiv => {
         indiv.infected = false;
         indiv.carrier = 0.5;
+        indiv.final = true;
       })
     }
     //one parent is aa, one is Aa, thus child is carrier if not infected
@@ -65,6 +82,7 @@ const ped_solve = (function () {
         if (indiv.infected === 0){
           indiv.infected = false;
           indiv.carrier = 1;
+          indiv.final = true;
         }
       })
     }
@@ -72,6 +90,7 @@ const ped_solve = (function () {
     if ((marriage[0].infected === true && marriage[1].carrier === 0 && marriage[1].infected === false) || (marriage[1].infected === true && marriage[0].carrier === 0 && marriage[0].infected === false)) {
       marriage[2].forEach(indiv => {
         indiv.carrier = 1;
+        indiv.final = true;
       })
     }
   }
@@ -80,7 +99,7 @@ const ped_solve = (function () {
     marriages.forEach(marriage => {
       if (marriage[0].final === true && marriage[1].final === true){
         marriage[2].forEach(indiv => {
-          if(marriage[2].final == false) {
+          if(marriage[2].final === false) {
             return;
           }
         })
@@ -88,6 +107,7 @@ const ped_solve = (function () {
         if (marriages[0] === null){
           return true;
         }
+        return false;
       }
     })
   }
