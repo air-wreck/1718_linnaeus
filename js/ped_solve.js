@@ -4,113 +4,6 @@ implements ped_solve.py, except in Javascript */
 
 // the module structure allows us to keep infection functions private
 const ped_solve = (function () {
-
-  /* infect_* functions determine the probability that an individual is
-     infected based on the necessary information */
-
-     
- //REPLACE INDIV WITH ARRAY INDEXES
-  function bottomUp(marriage) {
-    var infected = false;
-    if (marriage[0].infected === true) {
-      marriage[0].final = true;
-    }
-    if (marriage[1].infected === true) {
-      marriage[1].final = true;
-    }
-    marriage[2].forEach(indiv => {
-      if (indiv.infected === true){
-        indiv.final = true;
-      }
-    })
-    // if kid infected parents are carriers unless infected already
-    marriage[2].forEach(indiv => {
-      if (indiv.infected === true && indiv.father.infected === false) {
-        indiv.father.carrier = 1;
-        indiv.father.infected = false;
-        indiv.father.final = true;
-      }
-      if (indiv.infected === true && indiv.mother.infected === false) {
-        indiv.mother.carrier = 1;
-        infected = false;
-        indiv.mother.final = true;
-      }
-    })
-    
-    //if kid is unknown... go to parents top-down
-  }
- 
-  function topDown(marriage) {
-    if (infected === false) {
-      // if child is carrier but parents are unknown and aren't infected then, parents have 2/3 chance
-      marriage[2].forEach(indiv => {
-        if (indiv.carrier === 1 && indiv.mother.carrier != 1 && indiv.mother.infected != true && indiv.father.infected != true && indiv.mother.final === false && indiv.father.final === false) {
-          indiv.mother.carrier = 2/3;
-          indiv.father.carrier = 2/3;
-          indiv.mother.final = true;
-          indiv.father.final = true;
-        }
-    });
-     //if mom and dad are both carriers but not infected then child is has 2/3 chance of being carrier if not infected
-    if (marriage[0].carrier === 1 && marriage[1].carrier === 1 && marriage[1].infected === false && marriage[0].infected === false){
-      marriage[2].forEach(indiv => {
-        if (indiv.infected != 1){
-          indiv.carrier = 2/3;
-          indiv.final = true;
-        }
-      }
-    })
-      //mom and dad are purely dominant
-    if (marriage[0].carrier === 0 && marriage[0].infected === false && marriage[1].carrier === 0 && marriage[1].infected === false) {
-      marriage[2].forEach(indiv => {
-        indiv.infected = false;
-        indiv.carrier = 0;
-        indiv.final = true;
-      })
-    }
-    //one of the parents is a carrier the other is AA, thus child has 50% chance of being Aa
-    if ((marriage[0].carrier === 1 && marriage[1].carrier === 0 && marriage[1].infected === false) || (marriage[0].carrier === 1 && marriage[1].carrier === 0 && marriage[1].infected === false)) {
-      marriage[2].forEach(indiv => {
-        indiv.infected = false;
-        indiv.carrier = 0.5;
-        indiv.final = true;
-      })
-    }
-    //one parent is aa, one is Aa, thus child is carrier if not infected
-    if ((marriage[0].infected === true && marriage[1].carrier === 1 && marriage[1].infected === false) || (marriage[1].infected === true && marriage[0].carrier === 1 && marriage[0].infected === false)) {
-      marriage[2].forEach(indiv => {
-        if (indiv.infected === 0){
-          indiv.infected = false;
-          indiv.carrier = 1;
-          indiv.final = true;
-        }
-      })
-    }
-    //one parent infected, other is pure, then the kid's a carrier
-    if ((marriage[0].infected === true && marriage[1].carrier === 0 && marriage[1].infected === false) || (marriage[1].infected === true && marriage[0].carrier === 0 && marriage[0].infected === false)) {
-      marriage[2].forEach(indiv => {
-        indiv.carrier = 1;
-        indiv.final = true;
-      })
-    }
-  }
-
-  function solved (marriages) {
-    marriages.forEach(marriage => {
-      if (marriage[0].final === true && marriage[1].final === true){
-        marriage[2].forEach(indiv => {
-          if(marriage[2].final === false) {
-            return;
-          }
-        })
-        marriages.remove(marriage);
-        if (marriages[0] === null){
-          return true;
-        }
-        return false;
-      }
-    })
-  }
   /*
   function parentToChild(marriage) {
     marriage[2].forEach(indiv => {
@@ -147,6 +40,111 @@ const ped_solve = (function () {
       this.get = () =>
         [this.name, this.sex, this.infected];
     },
+
+    //REPLACE INDIV WITH ARRAY INDEXES
+    bottomUp: function bottomUp(marriage) {
+       var infected = false;
+       if (marriage[0].infected === true) {
+         marriage[0].final = true;
+       }
+       if (marriage[1].infected === true) {
+         marriage[1].final = true;
+       }
+       marriage[2].forEach(indiv => {
+         if (indiv.infected === true){
+           indiv.final = true;
+         }
+       })
+       // if kid infected parents are carriers unless infected already
+       marriage[2].forEach(indiv => {
+         if (indiv.infected === true && indiv.father.infected === false) {
+           indiv.father.carrier = 1;
+           indiv.father.infected = false;
+           indiv.father.final = true;
+         }
+         if (indiv.infected === true && indiv.mother.infected === false) {
+           indiv.mother.carrier = 1;
+           infected = false;
+           indiv.mother.final = true;
+         }
+       })
+
+       //if kid is unknown... go to parents top-down
+     },
+
+     topDown: function topDown(marriage) {
+       if (infected === false) {
+         // if child is carrier but parents are unknown and aren't infected then, parents have 2/3 chance
+         marriage[2].forEach(indiv => {
+           if (indiv.carrier === 1 && indiv.mother.carrier != 1 && indiv.mother.infected != true && indiv.father.infected != true && indiv.mother.final === false && indiv.father.final === false) {
+             indiv.mother.carrier = 2/3;
+             indiv.father.carrier = 2/3;
+             indiv.mother.final = true;
+             indiv.father.final = true;
+           }
+         });
+       }
+        //if mom and dad are both carriers but not infected then child is has 2/3 chance of being carrier if not infected
+       if (marriage[0].carrier === 1 && marriage[1].carrier === 1 && marriage[1].infected === false && marriage[0].infected === false){
+         marriage[2].forEach(indiv => {
+           if (indiv.infected != 1){
+             indiv.carrier = 2/3;
+             indiv.final = true;
+           }
+         });
+       }
+         //mom and dad are purely dominant
+       if (marriage[0].carrier === 0 && marriage[0].infected === false && marriage[1].carrier === 0 && marriage[1].infected === false) {
+         marriage[2].forEach(indiv => {
+           indiv.infected = false;
+           indiv.carrier = 0;
+           indiv.final = true;
+         })
+       }
+       //one of the parents is a carrier the other is AA, thus child has 50% chance of being Aa
+       if ((marriage[0].carrier === 1 && marriage[1].carrier === 0 && marriage[1].infected === false) || (marriage[0].carrier === 1 && marriage[1].carrier === 0 && marriage[1].infected === false)) {
+         marriage[2].forEach(indiv => {
+           indiv.infected = false;
+           indiv.carrier = 0.5;
+           indiv.final = true;
+         })
+       }
+       //one parent is aa, one is Aa, thus child is carrier if not infected
+       if ((marriage[0].infected === true && marriage[1].carrier === 1 && marriage[1].infected === false) || (marriage[1].infected === true && marriage[0].carrier === 1 && marriage[0].infected === false)) {
+         marriage[2].forEach(indiv => {
+           if (indiv.infected === 0){
+             indiv.infected = false;
+             indiv.carrier = 1;
+             indiv.final = true;
+           }
+         })
+       }
+       //one parent infected, other is pure, then the kid's a carrier
+       if ((marriage[0].infected === true && marriage[1].carrier === 0 && marriage[1].infected === false) || (marriage[1].infected === true && marriage[0].carrier === 0 && marriage[0].infected === false)) {
+         marriage[2].forEach(indiv => {
+           indiv.carrier = 1;
+           indiv.final = true;
+         })
+       }
+     },
+
+     solved: function solved (marriages) {
+       marriages.forEach(marriage => {
+         if (marriage[0].final === true && marriage[1].final === true){
+           marriage[2].forEach(indiv => {
+             if(marriage[2].final === false) {
+               return;
+             }
+           })
+           marriages.remove(marriage);
+           if (marriages[0] === null){
+             return true;
+           }
+           return false;
+         }
+       });
+     },
+
 
     /* recursively determine probability for a given person
        ooh, what if we made this anonymous and recursed with a Y-combinator? */
