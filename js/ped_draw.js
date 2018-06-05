@@ -34,8 +34,8 @@ const ped_draw = (function () {
 
         // shade the node based on infection probability
         let RGB = [255,
-                   Math.round(119 + 136 * (1 - person.carrier)),
-                   Math.round(86 + 169 * (1 - person.carrier))];
+                   Math.round(119 + 136 * (person.carrier)),
+                   Math.round(86 + 169 * (person.carrier))];
         let color_as_hex = "#"+RGB.map(d =>
           ("0"+d.toString(16)).slice(-2)).join("");
 
