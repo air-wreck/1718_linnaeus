@@ -10,12 +10,30 @@ window.addEventListener("load", event => {
         <li><span><b>Linnaeus</b></span></li>
       </div>
       <div style="float: right;">
-        <li><a href="home.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="pedigree.html">Pedigree</a></li>
-        <li><a href="punnett.html">Punnett Square</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="faq.html">FAQs</a></li>
+        <li>
+          <a href="home.html">Home</a>
+          <div class="underscore"></div>
+        </li>
+        <li>
+          <a href="about.html">About</a>
+          <div class="underscore"></div>
+        </li>
+        <li>
+          <a href="pedigree.html">Pedigree</a>
+          <div class="underscore"></div>
+        </li>
+        <li>
+          <a href="punnett.html">Punnett Square</a>
+          <div class="underscore"></div>
+        </li>
+        <li>
+          <a href="contact.html">Contact</a>
+          <div class="underscore"></div>
+        </li>
+        <li>
+          <a href="faq.html">FAQs</a>
+          <div class="underscore"></div>
+        </li>
       </div>
       <div style="float: right;" class="narrow-menu">
         <!-- this is such a sketchy way to make a menu button -->
@@ -36,6 +54,9 @@ window.addEventListener("load", event => {
       </div>
     </ul>
   </div>` + document.body.innerHTML;
+  Array.from(document.getElementsByClassName("underscore")).forEach(div => {
+    div.style.width = div.parentNode.offsetWidth + "px";
+  });
 });
 
 // respond to clicks when in small mode

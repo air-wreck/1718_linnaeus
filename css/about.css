@@ -16,7 +16,7 @@ strong {
 .content-21 {
   text-align: center;
   padding: 20px;
-  width: 600px;
+  max-width: 600px;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -38,15 +38,11 @@ strong {
 /* redo table layout for very small (mobile) screens)
    also condense title layout even further */
 @media (max-width: 768px) {
-  .title-text {
-    left: 30px;
-    top: 100px;
-  }
   .content-1-container {
+    grid-column gap: 10px;
     grid-template-columns: 0px 1fr 0px;
-    grid-template-rows: 130px 1fr
-                        130px 1fr;
-    grid-template-areas: "mgl ped-img mgr"
-                         "mgl ped-txt mgr";
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: "mgl ped-txt mgr"
+                         "mgl pun-txt mgr";
   }
 }

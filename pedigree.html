@@ -331,6 +331,19 @@ Very plain page for web-based pedigree stuff
       </h1>
     </div>
 
+    <div style="position: absolute; left: 10px; top: 100px;">
+      <a onclick="popup('popUpDiv')"
+      onmouseover="this.parentNode.getElementsByTagName('span')[0].style.display='inline-block'"
+      onmouseout="this.parentNode.getElementsByTagName('span')[0].style.display='none'" class="circle circle-red">?</a>
+      <span class="circle-red help-flag">help</span>
+    </div>
+    <div style="position: absolute; left: 10px; top: 130px;">
+      <a onclick="(function (x) {x.style.display==='none' ? x.style.display='block' : x.style.display='none'}(document.getElementById('usage-info')))"
+      onmouseover="this.parentNode.getElementsByTagName('span')[0].style.display='inline-block'"
+      onmouseout="this.parentNode.getElementsByTagName('span')[0].style.display='none'" class="circle circle-yellow">i</a>
+      <span class="circle-yellow help-flag">info</span>
+    </div>
+
     <div id="blanket" style="display:none"></div>
     <div class="content-21" id="popUpDiv" style="display:none">
       <p><h2>How To Read a Pedigree</h2>
@@ -344,9 +357,8 @@ Very plain page for web-based pedigree stuff
       </ul>
       <br><sup>1</sup> A <strong>carrier</strong> is an individual who has one allele for a disease but does not exhibit the affected phenotype. However, he/she can potentially pass the disease on to offspring.</p>
       </p>
-      <a href="#" onclick="popup('popUpDiv')" ><center class="button">Close</center></a>
+      <a onclick="popup('popUpDiv')" ><center class="button">Close</center></a>
     </div>
-    <a href="#" onclick="popup('popUpDiv')"><center class="notice"><strong><u>Help! I can't interpret my pedigree!</u></strong></center><br></a>
 
     <script>
     function toggle(div_id) {
@@ -375,9 +387,7 @@ Very plain page for web-based pedigree stuff
     }
     </script>
 
-    <div class="notice"><strong><u>Instructions:</u></strong> add or delete individuals as you like and define relationships among them. The probability of infection must be between 0 and 1, although a child is permitted to have an unknown probability (-1) as long as he or she has parents. Leave parents blank if this person has no parents in the pedigree. Note that individuals are identified by name (case sensitive), so you cannot have a duplicate name.</div>
-    <p>Note that this only graphs families; if there is an individual without a family, he or she will not be plotted</p>
-    <p>This is currently highly unstable: a good-looking pedigree might look terrible if you add or subtract a single person. This is mostly a proof-of-concept.</p>
+    <div id="usage-info" class="notice" style="display: none;"><strong>Instructions:</strong> add or delete individuals as you like and define relationships among them. Leave parents blank if this person has no parents in the pedigree. Note that individuals are identified by name (case sensitive), so you cannot have a duplicate name. This only graphs families; if there is an individual without a family, he or she will not be plotted. For more detailed information, visit our <a href="faq.html"><strong><u>FAQs</u></strong></a>.</div>
   </div>
 
   <!-- container for the image, retrieved from the server -->
@@ -398,15 +408,22 @@ Very plain page for web-based pedigree stuff
       </select>
     </div>
     <button class="button"
-            onclick="add_row(row_gen.next().value);">Add Individual</button>
-    <button class="button" onclick="make_ped();">Build Pedigree</button>
-    <button class="button" onclick="download_dat();">Download Data</button>
-    <button class="button" onclick="download_ped();">Download as Image</button>
+            onclick="add_row(row_gen.next().value);"
+            style="font-size: 11px;">Add Individual</button>
+    <button class="button"
+            onclick="make_ped();"
+            style="font-size: 11px;">Build Pedigree</button>
+    <button class="button"
+            onclick="download_dat();"
+            style="font-size: 11px;">Download Data</button>
+    <button class="button"
+            onclick="download_ped();"
+            style="font-size: 11px;">Download as Image</button>
     <label id="upload-file-wrapper">
       <input type="file" id="dat-file"
              style="display: none;"
              oninput="upload_dat(event);">
-      <span class="button" style="font-size: 13px;">
+      <span class="button" style="font-size: 11px;">
         Upload Data
       </span>
     </label>

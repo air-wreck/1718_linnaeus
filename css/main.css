@@ -103,11 +103,20 @@ html, body {
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
-  transition: all .2s ease-in;
+  font-weight: 100;
 }
 .nav-bar li a:hover {
-  background-color: #78bc12;
-  color: white;
+  color: black;
+}
+.nav-bar .underscore {
+  position: absolute;
+  background-color: black;
+  height: 2px;
+  transform: scaleX(0);
+  transition: all .15s ease-in;
+}
+.nav-bar li a:hover + .underscore {
+  transform: scaleX(1);
 }
 
 /* standard (green) button; color can be overridden with element-level style */
@@ -184,6 +193,38 @@ html, body {
   transition: all .2s ease-in;
 }
 .closebtn:hover {color: white;}
+
+/* circle help and info buttons */
+.circle {
+  display: inline-block;
+  border-radius: 13px;
+  width: 22px;
+  height: 22px;
+  text-align: center;
+  transition: all .15s ease-in;
+}
+.circle-red {
+  color: #b73000;
+  border: 2px solid #b73000;
+}
+.circle-red:hover {
+  color: white;
+  background-color: #b73000;
+}
+.circle-yellow {
+  color: #b79b00;
+  border: 2px solid #b79b00;
+}
+.circle-yellow:hover {
+  color: white;
+  background-color: #b79b00;
+}
+.help-flag {
+  display: none;
+  width: 50px;
+  border-radius: 5px;
+  text-align: center;
+}
 
 /* attractive inputs, custom styling reused from PHP project */
 .input-wrap {
