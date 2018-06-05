@@ -1,5 +1,12 @@
 /* CSS specific to faq.html */
 
+* {font-family: "Open Sans";}
+
+.faq-page {
+  width: 100%;
+  text-align: center;
+}
+
 dl.faq button {
     margin: 0;
     padding: 0;
