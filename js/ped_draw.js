@@ -31,11 +31,14 @@ const ped_draw = (function () {
         let shape = "square";
         if (person.sex === ped_solve.Sex.f)
           shape = "circle";
-
+        var penetrance = 0;
+        if (person.infected === true){
+          penetrance = 1;
+        }
         // shade the node based on infection probability
         let RGB = [255,
-                   Math.round(119 + 136 * (person.carrier)),
-                   Math.round(86 + 169 * (person.carrier))];
+                   Math.round(119 + 136 * (1-penetrance)),
+                   Math.round(86 + 169 * (1-penetrance))];
         let color_as_hex = "#"+RGB.map(d =>
           ("0"+d.toString(16)).slice(-2)).join("");
 

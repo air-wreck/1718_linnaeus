@@ -49,7 +49,7 @@ const ped_solve = (function () {
            indiv.carrier = 0;
            infected = true;
          }
-         if (indiv.carrier > 0){
+         else if (indiv.carrier > 0){
            carrier = true;
          }
        })
