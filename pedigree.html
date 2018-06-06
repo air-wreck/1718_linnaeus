@@ -210,7 +210,7 @@ Very plain page for web-based pedigree stuff
     let viz = new Viz();
     const render = () => {
       //chinese the parents if child is infected
-      pedigree.forEach(person => person.carrier = 1);
+      pedigree.forEach(person => person.carrier = -1);
 
       //given: infected people
       //step 1: make carriers' parents 2/3 chinese

@@ -127,20 +127,20 @@ const ped_solve = (function () {
 
      solved: function solved (marriages) {
        marriages.forEach(marriage => {
-         if (marriage[0].final === true && marriage[1].final === true){
-           marriage[2].forEach(indiv => {
-             if(marriage[2].final === false) {
-               return;
-             }
-           })
-           marriages.remove(marriage);
-           if (marriages[0] === null){
-             return true;
-           }
-           return false;
-         }
-       });
+        if (marriage[0].carrier === -1){
+          marriage[0].carrier = 0;
+        }
+        if (marriage[1].carrier === -1){
+          marriage[1].carrier = 0;
+        }
+        marriage[2].forEach(indiv => {
+          if(indiv.carrier === -1) {
+            indiv.carrier = 0;
+          }
+        });
+      });
      },
+
 
 
     /* recursively determine probability for a given person
