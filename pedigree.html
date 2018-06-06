@@ -256,7 +256,7 @@ Very plain page for web-based pedigree stuff
           });
 
       // generate DOT string description
-      let draw = new ped_draw.Draw("example");
+      let draw = new ped_draw.Draw(document.getElementById("ped-title").value);
       marriages.forEach(marriage => draw.draw_marriage(...marriage));
 
       // render on page
@@ -395,6 +395,11 @@ Very plain page for web-based pedigree stuff
       toggle('blanket');
       toggle(windowname);
     }
+
+    /* when the page loads, replace the title placeholder with actual title */
+    window.addEventListener("load", _ => {
+      (function (x) {x.parentNode.replaceChild(pretty.input("id='ped-title' value='title' style='text-align: center;'"), x)}(document.getElementById("title-placeholder")));
+    });
     </script>
 
     <div id="usage-info" class="notice" style="display: none;">
@@ -425,6 +430,7 @@ Very plain page for web-based pedigree stuff
 
   <!-- buttons on top for user interaction -->
   <div id="buttons">
+    <div id="title-placeholder"></div>
     <button class="button"
             onclick="add_row(row_gen.next().value);"
             style="font-size: 8pt;">Add Individual</button>
@@ -481,10 +487,11 @@ Very plain page for web-based pedigree stuff
       // person
       const pname = p => p ? p.name : "";
       const sex = s => s === "male" ? "m" : "f";
-      let data_str = pedigree.map(person => {
-        return [person.name, sex(person.sex), person.infected.toString(),
-          pname(person.father), pname(person.mother)].join("%");
-      }).join("%$%");
+      let data_str = document.getElementById("ped-title").value + "$$"
+        + pedigree.map(person => {
+          return [person.name, sex(person.sex), person.infected.toString(),
+            pname(person.father), pname(person.mother)].join("%");
+        }).join("%$%");
       let link = document.createElement("a");
       link.setAttribute("download", "linnaeus_pedigree_data.dat");
       link.setAttribute("href",
@@ -504,7 +511,9 @@ Very plain page for web-based pedigree stuff
           delete_row(indiv.id);
         });
 
-        let data_str = e.target.result;
+        document.getElementById("ped-title").value =
+          e.target.result.split("$$")[0]
+        let data_str = e.target.result.split("$$")[1];
         let people = data_str.split("%$%").map(p => p.split("%"));
         people.forEach(person_str => {
           let row_id = row_gen.next().value;
