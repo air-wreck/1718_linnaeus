@@ -332,14 +332,20 @@ Very plain page for web-based pedigree stuff
 
     <div style="position: absolute; left: 10px; top: 100px;">
       <a onclick="popup('popUpDiv')"
-      onmouseover="this.parentNode.getElementsByTagName('span')[0].style.display='inline-block'"
-      onmouseout="this.parentNode.getElementsByTagName('span')[0].style.display='none'" class="circle circle-red">?</a>
+      onmouseover="this.parentNode.getElementsByTagName('span')[0]
+        .style.display='inline-block'"
+      onmouseout="this.parentNode.getElementsByTagName('span')[0]
+        .style.display='none'" class="circle circle-red">?</a>
       <span class="circle-red help-flag">help</span>
     </div>
     <div style="position: absolute; left: 10px; top: 130px;">
-      <a onclick="(function (x) {x.style.display==='none' ? x.style.display='block' : x.style.display='none'}(document.getElementById('usage-info')))"
-      onmouseover="this.parentNode.getElementsByTagName('span')[0].style.display='inline-block'"
-      onmouseout="this.parentNode.getElementsByTagName('span')[0].style.display='none'" class="circle circle-yellow">i</a>
+      <a onclick="(function (x) {x.style.display === 'none' 
+        ? x.style.display='block' : x.style.display='none'}
+          (document.getElementById('usage-info')))"
+      onmouseover="this.parentNode.getElementsByTagName('span')[0]
+        .style.display='inline-block'"
+      onmouseout="this.parentNode.getElementsByTagName('span')[0]
+        .style.display='none'" class="circle circle-yellow">i</a>
       <span class="circle-yellow help-flag">info</span>
     </div>
 
@@ -352,10 +358,14 @@ Very plain page for web-based pedigree stuff
         <li>Two parents are connected by a horizontal line.</li><br>
         <li>A vertical line leads to the offspring of two parents.</li><br>
         <li>A shaded circle/square represents an affected individual.</li><br>
-        <li>An unshaded circle/square represents an unaffected individual.</li><br>
-        <li>Mouse over an individual to see the probability of him/her being a carrier<sup>1</sup>.</li>
+        <li>An unshaded circle/square represents an unaffected
+            individual.</li><br>
+        <li>Mouse over an individual to see the probability of him/her being a
+            carrier<sup>1</sup>.</li>
       </ul>
-      <br><sup>1</sup> A <strong>carrier</strong> is an individual who has one allele for a disease but does not exhibit the affected phenotype. However, he/she can potentially pass the disease on to offspring.</p>
+      <br><sup>1</sup> A <strong>carrier</strong> is an individual who has one
+      allele for a disease but does not exhibit the affected phenotype. However,
+      he/she can potentially pass the disease on to offspring.</p>
       </p>
       <a onclick="popup('popUpDiv')" ><center class="button">Close</center></a>
     </div>
@@ -387,13 +397,28 @@ Very plain page for web-based pedigree stuff
     }
     </script>
 
-    <div id="usage-info" class="notice" style="display: none;"><strong>Instructions:</strong> add or delete individuals as you like and define relationships among them. Leave parents blank if this person has no parents in the pedigree. Note that individuals are identified by name (case sensitive), so you cannot have a duplicate name. This only graphs families; if there is an individual without a family, he or she will not be plotted. For more detailed information, visit our <a href="faq.html"><strong><u>FAQs</u></strong></a>.</div>
+    <div id="usage-info" class="notice" style="display: none;">
+      <strong>Instructions:</strong> add or delete individuals as you like and
+      define relationships among them. Leave parents blank if this person has no
+      parents in the pedigree. Note that individuals are identified by name
+      (case sensitive), so you cannot have a duplicate name. This only graphs
+      families; if there is an individual without a family, he or she will not
+      be plotted. For more detailed information, visit our <a href="faq.html">
+      <strong><u>FAQs</u></strong></a>.
+    </div>
   </div>
 
   <!-- container for the image, retrieved from the server -->
   <div id="ped">
     <!-- error message, which starts out hidden -->
-    <div id="alert" class="alert" style="display: none;"><strong style="color: #b73000;"><b>Error: </b></strong><span id="alert-text"></span><span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span></div><br>
+    <div id="alert" class="alert" style="display: none;">
+      <strong style="color: #b73000;">
+        <b>Error: </b>
+      </strong>
+      <span id="alert-text"></span>
+      <span class="closebtn"
+            onclick="this.parentElement.style.display='none';">&times;</span>
+    </div><br>
     <!-- the actual rendered pedigree -->
     <svg id="ped-img"></svg>
   </div>
@@ -452,25 +477,43 @@ Very plain page for web-based pedigree stuff
     }
 
     const download_dat = () => {
-      // straight up just download the innerHTML of the pedigree list div
-      // since we can reconstruct the entire pedigree from that using already
-      // existing functions
-      let data_str = document.getElementById("list").innerHTML;
+      // download the pedigree as a '%'-delimited string representing each
+      // person
+      const pname = p => p ? p.name : "";
+      const sex = s => s === "male" ? "m" : "f";
+      let data_str = pedigree.map(person => {
+        return [person.name, sex(person.sex), person.infected.toString(),
+          pname(person.father), pname(person.mother)].join("%");
+      }).join("%$%");
       let link = document.createElement("a");
       link.setAttribute("download", "linnaeus_pedigree_data.dat");
       link.setAttribute("href",
         `data:application/octet-stream,${encodeURIComponent(data_str)}`);
       link.click();
+      console.log(data_str);
+      console.log(pedigree);
     }
 
     const upload_dat = event => {
       // upload pedigree data in same format as download_dat
-      // TODO: fix bug where everything resets to default
       let file = event.target.files[0];
       let reader = new FileReader();
       reader.onload = e => {
+        // clear any data already present
+        Array.from(document.getElementsByClassName("indiv")).forEach(indiv => {
+          delete_row(indiv.id);
+        });
+
         let data_str = e.target.result;
-        document.getElementById("list").innerHTML = `${data_str}`;
+        let people = data_str.split("%$%").map(p => p.split("%"));
+        people.forEach(person_str => {
+          let row_id = row_gen.next().value;
+          add_row(row_id);
+          ["name", "sex", "prob", "father", "mother"].forEach((field, i) => {
+            document.getElementById(field + row_id.toString()).value =
+              person_str[i];
+          });
+        });
         make_ped();
       }
       reader.readAsText(file);
