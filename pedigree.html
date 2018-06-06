@@ -44,7 +44,7 @@ Very plain page for web-based pedigree stuff
         </select>
         Affected: <select id="prob${row_id_no.toString()}" name="prob">
           <option value="true">Yes</option>
-          <option value="false">No</option>
+          <option value="false" selected>No</option>
         </select>
         Father: ${pretty.input("id='father"+row_id_no.toString()
           +"' type='text' name='father' value=''").outerHTML}
@@ -134,17 +134,10 @@ Very plain page for web-based pedigree stuff
           return -1;
         }
 
-        // different checks based on number of parents
+        // if an individual has parents, check that the parents are valid
         // at this point, it is guaranteed that # of parents is either 0 or 2
-        if (person.father === null && person.mother === null) {
-          // 0 parents: check for independent probability
-          if (person.infected < 0) {
-            pretty.warn_user("Founder must have independent probability");
-            return -1;
-          }
-
-        } else if (![person.father, person.mother].includes(null)) {
-          // 2 parents: check for existence of father and mother
+        if (![person.father, person.mother].includes(null)) {
+          // check for existence of father and mother
           if (!person.father || !person.mother) {
             pretty.warn_user("Specified parents not found in pedigree");
             return -1;
@@ -155,13 +148,14 @@ Very plain page for web-based pedigree stuff
             pretty.warn_user("Parent and offspring cannot coincide");
             return -1;
           }
-        }
 
-        // probability in range [0, 1]
-        if ((person.father === null && person.infected < 0)
-         || person.infected > 1) {
-          pretty.warn_user("Probabilities must be in range [0, 1]");
-          return -1;
+          // a non-infected person cannot have two infected parents
+          if (!person.infected
+            && person.father.infected && person.mother.infected) {
+            pretty.warn_user("Two infected parents cannot have non-infected "
+              + "child");
+            return -1;
+          }
         }
 
         // father and mother have proper biological sexes
@@ -173,13 +167,6 @@ Very plain page for web-based pedigree stuff
           pretty.warn_user("Father must be male and mother must be female");
           return -1;
         }
-
-        if (person.father !== null && person.mother !== null){
-          if (person.infected === false && person.father.infected === true && person.mother.infected === true){
-          pretty.warn_user("The child of two infected parents must also be infected");
-          return -1;
-        }
-      }
 
       }).includes(-1)) return -1;
 
@@ -283,13 +270,17 @@ Very plain page for web-based pedigree stuff
         let old_el = document.getElementById("ped-img");
         old_el.parentNode.replaceChild(new_el, old_el);
 
-        // add hover info box effect
         let graph = document.getElementById("graph0");
         Array.from(graph.childNodes)
           .filter(el => el.id && el.id.slice(0, 4) === "node")
           .forEach(node => {
-            let name = Array.from(node.childNodes)
-              .filter(child => child.tagName === "text")[0].innerHTML;
+            // display abbreviated name if too long, but remember original name
+            let text = Array.from(node.childNodes)
+              .filter(child => child.tagName === "text")[0]
+            let name = text.innerHTML;
+            if (name.length > 3) text.innerHTML = name.slice(0, 3) + ".";
+
+            // add hover box info effect
             let person = pedigree[pedigree.findIndex(indiv =>
               indiv.name === name)];
             node.addEventListener("mouseover", event => {
@@ -414,30 +405,23 @@ Very plain page for web-based pedigree stuff
 
   <!-- buttons on top for user interaction -->
   <div id="buttons">
-    <div style="display: inline-block; font-size: 10pt;">
-      Infection Model:<br>
-      <select id="select-infect" class="button">
-        <option value="avg">Average</option>
-        <option value="auto_dom">Autosomal Dominant</option>
-      </select>
-    </div>
     <button class="button"
             onclick="add_row(row_gen.next().value);"
-            style="font-size: 11px;">Add Individual</button>
+            style="font-size: 8pt;">Add Individual</button>
     <button class="button"
             onclick="make_ped();"
-            style="font-size: 11px;">Build Pedigree</button>
+            style="font-size: 8pt;">Build Pedigree</button>
     <button class="button"
             onclick="download_dat();"
-            style="font-size: 11px;">Download Data</button>
+            style="font-size: 8pt;">Download Data</button>
     <button class="button"
             onclick="download_ped();"
-            style="font-size: 11px;">Download as Image</button>
+            style="font-size: 8pt;">Download as Image</button>
     <label id="upload-file-wrapper">
       <input type="file" id="dat-file"
              style="display: none;"
              oninput="upload_dat(event);">
-      <span class="button" style="font-size: 11px;">
+      <span class="button" style="font-size: 8pt;">
         Upload Data
       </span>
     </label>
