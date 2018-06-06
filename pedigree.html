@@ -238,19 +238,23 @@ Very plain page for web-based pedigree stuff
           marriages.forEach(marriage => {
               ped_solve.bottomUp(marriage); 
               ped_solve.topDown(marriage);
+
               
           });
           solved_ped = ped_solve.solved(marriages, iterator);
 
         }
-
-          marriages.forEach(marriage => {
-
+        
+        var undone = marriages;
+        while (undone.length !== 0){
+          undone.forEach(marriage => {
+            if (marriage[0].carrier !== -1 && marriage[1].carrier !== -1){
               ped_solve.bottomUp(marriage); 
               ped_solve.topDown(marriage);
-              //document.write(marriage[0].name + marriage[0].carrier + marriage[1].name + marriage[1].carrier);
-              
+              undone.splice(undone.indexOf(marriage), 1);
+            }
           });
+        }
 
         marriages = [];
         pedigree
