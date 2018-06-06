@@ -103,7 +103,8 @@ const ped_solve = (function () {
        //one of the parents is a carrier the other is AA, thus child has 50% chance of being Aa
        if ((marriage[0].carrier > 0 && marriage[1].carrier === 0 && marriage[1].infected === false) || (marriage[1].carrier > 0 && marriage[0].carrier === 0 && marriage[0].infected === false)) {
          marriage[2].forEach(indiv => {
-           indiv.carrier = ((marriage[0].carrier + marriage[1].carrier)*.5);
+          //document.write(indiv.name);
+           indiv.carrier = ((marriage[0].carrier + marriage[1].carrier)/2);
          })
        }
        //one parent is aa, one is Aa, thus child is carrier if not infected
@@ -131,14 +132,18 @@ const ped_solve = (function () {
             if (iterator < marriages.length + 1){
               solved = false;
             } else {
-              marriage[0].carrier = 0;
+              if (marriage[0].father === null){
+                marriage[0].carrier = 0;
+              }
             }
           }
           if (marriage[1].carrier === -1){
             if (iterator < marriages.length + 1){
               solved = false;
             } else {
-              marriage[1].carrier = 0;
+              if (marriage[1].father === null){
+                marriage[1].carrier = 0;
+              }
             }
           }
           marriage[2].forEach(indiv => {
@@ -146,7 +151,9 @@ const ped_solve = (function () {
               if (iterator < marriages.length + 1){
               solved = false;
             } else {
-              indiv.carrier = 0;
+              if (indiv.father === null){
+                indiv.carrier = 0;
+              }
             }
             }
           });
