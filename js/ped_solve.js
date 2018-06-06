@@ -45,6 +45,14 @@ const ped_solve = (function () {
     bottomUp: function bottomUp(marriage) {
        var infected = false;
        var carrier = false;
+
+       if (marriage[0].infected === true) {
+          marriage[0].carrier = 0;
+        }
+
+       if (marriage[1].infected === true) {
+          marriage[1].carrier = 0;
+        }
        
        marriage[2].forEach(indiv => {
          if (indiv.infected === true){
@@ -58,27 +66,19 @@ const ped_solve = (function () {
        // if kid infected parents are carriers unless infected already
 
        if (infected === true){
-        if (marriage[0].infected === true) {
-          marriage[0].carrier = 0;
-        } else {
+        if (marriage[0].infected === false) {
           marriage[0].carrier = 1;
         }
-        if (marriage[1].infected === true) {
-         marriage[1].carrier = 0;
-        } else {
+        if (marriage[1].infected === false){
           marriage[1].carrier = 1;
         }
        } else if (carrier === true){
         if (marriage[0].infected === false){
           marriage[0].carrier = 2/3;
-        } else {
-          marriage[0].carrier = 0;
         }
-        if (marriage[0].infected === false){
+        if (marriage[1].infected === false){
           marriage[1].carrier = 2/3;
-        } else {
-          marriage[1].carrier = 0;
-        }
+        } 
        }
 
        //if kid is unknown... go to parents top-down
