@@ -28,17 +28,16 @@ This repository is organized into a few different directories. The root
 directory contains all of the `*.html` pages. These pages reference files in
 the `/img`, `/css`, and `/js` directories for the appropriate resources. In
 addition, `/js` has the additional subdirectory `/js/other`, which stores all
-external code.
+external code (read: dependencies).
 
 `/pedigree` contains all of the Python scripts for drawing and solving
 pedigrees, and `/punnett` contains all of the scripts for Punnett Squares. We
 are in the process of converting these to Javascript targeting the client-side.
 
 ### dependencies
-The only outside dependency used by this project is the `viz.js` project, but
-the necessary Javascript is included in this repository already, so you likely
-don't have to worry about that.
+This project relies on the outside dependencies `viz.js` (+ associated worker
+script `full.js.opaque`) and `html2canvas`. The necessary Javascript is already
+included in this repository under `/js/other`.
 
-### work to do
-We still need to implement the rest of our pedigree/Punnett functionality in
-Javascript. Also, someone should get around to writing those unit tests.
+All you then need is a reasonably recent version of a major browser. The latest
+version of Chrome is recommended.
