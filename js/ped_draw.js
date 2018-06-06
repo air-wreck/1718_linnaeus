@@ -23,7 +23,7 @@ const ped_draw = (function () {
       this.hidden = names => {
         // define hidden nodes from a list
         names.forEach(name =>
-          this.src += `${name} [shape=point style=invis width=0];`);
+          this.src += `"${name}" [shape=point style=invis width=0];`);
       }
 
       this.indiv = person => {
@@ -42,19 +42,19 @@ const ped_draw = (function () {
         let color_as_hex = "#"+RGB.map(d =>
           ("0"+d.toString(16)).slice(-2)).join("");
 
-        this.src += `${person.name}
+        this.src += `"${person.name}"
           [fillcolor="${color_as_hex}" shape=${shape}];`;
       }
 
       this.srank = nodes => {
         // places a list of nodes in the same rank
-        this.src += `{rank=same; ${nodes.join(" -- ")};};`;
+        this.src += `{rank=same; "${nodes.join('" -- "')}";};`;
       }
 
       this.edges = (edgelist, constraint="true") => {
         // makes a bunch of edges in 2D list
         edgelist.forEach(pair =>
-          this.src += `${pair[0]} -- ${pair[1]} [constraint=${constraint}];`);
+          this.src += `"${pair[0]}" -- "${pair[1]}" [constraint=${constraint}];`);
       }
 
       this.render = () => {
