@@ -3,6 +3,7 @@
 implements ped_solve.py, except in Javascript */
 
 // the module structure allows us to keep infection functions private
+
 const ped_solve = (function () {
   /*
   function parentToChild(marriage) {
@@ -44,6 +45,16 @@ const ped_solve = (function () {
     bottomUp: function bottomUp(marriage) {
        var infected = false;
        var carrier = false;
+       
+       if (marriage[0].infected === true && marriage[1].infected === true){
+        marriage[2].forEach(indiv =>{
+          if (indiv.infected === false){
+            pretty.warn_user("Parents that are both infected can't have a child that isn't.");
+            return -1;
+          }
+        })
+       }
+       
        marriage[2].forEach(indiv => {
          if (indiv.infected === true){
            indiv.carrier = 0;
@@ -83,7 +94,14 @@ const ped_solve = (function () {
      },
 
      topDown: function topDown(marriage) {
-  
+      if (marriage[0].infected === true && marriage[1].infected === true){
+        marriage[2].forEach(indiv =>{
+          if (indiv.infected === false){
+            pretty.warn_user("Parents that are both infected can't have a child that isn't.");
+            return -1;
+          }
+        })
+       }
         //if mom and dad are both carriers but not infected then child is has 2/3 chance of being carrier if not infected
        if (marriage[0].carrier > 0 && marriage[1].carrier > 0){
          marriage[2].forEach(indiv => {
