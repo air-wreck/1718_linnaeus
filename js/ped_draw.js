@@ -1,7 +1,10 @@
-/* ped_draw.js
-
-implements ped_draw.py, except in Javascript
-assumes that ped_solve.js has already been included with a <script> tag */
+/* =============
+File: ped_draw.js
+Authors: Eric, Nelson, and Karena
+Course: CSE
+Description: module containing functions for plotting a pedigree
+  assumes that ped_solve.js has already been included with a <script> tag
+============= */
 
 const ped_draw = (function () {
   return {
@@ -54,7 +57,8 @@ const ped_draw = (function () {
       this.edges = (edgelist, constraint="true") => {
         // makes a bunch of edges in 2D list
         edgelist.forEach(pair =>
-          this.src += `"${pair[0]}" -- "${pair[1]}" [constraint=${constraint}];`);
+          this.src += `"${pair[0]}" -- "${pair[1]}"
+            [constraint=${constraint}];`);
       }
 
       this.render = () => {

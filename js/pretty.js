@@ -1,9 +1,10 @@
-/* pretty.js
+/* =============
+File: pretty.js
+Authors: Eric, Nelson, and Karena
+Course: CSE
+Description: module exporting various cosmetic and utility functions
+============= */
 
-various functions for improving looks */
-
-/* the function closure isn't really necessary for now,
-   but we'll keep it because it's cool */
 const pretty = (function () {
   return {
     // custom warning box, for prettier looks than a basic window.alert()

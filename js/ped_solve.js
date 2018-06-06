@@ -1,8 +1,9 @@
-/* ped_solve.js
-
-implements ped_solve.py, except in Javascript */
-
-// the module structure allows us to keep infection functions private
+/* =============
+File: ped_solve.js
+Authors: Eric, Nelson, and Karena
+Course: CSE
+Description: module exporting functions for solving pedigrees
+============= */
 
 const ped_solve = (function () {
   /*
@@ -53,7 +54,7 @@ const ped_solve = (function () {
        if (marriage[1].infected === true) {
           marriage[1].carrier = 0;
         }
-       
+
        marriage[2].forEach(indiv => {
          if (indiv.infected === true){
            indiv.carrier = 0;
@@ -76,38 +77,45 @@ const ped_solve = (function () {
         if (marriage[0].infected === false && marriage[1].infected === false){
           marriage[0].carrier = 2/3 * maxcarrier;
           marriage[1].carrier = 2/3 * maxcarrier;
-        } 
+        }
        }
 
        //if kid is unknown... go to parents top-down
      },
 
      topDown: function topDown(marriage) {
-        //if mom and dad are both carriers but not infected then child is has 2/3 chance of being carrier if not infected
+        //if mom and dad are both carriers but not infected then child is has
+        //  2/3 chance of being carrier if not infected
        if (marriage[0].carrier > 0 && marriage[1].carrier > 0){
          marriage[2].forEach(indiv => {
            if (indiv.infected === false){
-             indiv.carrier = 2/3 * ((marriage[0].carrier + marriage[1].carrier)/2);
+             indiv.carrier = 2/3 * ((marriage[0].carrier
+               + marriage[1].carrier)/2);
            } else {
             indiv.carrier = 0;
            }
          });
        }
          //mom and dad are purely dominant
-       if (marriage[0].carrier === 0 && marriage[0].infected === false && marriage[1].carrier === 0 && marriage[1].infected === false) {
+       if (marriage[0].carrier === 0 && marriage[0].infected === false
+         && marriage[1].carrier === 0 && marriage[1].infected === false) {
          marriage[2].forEach(indiv => {
            indiv.carrier = 0;
          })
        }
 
-       //one of the parents is a carrier the other is AA, thus child has 50% chance of being Aa
-       if ((marriage[0].carrier > 0 && marriage[1].carrier === 0 && marriage[1].infected === false) || (marriage[1].carrier > 0 && marriage[0].carrier === 0 && marriage[0].infected === false)) {
+       //one of the parents is a carrier the other is AA, thus child has 50%
+       //  chance of being Aa
+       if ((marriage[0].carrier > 0 && marriage[1].carrier === 0
+         && marriage[1].infected === false) || (marriage[1].carrier > 0
+         && marriage[0].carrier === 0 && marriage[0].infected === false)) {
          marriage[2].forEach(indiv => {
            indiv.carrier = ((marriage[0].carrier + marriage[1].carrier)/2);
          })
        }
        //one parent is aa, one is Aa, thus child is carrier if not infected
-       if ((marriage[0].infected === true && marriage[1].carrier > 0) || (marriage[1].infected === true && marriage[0].carrier > 0)) {
+       if ((marriage[0].infected === true && marriage[1].carrier > 0)
+       || (marriage[1].infected === true && marriage[0].carrier > 0)) {
          marriage[2].forEach(indiv => {
            if (indiv.infected === false){
              indiv.carrier = 1;
@@ -117,7 +125,9 @@ const ped_solve = (function () {
          })
        }
        //one parent infected, other is pure, then the kid's a carrier
-       if ((marriage[0].infected === true && marriage[1].carrier <= 0 && marriage[1].infected === false) || (marriage[1].infected === true && marriage[0].carrier <= 0 && marriage[0].infected === false)) {
+       if ((marriage[0].infected === true && marriage[1].carrier <= 0
+         && marriage[1].infected === false) || (marriage[1].infected === true
+         && marriage[0].carrier <= 0 && marriage[0].infected === false)) {
          marriage[2].forEach(indiv => {
            indiv.carrier = 1;
          })
@@ -149,7 +159,7 @@ const ped_solve = (function () {
             if(indiv.carrier === -1) {
               if (iterator < marriages.length + 1){
               solved = false;
-            } 
+            }
             }
           });
         });
@@ -168,7 +178,7 @@ const ped_solve = (function () {
             }
           });
         });
-        }       
+        }
        }
        */
        return solved;

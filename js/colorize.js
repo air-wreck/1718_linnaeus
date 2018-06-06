@@ -1,20 +1,23 @@
-/* colorize.js
+/* =============
+File: colorize.js
+Authors: Eric, Nelson, and Karena
+Course: CSE
+Description: functions for different color mappings for use in punnett.html
+  each function represents a different colorization scheme, e.g. codominant
 
-functions for different color mappings for use in punnett.html
-each function represents a different colorization scheme, e.g. codominant
+  for each function, the following API is specified:
+    parameters:
+      cell :: String, a genotype description like "AaBBcC"
+      colorspace :: Object, a colorspace object returned by sample_colors(n)
+                            this is used since it's less efficient to generate
+                            the colorspace each time we map to a cell
+    returns:
+      colors :: [String], a list of hex colors to use for that cell,
+                          like ["#ffffff", "#000000"] for 50% white/50% black
 
-for each function, the following API is specified:
-  parameters:
-    cell :: String, a genotype description like "AaBBcC"
-    colorspace :: Object, a colorspace object returned by sample_colors(n)
-                          this is used since it's less efficient to generate
-                          the colorspace each time we map to a cell
-  returns:
-    colors :: [String], a list of hex colors to use for that cell,
-                        like ["#ffffff", "#000000"] for 50% white/50% black
-
-  it is permissible to omit parameters for calls to colorize.color_blank and
-  colorize.color_random only */
+    it is permissible to omit parameters for calls to colorize.color_blank and
+    colorize.color_random only
+============= */
 
 const colorize = (function () {
   let is_dom = g => g === g.toUpperCase();

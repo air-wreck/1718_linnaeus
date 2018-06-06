@@ -1,6 +1,9 @@
-/* pun_solve.js
-
-functions for solving punnett squares */
+/* =============
+File: pun_solve.js
+Authors: Eric, Nelson, and Karena
+Course: CSE
+Description: module exporting functions for solving Punnett squares
+============= */
 
 const pun_solve = (function () {
   /* transforms a genotype string description into a 2D array, e.g.

@@ -1,9 +1,14 @@
-/* nav.js
+/* =============
+File: nav.js
+Authors: Eric, Nelson, and Karena
+Course: CSE
+Description: adds navigation bar to an HTML page when included as <script>
+============= */
 
-nav bar responsive JS */
-
-// load common navbar when document loads
+// do setup on page load
 window.addEventListener("load", event => {
+
+  // load common navbar when document loads
   document.body.innerHTML = `<div class="nav-bar">
     <ul>
       <div style="float: left;">
@@ -57,18 +62,19 @@ window.addEventListener("load", event => {
   Array.from(document.getElementsByClassName("underscore")).forEach(div => {
     div.style.width = div.parentNode.offsetWidth + "px";
   });
-});
 
-// respond to clicks when in small mode
-window.addEventListener("click", event => {
-  menu = document.getElementById("dropdown");
-  if (event.target.matches("#dropbtn") || event.target.matches(".menu")) {
-    if (menu.style.display === "none" || menu.style.display === "") {
-      menu.style.display = "block";
+  // respond to clicks when in small mode
+  // this technically should be in here, although it's not necessary
+  window.addEventListener("click", event => {
+    menu = document.getElementById("dropdown");
+    if (event.target.matches("#dropbtn") || event.target.matches(".menu")) {
+      if (menu.style.display === "none" || menu.style.display === "") {
+        menu.style.display = "block";
+      } else {
+        menu.style.display = "none";
+      }
     } else {
       menu.style.display = "none";
     }
-  } else {
-    menu.style.display = "none";
-  }
+  });
 });

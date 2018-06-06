@@ -1,13 +1,16 @@
 <!DOCTYPE html>
+<!-- =============
+File: pedigree.html
+Authors: Eric, Nelson, and Karena
+Course: CSE
+Description: web interface for pedigree plotting and solving
+============= -->
+
 <html>
-
-<!-- pedigree.html
-
-Very plain page for web-based pedigree stuff
--->
-
 <head>
   <title>Pedigree</title>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" type="image/png" href="img/png/l.png">
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/pedigree.css">
 
@@ -15,6 +18,8 @@ Very plain page for web-based pedigree stuff
   <script type="text/javascript" src="js/nav.js"></script>
   <!-- custom JS styles -->
   <script type="text/javascript" src="js/pretty.js"></script>
+  <!-- popup div -->
+  <script type="text/javascript" src="js/popup.js"></script>
 
   <!-- pedigree scripts -->
   <script type="text/javascript" src="js/ped_solve.js"></script>
@@ -204,19 +209,18 @@ Very plain page for web-based pedigree stuff
 
     let viz = new Viz();
     const render = () => {
-      //chinese the parents if child is infected
+      // initially set all individuals to TBD carrier probabilities
       pedigree.forEach(person => person.carrier = -1);
 
-      //given: infected people
-      //step 1: make carriers' parents 2/3 chinese
-      //step 2: infected peoples' parents all carriers no matter what
-      //step 2.5: make
-      //step 3: recurse this until finish pedigree (do math with 2/3)
+      // given: infected people
+      // step 1: make carriers' parents 2/3 chinese
+      // step 2: infected peoples' parents all carriers no matter what
+      // step 2.5: make
+      // step 3: recurse this until finish pedigree (do math with 2/3)
 
       // identify all marriages
       // we assume that all relationships are monogamous and generational
-
-        let marriages = [];
+      const get_marriages = () => {
         pedigree
           .filter(indiv => indiv.father !== null)
           .forEach(indiv => {
@@ -230,46 +234,36 @@ Very plain page for web-based pedigree stuff
               return false;
             })) marriages.push([indiv.father, indiv.mother, [indiv]]);
           });
+      }
 
-        var solved_ped = false;
-        var iterator = 0;
-        while (solved_ped === false && iterator < marriages.length+1){
-          iterator += 1;
-          marriages.forEach(marriage => {
-              ped_solve.bottomUp(marriage); 
-              ped_solve.topDown(marriage);
+      let marriages = [];
+      get_marriages();
 
-              
-          });
-          solved_ped = ped_solve.solved(marriages, iterator);
+      var solved_ped = false;
+      var iterator = 0;
+      while (solved_ped === false && iterator < marriages.length+1){
+        iterator += 1;
+        marriages.forEach(marriage => {
+          ped_solve.bottomUp(marriage);
+          ped_solve.topDown(marriage);
+        });
+        solved_ped = ped_solve.solved(marriages, iterator);
+      }
 
-        }
-        
-        var undone = marriages;
-        while (undone.length !== 0){
-          undone.forEach(marriage => {
-            if (marriage[0].carrier !== -1 && marriage[1].carrier !== -1){
-              ped_solve.bottomUp(marriage); 
-              ped_solve.topDown(marriage);
-              undone.splice(undone.indexOf(marriage), 1);
-            }
-          });
-        }
+      var undone = marriages;
+      while (undone.length !== 0){
+        undone.forEach(marriage => {
+          if (marriage[0].carrier !== -1 && marriage[1].carrier !== -1){
+            ped_solve.bottomUp(marriage);
+            ped_solve.topDown(marriage);
+            undone.splice(undone.indexOf(marriage), 1);
+          }
+        });
+      }
 
-        marriages = [];
-        pedigree
-          .filter(indiv => indiv.father !== null)
-          .forEach(indiv => {
-            // has this marriage already been found?
-            // i.e. is this a sibling of an already found child?
-            if (!marriages.some(union => {
-              if (union[0] === indiv.father && union[1] === indiv.mother) {
-                union[2].push(indiv);
-                return true;
-              }
-              return false;
-            })) marriages.push([indiv.father, indiv.mother, [indiv]]);
-          });
+      // clear & reset marriages list after solving
+      marriages = [];
+      get_marriages();
 
       // generate DOT string description
       let draw = new ped_draw.Draw(document.getElementById("ped-title").value);
@@ -338,6 +332,13 @@ Very plain page for web-based pedigree stuff
         render();
       }
     }
+
+    /* when the page loads, replace the title placeholder with actual title */
+    window.addEventListener("load", _ => {
+      (function (x) {x.parentNode.replaceChild(pretty.input(
+        "id='ped-title' value='title' style='text-align: center;'"), x)}
+          (document.getElementById("title-placeholder")));
+    });
   </script>
   <div id="instructions">
     <div style="text-align: center;">
@@ -355,7 +356,7 @@ Very plain page for web-based pedigree stuff
       <span class="circle-red help-flag">help</span>
     </div>
     <div style="position: absolute; left: 10px; top: 130px;">
-      <a onclick="(function (x) {x.style.display === 'none' 
+      <a onclick="(function (x) {x.style.display === 'none'
         ? x.style.display='block' : x.style.display='none'}
           (document.getElementById('usage-info')))"
       onmouseover="this.parentNode.getElementsByTagName('span')[0]
@@ -386,42 +387,10 @@ Very plain page for web-based pedigree stuff
       <a onclick="popup('popUpDiv')" ><center class="button">Close</center></a>
     </div>
 
-    <script>
-    function toggle(div_id) {
-      var el = document.getElementById(div_id);
-      if ( el.style.display == 'none' ) { el.style.display = 'block';}
-      else {el.style.display = 'none';}
-    }
-    function blanket_size(popUpDivVar) {
-      blanket_height = document.body.parentNode.scrollHeight;
-      var blanket = document.getElementById('blanket');
-      blanket.style.height = blanket_height + 'px';
-      var popUpDiv = document.getElementById(popUpDivVar);
-      popUpDiv_height=blanket_height/2-(blanket_height*.2);
-      popUpDiv.style.top = popUpDiv_height + 'px';
-    }
-
-    function window_pos(popUpDivVar) {
-      var popUpDiv = document.getElementById(popUpDivVar);
-    }
-
-    function popup(windowname) {
-      blanket_size(windowname);
-      window_pos(windowname);
-      toggle('blanket');
-      toggle(windowname);
-    }
-
-    /* when the page loads, replace the title placeholder with actual title */
-    window.addEventListener("load", _ => {
-      (function (x) {x.parentNode.replaceChild(pretty.input("id='ped-title' value='title' style='text-align: center;'"), x)}(document.getElementById("title-placeholder")));
-    });
-    </script>
-
     <div id="usage-info" class="notice" style="display: none;">
       <strong>Instructions:</strong> add or delete individuals as you like and
-      define relationships among them. Leave parents blank if this person has no
-      parents in the pedigree. Note that individuals are identified by name
+      define relationships among them. Leave parents blank if this person has
+      no parents in the pedigree. Note that individuals are identified by name
       (case sensitive), so you cannot have a duplicate name. This only graphs
       families; if there is an individual without a family, he or she will not
       be plotted. For more detailed information, visit our <a href="faq.html">
@@ -472,10 +441,11 @@ Very plain page for web-based pedigree stuff
   <!-- div storing the list of individuals -->
   <div id="list"></div>
 
-  <!-- download rendered pedigree SVG as a PNG image -->
+  <!-- functions to deal with uploading/downloading functionality -->
   <script type="text/javascript">
     let canvas = document.createElement("canvas");
     const download_ped = () => {
+      // downloaded rendered pedigree SVG as a PNG image
       let ped_img = document.getElementById("ped-img");
       if (ped_img.innerHTML === "") {
         pretty.warn_user("No pedigree found");
