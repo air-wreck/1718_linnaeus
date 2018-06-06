@@ -36,8 +36,8 @@ Very plain page for web-based pedigree stuff
       // append a row described by row id number "row_id_no"
       let list = document.getElementById("list");
       let text = `<div id="row${row_id_no.toString()}" class="indiv">
-        Name: ${pretty.input("id='name"+row_id_no.toString()
-          +"' type='text' name='name' value='Bob'").outerHTML}
+        Name: ${pretty.input(`id='name${row_id_no.toString()}' type='text'
+          name='name' value='Bob ${row_id_no}' pattern='^[^%]+$'`).outerHTML}
         Sex: <select id="sex${row_id_no.toString()}" name="sex">
           <option value="m">male</option>
           <option value="f">female</option>
@@ -47,9 +47,9 @@ Very plain page for web-based pedigree stuff
           <option value="false" selected>No</option>
         </select>
         Father: ${pretty.input("id='father"+row_id_no.toString()
-          +"' type='text' name='father' value=''").outerHTML}
+          +"' type='text' name='father' value='' pattern='^[^%]+$'").outerHTML}
         Mother: ${pretty.input("id='mother"+row_id_no.toString()
-          +"' type='text' name='mother' value=''").outerHTML}
+          +"' type='text' name='mother' value='' pattern='^[^%]+$'").outerHTML}
         <button class="button delete-button"
           onclick="delete_row('row${row_id_no.toString()}');">
           Delete Individual
