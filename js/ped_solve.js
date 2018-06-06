@@ -46,15 +46,6 @@ const ped_solve = (function () {
        var infected = false;
        var carrier = false;
        
-       if (marriage[0].infected === true && marriage[1].infected === true){
-        marriage[2].forEach(indiv =>{
-          if (indiv.infected === false){
-            pretty.warn_user("Parents that are both infected can't have a child that isn't.");
-            return -1;
-          }
-        })
-       }
-       
        marriage[2].forEach(indiv => {
          if (indiv.infected === true){
            indiv.carrier = 0;

@@ -173,6 +173,12 @@ Very plain page for web-based pedigree stuff
           pretty.warn_user("Father must be male and mother must be female");
           return -1;
         }
+
+        if (person.infected === false && person.father.infected === true && person.mother.infected === true){
+          pretty.warn_user("The child of two infected parents must also be infected");
+          return -1;
+        }
+
       }).includes(-1)) return -1;
 
 
