@@ -2,65 +2,37 @@
 
 * {font-family: "Open Sans";}
 
-.faq-page {
+.faq-container {
   width: 100%;
   text-align: center;
 }
-
-dl.faq button {
-    margin: 0;
-    padding: 0;
-    margin-top: 1em;
-    font-weight: bold;
-    font-size: 110%;
-    border: thin solid transparent;
-    background-color: transparent;
-    padding-left: 0.125em;
-    padding-right: 0.125em;
-    font-family: "Open Sans";
+.faq-container h1, h2 {
+  font-weight: 100;
 }
-
-dl dd {
-  margin: 0;
-  padding: 0;
-  margin-left: 1.5em;
-  margin-right: 1.5em;
+.faq-wrapper {
+  text-align: center;
+  display: inline-block;
 }
-
-dl.faq .desc {
-    margin: 0;
-    padding: 0.5em;
-    font-size: 110%;
-    display: none;
-    background-color: #ffec82;
-    font-family: "Open Sans";
-    border-radius: 10px
+.question {
+  text-align: left;
+  width: 600px;
+  background-color: var(--color1);
+  border-radius: 5px;
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 5px;
+  display: inline-block;
+  transition: all .1s ease-in;
 }
-
-dl.faq button:hover,
-dl.faq button:focus {
-  background-color: #eee;
+.question:hover {
+  background-color: #f1ffdd;
 }
-
-dl.faq button:focus {
-  border-color: #ffec82;
-}
-
-dl.faq button:hover {
-  text-decoration: underline;
-}
-
-dl.faq button:active {
-  background-color: #bbb;
-}
-
-dl.faq button[aria-expanded="false"]:before {
-  content: url('../images/right-arrow-brown.png');
-  padding-right: 0.35em;
-
-}
-
-dl.faq button[aria-expanded="true"]:before {
-  content: url('../images/down-arrow-brown.png');
-  padding-right: 0.35em;
+.answer {
+  text-align: left;
+  width: 580px;
+  background-color: #f1ffdd;
+  border-radius: 5px;
+  border: 1px solid black;
+  padding: 10px;
+  display: inline-block;
 }

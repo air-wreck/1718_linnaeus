@@ -7,68 +7,43 @@
   <script type="text/javascript" src="js/nav.js"></script>
 </head>
 <body>
-  <style>
-    .faq-container {
-      width: 100%;
-      text-align: center;
-    }
-    .faq-container h1, h2 {
-      font-weight: 100;
-    }
-    .faq-wrapper {
-      text-align: center;
-      display: inline-block;
-    }
-    .question {
-      text-align: left;
-      width: 600px;
-      background-color: var(--color1);
-      border-radius: 5px;
-      border: 1px solid var(--color1);
-      padding: 10px;
-      display: inline-block;
-      transition: all .1s ease-in;
-    }
-    .question:hover {
-      background-color: white;
-    }
-    .answer {
-      text-align: left;
-      width: 580px;
-      border-radius: 5px;
-      border: 1px solid var(--color1);
-      padding: 10px;
-      display: inline-block;
-    }
-  </style>
-
   <script type="text/javascript">
+    // on page load, add open/closing effect
     window.addEventListener("load", _ => {
       Array.from(document.getElementsByClassName("faq-wrapper"))
         .forEach(faq => {
+          faq.after(document.createElement("br"));
           let ques = faq.getElementsByClassName("question")[0];
+          ques.after(document.createElement("br"));
           let ans = faq.getElementsByClassName("answer")[0];
           ans.style.display = "none"
+          let triangle = document.createElement("div");
+          triangle.style.display = "inline";
+          triangle.innerHTML = "&#x25BC;";
+          ques.insertBefore(triangle, ques.firstChild);
           ques.addEventListener("click", event => {
-            ans.style.display = ans.style.display === "none"
-              ? "inline-block"
-              : "none";
+            if (ans.style.display === "none") {
+              ans.style.display = "inline-block";
+              triangle.innerHTML = "&#x25B2;";
+            } else {
+              ans.style.display = "none";
+              triangle.innerHTML = "&#x25BC;";
+            }
           });
-          ques.innerHTML = "&#x25BC; " + ques.innerHTML;
         })
     });
   </script>
 
   <div class="faq-container">
     <h1>Frequently Asked Questions</h1>
-    <div style="width: 100; text-align: left; padding: 30px;">
+    <div style="display: inline-block; text-align: left; padding: 30px;">
       <h2>General</h2>
       <div class="faq-wrapper">
         <div class="question">
           What are the functionalities of pedigrees and Punnett squares?
-        </div><br>
+        </div>
         <div class="answer">
-          These two visual concepts are an integral part of most biology courses taught from the secondary school level and up, and gaining an understanding of how genetics works through a visual aid can be a boon for most teachers. In addition, pedigrees and Punnett squares are an effective tool for users to determine likelihood of diseases being passed from parent to child. 
+          These two visual concepts are an integral part of most biology courses taught from the secondary school level and up, and gaining an understanding of how genetics works through a visual aid can be a boon for most teachers. In addition, pedigrees and Punnett squares are an effective tool for users to determine likelihood of diseases being passed from parent to child.
           <br>
           <br>
           Pedigrees focus on displaying the relationships within a family, and are effective to look at genetic inheritance on a "macro" scale.
@@ -84,49 +59,38 @@
           How do I calculate the probability of two parents having an infected child in the future?
         </div>
         <div class="answer">
-          Using the pedigree, you can determine the most likely genotype of each parent (a purely unaffected parent has genotype AA; a carrier parent has genotype Aa; an infected parent has genotype aa). You may then utilize these genotypes in the Punnett square function to determine the possible offspring genotypes and phenotypes. 
+          Using the pedigree, you can determine the most likely genotype of each parent (a purely unaffected parent has genotype AA; a carrier parent has genotype Aa; an infected parent has genotype aa). You may then utilize these genotypes in the Punnett square function to determine the possible offspring genotypes and phenotypes.
         </div>
-      </div><br>
+      </div>
       <div class="faq-wrapper">
         <div class="question">
           What modes of inheritance are supported?
         </div>
         <div class="answer">
-          The Linnaeus Pedigree supports the most common mode of inheritance, autosomal 
-            recessive.
+          The Linnaeus Pedigree supports the most common mode of inheritance, autosomal recessive.
+        </div>
+      </div>
+
+      <h2> Punnett Square</h2>
+      <div class="faq-wrapper">
+        <div class="question">
+          What modes of inheritance are supported?
+        </div>
+        <div class="answer">
+          The Linnaeus Punnett square supports three modes of inheritance: autosomal dominant, codominance, and incomplete dominance.
+        </div>
+      </div>
+      <div class="faq-wrapper">
+        <div class="question">
+          How are these modes of inheritance different?
+        </div>
+        <div class="answer">
+          <u>Autosomal</u>: The dominant phenotype <strong>only</strong> will be expressed as long as at least one dominant allele is inherited (genotype AA or Aa). This is represented with a fully shaded cell.<br><br>
+          <u>Codominance</u>: If both the dominant allele and the recessive allele are present (genotype Aa), both the dominant <strong>and</strong> the recessive phenotypes will be expressed. This is represented with a half-shaded cell.<br><br>
+          <u>Incomplete Dominance</u>: If both the dominant allele and the recessive allele are present (genotype Aa), the phenotype will be an <strong>intermediate</strong> of dominant and recessive. This is represented with a lightly shaded cell.
         </div>
       </div>
     </div>
   </div>
-
-
-  <dl class="faq">
-    <h1 style="font-weight: 100;">Punnett Square</h1>
-    <dt>
-      <button aria-expanded="false" aria-controls="faq1_desc">
-        What modes of inheritance are supported?
-      </button>
-    </dt>
-    <dd>
-      <p id="faq1_desc" class="desc">
-
-            The Linnaeus Punnett square supports three modes of inheritance: autosomal dominant, codominance, and incomplete dominance.
-
-      </p>
-    </dd>
-    <dt>
-      <button aria-expanded="false" aria-controls="faq2_desc">
-        How are these modes of inheritance different?
-      </button>
-    </dt>
-    <dd>
-      <p id="faq2_desc" class="desc">
-        <u>Autosomal</u>: The dominant phenotype <strong>only</strong> will be expressed as long as at least one dominant allele is inherited (genotype AA or Aa). This is represented with a fully shaded cell.<br><br>
-        <u>Codominance</u>: If both the dominant allele and the recessive allele are present (genotype Aa), both the dominant <strong>and</strong> the recessive phenotypes will be expressed. This is represented with a half-shaded cell.<br><br>
-        <u>Incomplete Dominance</u>: If both the dominant allele and the recessive allele are present (genotype Aa), the phenotype will be an <strong>intermediate</strong> of dominant and recessive. This is represented with a lightly shaded cell.
-
-      </p>
-    </dd>
-  </dl>
 </body>
 </html>
