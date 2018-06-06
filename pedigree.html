@@ -234,8 +234,13 @@ Very plain page for web-based pedigree stuff
         var solved_ped = false;
         while (solved_ped === false){
           marriages.forEach(marriage => {
-              ped_solve.bottomUp(marriage);
+              ped_solve.bottomUp(marriage); 
+          });
+          marriages.forEach(marriage => {
               ped_solve.topDown(marriage);
+          });
+          marriages.forEach(marriage => {
+              ped_solve.bottomUp(marriage); 
           });
           solved_ped = ped_solve.solved(marriages);
         }
