@@ -118,7 +118,7 @@ const ped_solve = (function () {
          })
        }
        //one parent infected, other is pure, then the kid's a carrier
-       if ((marriage[0].infected === true && marriage[1].carrier === 0 && marriage[1].infected === false) || (marriage[1].infected === true && marriage[0].carrier === 0 && marriage[0].infected === false)) {
+       if ((marriage[0].infected === true && marriage[1].carrier <= 0 && marriage[1].infected === false) || (marriage[1].infected === true && marriage[0].carrier <= 0 && marriage[0].infected === false)) {
          marriage[2].forEach(indiv => {
            indiv.carrier = 1;
          })
