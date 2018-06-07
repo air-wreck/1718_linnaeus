@@ -39,10 +39,10 @@ Description: web interface for pedigree plotting and solving
     let pedigree = [];  // a list of individuals present with all their data
 
     /* functions for generating, validating, and rendering pedigree */
-    
+
     const add_row = row_id_no => {
       // append a row described by row id number "row_id_no"
-      
+
       let list = document.getElementById("list");
       // obtain row parameters
       let text = `<div id="row${row_id_no.toString()}" class="indiv">
@@ -118,7 +118,7 @@ Description: web interface for pedigree plotting and solving
           child.add_parents(
             pedigree[pedigree.findIndex(x => x.name === father)],
             pedigree[pedigree.findIndex(x => x.name === mother)]);
-        } else if ([father, mother].some(p => p !== "")) { 
+        } else if ([father, mother].some(p => p !== "")) {
           // invalid number of parents
           pretty.warn_user("Each individual must have exactly 0 or 2 parents");
           return -1;
@@ -241,7 +241,7 @@ Description: web interface for pedigree plotting and solving
       let marriages = [];
       get_marriages();
 
-      // begin solving pedigree probabilities 
+      // begin solving pedigree probabilities
       var solved_ped = false;
       var iterator = 0;
       while (solved_ped === false && iterator < marriages.length+1){
@@ -301,8 +301,8 @@ Description: web interface for pedigree plotting and solving
               indiv.name === name)];
             node.addEventListener("mouseover", event => {
               let info = document.createElement("div");
-              info.style.left = event.pageX + "px";
-              info.style.top = event.pageY + "px";
+              info.style.left = (event.pageX+1) + "px";
+              info.style.top = (event.pageY+1) + "px";
               info.className = "info";
               info.innerHTML = `<strong>${person.name}</strong><br>
                 Sex: ${person.sex}<br>

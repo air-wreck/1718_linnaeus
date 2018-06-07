@@ -299,9 +299,33 @@ Description: web interface for manipulating and solving Punnett squares
         </tr>
         ${prob_tbl_html.join("")}`;
       document.getElementById("prob-tbl").innerHTML = prob_tbl.outerHTML;
-      document.getElementById("flip-order").addEventListener("click", event => {
-        make_prob_table(new_ordering);
-      })
+      document.getElementById("flip-order")
+        .addEventListener("click", event => {
+          make_prob_table(new_ordering);
+        });
+
+      // create the hover effect on the punnett square
+      Array.from(document.getElementsByTagName("td"))
+        .filter(cell =>
+          cell.parentNode.parentNode.parentNode.id === "punnett-table")
+        .forEach(cell => {
+          let info = document.createElement("div");
+          info.style.position = "absolute";
+          info.style.backgroundColor = "white";
+          info.style.padding = "5px";
+          info.style.fontSize = "10pt";
+          info.style.border = "1px solid black";
+          info.innerHTML = `<strong>${cell.textContent}</strong>
+            Prob: ${(freq[cell.textContent] / genos.length * 100).toFixed(2)}%`;
+          cell.addEventListener("mouseover", event => {
+            info.style.left = (event.pageX+1) + "px";
+            info.style.top = (event.pageY+1) + "px";
+            document.body.appendChild(info);
+          });
+          cell.addEventListener("mouseout", _ => {
+            document.body.removeChild(info);
+          });
+        });
     }
 
     const load_pun = () => {
