@@ -10,6 +10,7 @@ Description: web interface for manipulating and solving Punnett squares
 <head>
   <title>Linnaeus | Punnett Square</title>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
   <link rel="shortcut icon" type="image/png" href="img/png/l.png">
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/punnett.css">
@@ -81,11 +82,14 @@ Description: web interface for manipulating and solving Punnett squares
 
   <!-- hidden text box with usage information -->
   <div id="usage-info" class="usage"
-       style="text-align: center; display: none;">
-    <strong>Usage Info:</strong> A 2x2 square supports multiple modes of
-    inheritance. All other square sizes will default to autosomal
-    inheritance.<br>To learn more about modes of inheritance, please visit our
-    <a href="faq.html"><strong><u>FAQs</u></strong></a>.
+       style="text-align: left; display: none;">
+    <strong>Usage Info: </strong>Select a Punnett square size and set each
+    parent's traits by clicking the appropriate genotypes. Click "Solve..." to
+    plot the Punnett square. You can hover over each cell to get more
+    information. A 2x2 square supports multiple modes of inheritance. All other
+    square sizes will default to autosomal inheritance. To learn more about
+    modes of inheritance, please visit our <a href="faq.html"><strong>
+    <u>FAQs</u></strong></a>.
   </div>
 
   <div style="text-align: center; font-weight: 100;">
@@ -316,7 +320,8 @@ Description: web interface for manipulating and solving Punnett squares
           info.style.fontSize = "10pt";
           info.style.border = "1px solid black";
           info.innerHTML = `<strong>${cell.textContent}</strong>
-            Prob: ${(freq[cell.textContent] / genos.length * 100).toFixed(2)}%`;
+            Prob: ${(freq[cell.textContent] / genos.length * 100)
+              .toFixed(2)}%`;
           cell.addEventListener("mouseover", event => {
             info.style.left = (event.pageX+1) + "px";
             info.style.top = (event.pageY+1) + "px";

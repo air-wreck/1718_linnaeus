@@ -10,6 +10,7 @@ Description: web interface for pedigree plotting and solving
 <head>
   <title>Linnaeus | Pedigree</title>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
   <link rel="shortcut icon" type="image/png" href="img/png/l.png">
   <!-- CSS stylesheets -->
   <link rel="stylesheet" type="text/css" href="css/main.css">
@@ -47,7 +48,7 @@ Description: web interface for pedigree plotting and solving
       // obtain row parameters
       let text = `<div id="row${row_id_no.toString()}" class="indiv">
         Name: ${pretty.input(`id='name${row_id_no.toString()}' type='text'
-          name='name' value='Bob ${row_id_no}' pattern='^[^%]+$'`).outerHTML}
+          name='name' value='Bob ${row_id_no}' pattern='^[^%$]+$'`).outerHTML}
         Sex: <select id="sex${row_id_no.toString()}" name="sex">
           <option value="m">male</option>
           <option value="f">female</option>
@@ -56,10 +57,10 @@ Description: web interface for pedigree plotting and solving
           <option value="true">Yes</option>
           <option value="false" selected>No</option>
         </select>
-        Father: ${pretty.input("id='father"+row_id_no.toString()
-          +"' type='text' name='father' value='' pattern='^[^%]+$'").outerHTML}
-        Mother: ${pretty.input("id='mother"+row_id_no.toString()
-          +"' type='text' name='mother' value='' pattern='^[^%]+$'").outerHTML}
+        Father: ${pretty.input("id='father"+row_id_no.toString()+
+          "' type='text' name='father' value='' pattern='^[^%$]+$'").outerHTML}
+        Mother: ${pretty.input("id='mother"+row_id_no.toString()+
+          "' type='text' name='mother' value='' pattern='^[^%$]+$'").outerHTML}
         <button class="button delete-button"
           onclick="delete_row('row${row_id_no.toString()}');">
           Delete Individual
@@ -347,7 +348,8 @@ Description: web interface for pedigree plotting and solving
     /* when the page loads, replace the title placeholder with actual title */
     window.addEventListener("load", _ => {
       (function (x) {x.parentNode.replaceChild(pretty.input(
-        "id='ped-title' value='title' style='text-align: center;'"), x)}
+        `id="ped-title" value="title" style="text-align: center;"
+         pattern="^[^$%]*$"`), x)}
           (document.getElementById("title-placeholder")));
     });
   </script>
@@ -405,7 +407,7 @@ Description: web interface for pedigree plotting and solving
 
     <!-- hidden text box with usage info -->
     <div id="usage-info" class="notice" style="display: none;">
-      <strong>Instructions:</strong> add or delete individuals as you like and
+      <strong>Usage Info:</strong> add or delete individuals as you like and
       define relationships among them. Leave parents blank if this person has
       no parents in the pedigree. Note that individuals are identified by name
       (case sensitive), so you cannot have a duplicate name. This only graphs

@@ -10,6 +10,7 @@ Description: answers to frequently asked questions about Linnaeus
 <head>
   <title>Linnaeus | FAQs</title>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
   <link rel="shortcut icon" type="image/png" href="img/png/l.png">
   <!-- CSS stylesheets -->
   <link rel="stylesheet" type="text/css" href="css/main.css">
@@ -79,12 +80,57 @@ Description: answers to frequently asked questions about Linnaeus
           on?
         </div>
         <div class="answer">
-          Click the "Download Data" button to save a current work file. To
+          Click the "Download Data/CSV" button to save a current work file. To
           edit, simply reupload the file using the "Upload Data" button.
           <br>
           <br>
           Alternatively, a pedigree or Punnett square can be saved as an image
           by clicking the "Download as Image" button.
+          <br>
+          <br>
+          Note that in order to keep the downloaded CSV as clean as possible,
+          the information about the inheritance mode is contained within the
+          filename for Punnett square CSV files. This means that you should not
+          rename these files.
+        </div>
+      </div>
+      <div class="faq-wrapper">
+        <div class="question">
+          Where can I learn more about the basic genetic concepts used in
+          Linnaeus?
+        </div>
+        <div class="answer">
+          Most of the biological concepts in Linnaeus require only a high
+          school-level class to understand. If you are unfamiliar with concepts
+          like genotypes, dominant traits, or Mendelian inheritance, you may
+          find it useful to consult a high school textbook or an online
+          educational resource like Khan Academy before using Linnaeus.
+        </div>
+      </div>
+      <div class="faq-wrapper">
+        <div class="question">
+          Is Linnaeus free software/open source?
+        </div>
+        <div class="answer">
+          Although we love free software, Linnaeus is unfortunately
+          closed-source. This is because it is being developed as a school
+          project, and sharing the source code would constitute a violation of
+          academic integrity (especially if others contribute). Perhaps
+          Linnaeus will become free software once we have finished the CSE
+          course.
+        </div>
+      </div>
+      <div class="faq-wrapper">
+        <div class="question">
+          I downloaded an image/data file, but the image/data therein differs
+          from that on my screen. Why did this happen?
+        </div>
+        <div class="answer">
+          This is likely caused by forgetting to click "solve"/"build" before
+          downloading the file. The file downloads will take whatever pedigree
+          or Punnett square is <em>currently</em> rendered on the screen,
+          so you will need to "refresh" the view by solving each configuration
+          before downloading.
         </div>
       </div>
 
@@ -136,7 +182,7 @@ Description: answers to frequently asked questions about Linnaeus
           What are the different Punnett square sizes?
         </div>
         <div class="answer">
-          The Linnaeus Punnett square supports three sizes: 2x2, 4x4, 8x8, and
+          The Linnaeus Punnett square supports four sizes: 2x2, 4x4, 8x8, and
           16x16. Each size determines the possible offspring genotypes and
           phenotypes for a different number of traits.
           <br>
@@ -164,7 +210,9 @@ Description: answers to frequently asked questions about Linnaeus
         </div>
         <div class="answer">
           The Linnaeus Punnett square supports three modes of inheritance:
-          autosomal dominant, codominance, and incomplete dominance.
+          autosomal dominant, codominance, and incomplete dominance. Only
+          autosomal dominant is supported for large (4x4, 8x8, and 16x16)
+          Punnett squares.
         </div>
       </div>
       <div class="faq-wrapper">
