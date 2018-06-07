@@ -264,6 +264,46 @@ Description: web interface for manipulating and solving Punnett squares
     /* SOLVING & TABLE MAKING FUNCTIONS */
 
     var data = []; // expose data for easy CSV downloading later on
+
+    const make_prob_table = ordering => {
+      // find the probabilities of the various genotypes by counting their
+      //   occurrences in the solution matrix
+      let genos = Array.prototype.concat(...data.map((row, i) => {
+        if (i === 0) return [];
+        return Array.prototype.concat(...row.map((cell, j) => {
+          if (j === 0) return [];
+          return [cell];
+        }));
+      }));
+      let freq = genos.reduce((acc, x) => {
+        if (Object.keys(acc).includes(x)) acc[x]++;
+        else acc[x] = 1;
+        return acc;
+      }, {});
+
+      let prob_tbl_html = Object.keys(freq)
+        .map(key => freq[key], `<tr><td>${key}</td><td>${(freq[key] /
+          genos.length * 100).toFixed(2) + "%"}</td></tr>`])
+        .sort((a, b) => ordering === "increasing"
+          ? a[0] - b[0] : b[0] - a[0])
+        .map(pair => pair[1]);
+      let prob_tbl = document.createElement("table");
+      let new_ordering = ordering === "increasing"
+        ? "decreasing" : "increasing";
+      prob_tbl.innerHTML =
+        `<tr>
+          <th>Genotype</th>
+          <th id="flip-order">
+            ${ordering === "decreasing" ? "&#x25BE;" : "&#x25B4;"}Probability
+          </th>
+        </tr>
+        ${prob_tbl_html.join("")}`;
+      document.getElementById("prob-tbl").innerHTML = prob_tbl.outerHTML;
+      document.getElementById("flip-order").addEventListener("click", event => {
+        make_prob_table(new_ordering);
+      })
+    }
+
     const load_pun = () => {
       /* loads the punnett square */
       let father = document.getElementById("father-entry").textContent;
@@ -291,28 +331,7 @@ Description: web interface for manipulating and solving Punnett squares
                     .map(c => cmap(c, colorspace)))));
       let tbl = document.getElementById("pun-tbl");
       tbl.innerHTML = colorize.colortbl(data, colors);
-
-      // find the probabilities of the various genotypes by counting their
-      //   occurrences in the solution matrix
-      let genos = Array.prototype.concat(...data.map((row, i) => {
-        if (i === 0) return [];
-        return Array.prototype.concat(...row.map((cell, j) => {
-          if (j === 0) return [];
-          return [cell];
-        }));
-      }));
-      let freq = genos.reduce((acc, x) => {
-        if (Object.keys(acc).includes(x)) acc[x]++;
-        else acc[x] = 1;
-        return acc;
-      }, {});
-      let prob_tbl_html = Object.keys(freq).map(key =>
-        `<tr><td>${key}</td><td>${(freq[key] / genos.length * 100).toFixed(2)
-          + "%"}</td></tr>`);
-      let prob_tbl = document.createElement("table");
-      prob_tbl.innerHTML = `<tr><th>Genotype</th><th>Probability</th></tr>
-        ${prob_tbl_html.join("")}`;
-      document.getElementById("prob-tbl").innerHTML = prob_tbl.outerHTML;
+      make_prob_table("decreasing");
     }
 
 
