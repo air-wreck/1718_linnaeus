@@ -20,7 +20,6 @@
   left: 15%;
   top: 25%;
   position: absolute;
-  max-width: 100%;
 }
 
 .title-img {
@@ -110,6 +109,9 @@
     left: 30px;
     top: 100px;
   }
+  .front-page h1 {
+    font-size: 400%;
+  }
   .content-1-container {
     grid-template-columns: 0px 1fr 0px;
     grid-template-rows: 130px 1fr
@@ -130,6 +132,3 @@
     padding-right: 0px;
   }
 }
-
-/* TODO: add media query for super-wide screens and landscape phones */
-/* TODO: make CSS mobile-first */

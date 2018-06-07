@@ -8,6 +8,7 @@
 }
 .faq-container h1, h2 {
   font-weight: 100;
+  width: 100%;
 }
 .faq-wrapper {
   text-align: center;
