@@ -282,7 +282,7 @@ Description: web interface for manipulating and solving Punnett squares
       }, {});
 
       let prob_tbl_html = Object.keys(freq)
-        .map(key => freq[key], `<tr><td>${key}</td><td>${(freq[key] /
+        .map(key => [freq[key], `<tr><td>${key}</td><td>${(freq[key] /
           genos.length * 100).toFixed(2) + "%"}</td></tr>`])
         .sort((a, b) => ordering === "increasing"
           ? a[0] - b[0] : b[0] - a[0])
