@@ -17,3 +17,8 @@ punnett/ct_config
 
 # ignore local files (mostly unused font files) on Eric's laptop
 eric_local/*
+
+# ignore automatic appendix generator stuff
+appendix/*
+appendix.sh
+
