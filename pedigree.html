@@ -11,6 +11,7 @@ Description: web interface for pedigree plotting and solving
   <title>Linnaeus | Pedigree</title>
   <meta charset="utf-8">
   <link rel="shortcut icon" type="image/png" href="img/png/l.png">
+  <!-- CSS stylesheets -->
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/pedigree.css">
 
@@ -27,6 +28,7 @@ Description: web interface for pedigree plotting and solving
   <script type="text/javascript" src="js/other/viz.js"></script>
   <script type="text/javascript" src="js/other/full.js.opaque"></script>
 </head>
+
 <body>
   <script type="text/javascript">
     // generator to produce subsequent row_id numbers
@@ -37,9 +39,12 @@ Description: web interface for pedigree plotting and solving
     let pedigree = [];  // a list of individuals present with all their data
 
     /* functions for generating, validating, and rendering pedigree */
+    
     const add_row = row_id_no => {
       // append a row described by row id number "row_id_no"
+      
       let list = document.getElementById("list");
+      // obtain row parameters
       let text = `<div id="row${row_id_no.toString()}" class="indiv">
         Name: ${pretty.input(`id='name${row_id_no.toString()}' type='text'
           name='name' value='Bob ${row_id_no}' pattern='^[^%]+$'`).outerHTML}
@@ -64,14 +69,16 @@ Description: web interface for pedigree plotting and solving
 
     const delete_row = row_id => {
       // delete a row
+
       let row = document.getElementById(row_id);
       row.parentNode.removeChild(row);
     }
 
     const build = () => {
       // transform HTML list into pedigree array
+
       pedigree = [];  // reset pedigree
-      let rows = document.getElementById("list").childNodes;
+      let rows = document.getElementById("list").childNodes; // get pedigree individuals
 
       row_nums = Array.from(document.getElementById("list").childNodes)
         .filter(el => el.className === "indiv")
@@ -84,11 +91,12 @@ Description: web interface for pedigree plotting and solving
           return -1;
         }
 
-        let sex = ped_solve.Sex.m;
+        let sex = ped_solve.Sex.m; // set sex of individual
         if (document.getElementById("sex" + n).value === "f")
           sex = ped_solve.Sex.f;
 
         let prob = true;
+        // set individual as infected (true) or uninfected (false)
         if (document.getElementById("prob" + n).value === "false")
           prob = false;
 
@@ -110,7 +118,8 @@ Description: web interface for pedigree plotting and solving
           child.add_parents(
             pedigree[pedigree.findIndex(x => x.name === father)],
             pedigree[pedigree.findIndex(x => x.name === mother)]);
-        } else if ([father, mother].some(p => p !== "")) {
+        } else if ([father, mother].some(p => p !== "")) { 
+          // invalid number of parents
           pretty.warn_user("Each individual must have exactly 0 or 2 parents");
           return -1;
         }
@@ -120,7 +129,6 @@ Description: web interface for pedigree plotting and solving
 
     const verify = () => {
       // verify that the pedigree is valid
-      // we can afford to be inefficient, since pedigrees are small
 
       // is there even anyone in the pedigree?
       if (pedigree.length === 0) {
@@ -212,12 +220,6 @@ Description: web interface for pedigree plotting and solving
       // initially set all individuals to TBD carrier probabilities
       pedigree.forEach(person => person.carrier = -1);
 
-      // given: infected people
-      // step 1: make carriers' parents 2/3 chinese
-      // step 2: infected peoples' parents all carriers no matter what
-      // step 2.5: make
-      // step 3: recurse this until finish pedigree (do math with 2/3)
-
       // identify all marriages
       // we assume that all relationships are monogamous and generational
       const get_marriages = () => {
@@ -239,21 +241,30 @@ Description: web interface for pedigree plotting and solving
       let marriages = [];
       get_marriages();
 
+      // begin solving pedigree probabilities 
       var solved_ped = false;
       var iterator = 0;
       while (solved_ped === false && iterator < marriages.length+1){
+        // repeat until all individuals are solved, or until
+        //    a capped number of runs has been reached
         iterator += 1;
         marriages.forEach(marriage => {
+          // call solving functions for each marriage in pedigree
           ped_solve.bottomUp(marriage);
           ped_solve.topDown(marriage);
         });
+        //now check if all individuals are solved
         solved_ped = ped_solve.solved(marriages, iterator);
       }
 
+      // in the case that there are still unsolved individuals
       var undone = marriages;
       while (undone.length !== 0){
+        // repeat until all marriages are solved
         undone.forEach(marriage => {
           if (marriage[0].carrier !== -1 && marriage[1].carrier !== -1){
+            // choose marriages with existing information to finish solving,
+            //    then remove from list
             ped_solve.bottomUp(marriage);
             ped_solve.topDown(marriage);
             undone.splice(undone.indexOf(marriage), 1);
@@ -327,7 +338,7 @@ Description: web interface for pedigree plotting and solving
     const make_ped = () => {
       // put together all the little functions
       if (build() > 0 && verify() > 0) {
-        //yay for short-circuiting!
+        // short-circuits if conditions not met
         // error messages already provided by verify()
         render();
       }
@@ -340,6 +351,8 @@ Description: web interface for pedigree plotting and solving
           (document.getElementById("title-placeholder")));
     });
   </script>
+
+  <!-- page header -->
   <div id="instructions">
     <div style="text-align: center;">
       <h1 style="font-weight: 100;">
@@ -347,6 +360,7 @@ Description: web interface for pedigree plotting and solving
       </h1>
     </div>
 
+    <!-- mouseover button for help -->
     <div style="position: absolute; left: 10px; top: 100px;">
       <a onclick="popup('popUpDiv')"
       onmouseover="this.parentNode.getElementsByTagName('span')[0]
@@ -355,6 +369,7 @@ Description: web interface for pedigree plotting and solving
         .style.display='none'" class="circle circle-red">?</a>
       <span class="circle-red help-flag">help</span>
     </div>
+    <!-- mouseover button for usage info -->
     <div style="position: absolute; left: 10px; top: 130px;">
       <a onclick="(function (x) {x.style.display === 'none'
         ? x.style.display='block' : x.style.display='none'}
@@ -366,6 +381,7 @@ Description: web interface for pedigree plotting and solving
       <span class="circle-yellow help-flag">info</span>
     </div>
 
+    <!-- hidden pop-up with help info.-->
     <div id="blanket" style="display:none"></div>
     <div class="content-21" id="popUpDiv" style="display:none">
       <p><h2>How To Read a Pedigree</h2>
@@ -387,6 +403,7 @@ Description: web interface for pedigree plotting and solving
       <a onclick="popup('popUpDiv')" ><center class="button">Close</center></a>
     </div>
 
+    <!-- hidden text box with usage info -->
     <div id="usage-info" class="notice" style="display: none;">
       <strong>Instructions:</strong> add or delete individuals as you like and
       define relationships among them. Leave parents blank if this person has
@@ -517,7 +534,7 @@ Description: web interface for pedigree plotting and solving
 
   <!-- FOR EASIER TESTING -->
   <script type="text/javascript">
-  // if this window has parameter ?mode=testing, add entires automatically
+  // if this window has parameter ?mode=testing, add default values automatically
   if (window.location.href.split("").includes("?")
    && window.location.href.split("?")[1].split("").includes("=")
    && window.location.href.split("?")[1].split("=")[0] === "mode"

@@ -33,6 +33,7 @@ Description: web interface for manipulating and solving Punnett squares
     <h1 style="font-weight: 100;">
       Welcome to Linnaeus: the online Punnett Square maker!
     </h1>
+    <!-- button for help information -->
     <div style="position: absolute; left: 10px; top: 100px;">
       <a onclick="popup('popUpDiv')"
          onmouseover="this.parentNode.getElementsByTagName('span')[0]
@@ -42,6 +43,7 @@ Description: web interface for manipulating and solving Punnett squares
          class="circle circle-red">?</a>
       <span class="circle-red help-flag">help</span>
     </div>
+    <!-- button for usage information -->
     <div style="position: absolute; left: 10px; top: 130px;">
       <a onclick="(function (x) {x.style.display==='none'
                     ? x.style.display='block'
@@ -56,6 +58,7 @@ Description: web interface for manipulating and solving Punnett squares
     </div>
   </div>
 
+  <!-- hidden pop-up with help information -->
   <div id="blanket" style="display:none"></div>
   <div class="content-21" id="popUpDiv" style="display:none">
     <p><h2>How To Read a Punnett Square</h2>
@@ -76,6 +79,7 @@ Description: web interface for manipulating and solving Punnett squares
     <a onclick="popup('popUpDiv')" ><center class="button">Close</center></a>
   </div>
 
+  <!-- hidden text box with usage information -->
   <div id="usage-info" class="usage"
        style="text-align: center; display: none;">
     <strong>Usage Info:</strong> A 2x2 square supports multiple modes of
@@ -88,6 +92,7 @@ Description: web interface for manipulating and solving Punnett squares
     <br>Punnett Square Size:
   </div>
 
+  <!-- buttons to choose size of square -->
   <div style="text-align: center; margin-top: 10px;">
     <button class="button" id="click-2"
             onclick="show(1);" style="margin-left: 20px;">
@@ -107,6 +112,7 @@ Description: web interface for manipulating and solving Punnett squares
     </button>
   </div>
 
+  <!-- user entry fields -->
   <div>
     <div id="data-father" class="data-entry">
       <span class="data-title">Father</span>
@@ -133,6 +139,8 @@ Description: web interface for manipulating and solving Punnett squares
         <option value="autosomal">Autosomal</option>
       </select>
     </div>
+
+    <!-- buttons for user interaction -->
     <button class="button"
             onclick="load_pun();"
             style="font-size: 10pt;">
@@ -171,7 +179,6 @@ Description: web interface for manipulating and solving Punnett squares
   <div id="pun-tbl" style="margin: 10px 0; text-align: center;"></div>
   <div id="prob-tbl" style="margin: 10px 0; text-align: center;"></div>
 
-  <!-- just here for now -->
   <script type="text/javascript">
 
     /* DISPLAY & DATA ENTRY FUNCTIONS */
