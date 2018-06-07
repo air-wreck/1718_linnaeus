@@ -168,9 +168,8 @@ Description: web interface for manipulating and solving Punnett squares
     </div>
   </div>
 
-  <div id="pun-tbl"
-       style="margin-top: 10px; margin-bottom: 10px; text-align: center;">
-  </div>
+  <div id="pun-tbl" style="margin: 10px 0; text-align: center;"></div>
+  <div id="prob-tbl" style="margin: 10px 0; text-align: center;"></div>
 
   <!-- just here for now -->
   <script type="text/javascript">
@@ -196,7 +195,7 @@ Description: web interface for manipulating and solving Punnett squares
     // set the entry fields to allow this many traits
     const show = size => {
       current_display = size;
-      if (size == 1) {
+      if (size === 1) {
         document.getElementById("inherit2").style.display = "inline-block";
         document.getElementById("inherit").style.display = "none";
       }
@@ -285,6 +284,28 @@ Description: web interface for manipulating and solving Punnett squares
                     .map(c => cmap(c, colorspace)))));
       let tbl = document.getElementById("pun-tbl");
       tbl.innerHTML = colorize.colortbl(data, colors);
+
+      // find the probabilities of the various genotypes by counting their
+      //   occurrences in the solution matrix
+      let genos = Array.prototype.concat(...data.map((row, i) => {
+        if (i === 0) return [];
+        return Array.prototype.concat(...row.map((cell, j) => {
+          if (j === 0) return [];
+          return [cell];
+        }));
+      }));
+      let freq = genos.reduce((acc, x) => {
+        if (Object.keys(acc).includes(x)) acc[x]++;
+        else acc[x] = 1;
+        return acc;
+      }, {});
+      let prob_tbl_html = Object.keys(freq).map(key =>
+        `<tr><td>${key}</td><td>${(freq[key] / genos.length * 100).toFixed(2)
+          + "%"}</td></tr>`);
+      let prob_tbl = document.createElement("table");
+      prob_tbl.innerHTML = `<tr><th>Genotype</th><th>Probability</th></tr>
+        ${prob_tbl_html.join("")}`;
+      document.getElementById("prob-tbl").innerHTML = prob_tbl.outerHTML;
     }
 
 
