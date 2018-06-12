@@ -54,13 +54,14 @@ window.addEventListener("load", event => {
             <a href="about.html">About</a>
             <a href="pedigree.html">Pedigree</a>
             <a href="punnett.html">Punnett Square</a>
+            <a href="contact.html">Contact</a>
             <a href="faq.html">FAQs</a>
           </div>
       </div>
     </ul>
   </div>` + document.body.innerHTML;
   Array.from(document.getElementsByClassName("underscore")).forEach(div => {
-    div.style.width = div.parentNode.offsetWidth + "px";
+    div.style.width = (div.parentNode.offsetWidth-1) + "px";
   });
 
   // respond to clicks when in small mode

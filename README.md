@@ -1,6 +1,11 @@
 # 1718_linnaeus
 CSE 2017-18 final project by Nelson, Karena and Eric
 
+```
+This repository is a clone of the original, which is private and has been
+submitted as our final project.
+```
+
 ### introduction
 Biology is the world around us. This is therefore a very powerful tool for the
 world around us. Try it [here](http://54.191.167.183/1718_linnaeus/home.html).
