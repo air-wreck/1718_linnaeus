@@ -8,7 +8,8 @@ submitted as our final project.
 
 ### introduction
 Biology is the world around us. This is therefore a very powerful tool for the
-world around us. Try it [here](http://54.191.167.183/1718_linnaeus/home.html).
+world around us. Try it
+[here](https://air-wreck.github.io/1718_linnaeus/home.html).
 
 ### new! april 2018
 The code has been rewritten to work entire in-browser, so there is no longer
@@ -24,9 +25,8 @@ Actually, you don't even need internet access anymore.
 
 ### getting started
 You can get started by simply visiting the link above. You can look through the
-source code, but we unfortunately aren't accepting pull requests right now,
-since this is a school project and it would be a violation of academic
-integrity to have someone else write some of the code for us.
+source code in this repository. I guess you can submit a pull request if you
+feel so inclined, but I have no clue why you would want to do that.
 
 ### this repository
 This repository is organized into a few different directories. The root
